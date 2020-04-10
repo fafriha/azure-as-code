@@ -21,7 +21,7 @@ resource "azurerm_automation_runbook" "wvd" {
   runbook_type            = "PowerShell"
 
   publish_content_link {
-    uri = "${var.wvd_base_url}/scaling.ps1"
+    uri = "${var.wvd_base_url}/PowerShell/scaling.ps1"
   }
 }
 

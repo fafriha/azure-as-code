@@ -156,7 +156,7 @@ resource "azurerm_virtual_machine_extension" "wvd_hostpool_join" {
 
   settings = <<SETTINGS
 {
-    "modulesURL": "${var.wvd_base_url}/Configuration.zip",
+    "modulesURL": "${var.wvd_base_url}/PowerShell/Configuration.zip",
     "configurationFunction": "Configuration.ps1\\RegisterSessionHost",
      "properties": {
         "TenantAdminCredentials":{
@@ -196,7 +196,7 @@ PROTECTED_SETTINGS
 
 #   settings = <<SETTINGS
 # {
-#     "modulesURL": "${var.wvd_base_url}/DSC/Configuration.zip",
+#     "modulesURL": "${var.wvd_base_url}/PowerShell/Configuration.zip",
 #     "configurationFunction": "Configuration.ps1\\AdditionalSessionHosts",
 #      "properties": {
 #         "TenantAdminCredentials":{
@@ -236,7 +236,7 @@ PROTECTED_SETTINGS
 
 #   settings = <<SETTINGS
 # {
-#     "modulesURL": "${var.wvd_base_url}/DSC/Configuration.zip",
+#     "modulesURL": "${var.wvd_base_url}/PowerShell/Configuration.zip",
 #     "configurationFunction": "Configuration.ps1\\AdditionalSessionHosts",
 #      "properties": {
 #         "TenantAdminCredentials":{
@@ -276,7 +276,7 @@ PROTECTED_SETTINGS
 
 #   settings = <<SETTINGS
 # {
-#     "modulesURL": "${var.wvd_base_url}/DSC/Configuration.zip",
+#     "modulesURL": "${var.wvd_base_url}/PowerShell/Configuration.zip",
 #     "configurationFunction": "Configuration.ps1\\AdditionalSessionHosts",
 #      "properties": {
 #         "TenantAdminCredentials":{
