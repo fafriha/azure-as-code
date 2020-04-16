@@ -9,31 +9,20 @@ resource "azurerm_automation_account" "wvd_scaling_tool" {
   sku_name = "Basic"
 }
 
-Invoke-WebRequest -Uri $uri -OutFile ".\createazureautomationaccount.ps1"
-
 resource "null_resource" "wvd_scaling_tool" {
   provisioner "local-exec" {
-    command = "&{Invoke-WebRequest -Uri $Uri -OutFile; & $OutFile -SubscriptionID $SubscriptionId `
-              -ResourceGroupName $ResourceGroupName `
-              -AutomationAccountName $AutomationAccountName `
-              -Location $Location	`
-              -WorkspaceName $WorkspaceName	`
-              -SelfSignedCertPlainPassword $SelfSignedCertPlainPassword `
-              -RunbookName $RunbookName `
-              -WebhookName $WebhookName `
-              -AADTenantId $AADTenantId `
-              -SvcPrincipalApplicationId $SvcPrincipalApplicationId `
-              -SvcPrincipalSecret $SvcPrincipalSecret"}
+    command = "&{Invoke-WebRequest -Uri $Uri -OutFile; & $OutFile -SubscriptionID $SubscriptionId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -Location $Location	-WorkspaceName $WorkspaceName	-SelfSignedCertPlainPassword $SelfSignedCertPlainPassword -RunbookName $RunbookName -WebhookName $WebhookName -AADTenantId $AADTenantId -SvcPrincipalApplicationId $SvcPrincipalApplicationId -SvcPrincipalSecret $SvcPrincipalSecret}"
 
     environment = {
-      OutFile = "C:\Temp\SetAutomationAccount.ps1"
+      OutFile = "C:\\temp\\SetAutomationAccount.ps1"
       Uri = "https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/PowerShell/SetAutomationAccount.ps1"
       SubscriptionId = var.global_subscription_id
       ResourceGroupName = azurerm_resource_group.wvd.name
       AutomationAccountName = azurerm_automation_account.wvd_scaling_tool.name
       Location = azurerm_resource_group.wvd.location
       WorkspaceName = azurerm_log_analytics_workspace.wvd_monitoring.name
-      SelfSignedCertPlainPassword = azurerm_key_vault_secret.automation_run_as_account_cert_pwd.value
+      #SelfSignedCertPlainPassword = azurerm_key_vault_secret.automation_run_as_account_cert_pwd.value
+      SelfSignedCertPlainPassword = "P@ssw0rd1!"
       RunbookName = azurerm_automation_runbook.wvd_scaling_tool.name
       WebhookName = var.wvd_webhook_name
       AADTenantId = var.global_aad_tenant_id

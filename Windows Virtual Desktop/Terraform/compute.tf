@@ -8,8 +8,8 @@ resource "azurerm_windows_virtual_machine" "wvd_hosts" {
   resource_group_name       = azurerm_resource_group.wvd.name
   network_interface_ids     = [azurerm_network_interface.wvd_hosts[count.index].id]
   size                      = var.wvd_vm_size
-  zone                     = "${count.index+1}"
-  #zone                      = 3
+  #zone                     = "${count.index+1}"
+  zone                      = 3
   admin_username            = azurerm_key_vault_secret.wvd_local_admin_account.name
   admin_password            = azurerm_key_vault_secret.wvd_local_admin_account.value
   enable_automatic_updates  = false
