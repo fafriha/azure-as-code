@@ -9,9 +9,11 @@ resource "azurerm_automation_account" "wvd_scaling_tool" {
   sku_name = "Basic"
 }
 
+Invoke-WebRequest -Uri $uri -OutFile ".\createazureautomationaccount.ps1"
+
 resource "null_resource" "wvd_scaling_tool" {
   provisioner "local-exec" {
-    command = "..\PowerShell\SetAutomationAccount.ps1 -SubscriptionID $SubscriptionId `
+    command = "&{Invoke-WebRequest -Uri $Uri -OutFile; & $OutFile -SubscriptionID $SubscriptionId `
               -ResourceGroupName $ResourceGroupName `
               -AutomationAccountName $AutomationAccountName `
               -Location $Location	`
@@ -21,9 +23,11 @@ resource "null_resource" "wvd_scaling_tool" {
               -WebhookName $WebhookName `
               -AADTenantId $AADTenantId `
               -SvcPrincipalApplicationId $SvcPrincipalApplicationId `
-              -SvcPrincipalSecret $SvcPrincipalSecret"
+              -SvcPrincipalSecret $SvcPrincipalSecret"}
 
     environment = {
+      OutFile = "C:\Temp\SetAutomationAccount.ps1"
+      Uri = "https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/PowerShell/SetAutomationAccount.ps1"
       SubscriptionId = var.global_subscription_id
       ResourceGroupName = azurerm_resource_group.wvd.name
       AutomationAccountName = azurerm_automation_account.wvd_scaling_tool.name
