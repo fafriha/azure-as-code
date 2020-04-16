@@ -1,4 +1,4 @@
-################################################### Storage ################################################
+################################################### Windows Virtual Desktop ################################################
 
 ## This storage account will host a file share used to store all users profiles
 resource "azurerm_storage_account" "wvd" {
