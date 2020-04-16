@@ -1,6 +1,8 @@
 ## Getting the currently used service principal configuration
 data "azurerm_client_config" "current" {}
 
+################################################### Hub ################################################
+
 ## Getting the hub resource group
 data "azurerm_resource_group" "hub" {
   name  = var.hub_resource_group_name
@@ -18,11 +20,11 @@ data "azurerm_route_table" "hub" {
   resource_group_name = var.hub_resource_group_name
 }
 
-# data "azurerm_resource_group" "img" {
-#   name  = var.img_resource_group_name
-# }
+################################################### Windows Virtual Desktop ################################################
 
-# data "azurerm_image" "img" {
-#   name                = var.wvd_image_name
-#   resource_group_name = data.azurerm_resource_group.img.name
-# }
+data "azurerm_automation_variable_string" "wvd_scaling_tool" {
+  name                    = var.wvd_automation_variable_name
+  resource_group_name     = var.wvd_resource_group_name
+  automation_account_name = var.wvd_automation_account_name
+  depends_on              = [null_resource.wvd_scaling_tool]
+}

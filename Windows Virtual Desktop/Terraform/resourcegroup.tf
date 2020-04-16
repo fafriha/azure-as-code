@@ -5,10 +5,3 @@ resource "azurerm_resource_group" "wvd" {
   name     = var.wvd_resource_group_name
   location = var.wvd_location
 }
-
-################################################### Hub ################################################
-
-# resource "azurerm_resource_group" "core" {
-#   name     = var.core_resource_group_name
-#   location = var.core_location
-# }

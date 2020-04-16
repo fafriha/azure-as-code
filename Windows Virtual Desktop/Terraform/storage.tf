@@ -11,7 +11,7 @@ resource "azurerm_storage_account" "wvd" {
 
 ## This file share will be used to store all users profiles 
 resource "azurerm_storage_share" "wvd" {
-  name                 = var.wvd_file_share_name
+  name                 = "profiles"
   storage_account_name = azurerm_storage_account.wvd.name
   quota                = 5120
 }
