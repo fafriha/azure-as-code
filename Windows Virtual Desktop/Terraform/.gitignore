@@ -2,4 +2,5 @@ connection.tf
 variables.tf
 *.exe
 *.tfstate
+*.tfstate.backup
 lock.json

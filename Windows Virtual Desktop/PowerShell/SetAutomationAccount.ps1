@@ -1,4 +1,3 @@
-#Requires -RunAsAdministrator
 <#
 .SYNOPSIS
 	This is a sample script for to deploy the required resources to execute scaling script in Microsoft Azure Automation Account.
@@ -80,20 +79,10 @@ param(
 )
 
 # Set the ExecutionPolicy
-Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser -Force -Confirm:$false
-
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser -Force -Confirm:$false
 
 # Setting ErrorActionPreference to stop script execution when error occurs
 $ErrorActionPreference = "Stop"
-
-# Install and import Az and AzureAD modules
-Write-Output "Setting PSRepository and installing Az modules"
-Set-PSRepository PSGallery -InstallationPolicy Trusted
-Install-Module Az -AllowClobber -Confirm:$False -Force
-Import-Module Az.Resources
-Import-Module Az.Accounts
-Import-Module Az.OperationalInsights
-Import-Module Az.Automation
 
 $SvcPrincipalSecuredSecret = $SvcPrincipalSecret | ConvertTo-SecureString -AsPlainText -Force
 $Creds = New-Object System.Management.Automation.PSCredential -ArgumentList ($SvcPrincipalApplicationId, $SvcPrincipalSecuredSecret)
@@ -117,122 +106,6 @@ $RoleAssignment = (Get-AzRoleAssignment -ServicePrincipalName $SvcPrincipalAppli
 
 if ($RoleAssignment.RoleDefinitionName -eq "Owner" -or $RoleAssignment.RoleDefinitionName -eq "Contributor")
 {
-	#Check if the resourcegroup exist
-	$ResourceGroup = Get-AzResourceGroup -Name $ResourceGroupName -Location $Location -ErrorAction SilentlyContinue
-	if ($ResourceGroup -eq $null) {
-		New-AzResourceGroup -Name $ResourceGroupName -Location $Location -Force -Verbose
-		Write-Output "Resource Group was created with name $ResourceGroupName"
-	}
-
-	#Check if the Automation Account exist
-	$AutomationAccount = Get-AzAutomationAccount -ResourceGroupName $ResourceGroupName -Name $AutomationAccountName -ErrorAction SilentlyContinue
-	if ($AutomationAccount -eq $null) {
-		New-AzAutomationAccount -ResourceGroupName $ResourceGroupName -Name $AutomationAccountName -Location $Location -Plan Free -Verbose
-		Write-Output "Automation Account was created with name $AutomationAccountName"
-	}
-
-	$RequiredModules = @(
-		[pscustomobject]@{ ModuleName = 'Az.Accounts'; ModuleVersion = '1.6.4' }
-		[pscustomobject]@{ ModuleName = 'Microsoft.RDInfra.RDPowershell'; ModuleVersion = '1.0.1288.1' }
-		[pscustomobject]@{ ModuleName = 'OMSIngestionAPI'; ModuleVersion = '1.6.0' }
-		[pscustomobject]@{ ModuleName = 'Az.Compute'; ModuleVersion = '3.1.0' }
-		[pscustomobject]@{ ModuleName = 'Az.Resources'; ModuleVersion = '1.8.0' }
-		[pscustomobject]@{ ModuleName = 'Az.Automation'; ModuleVersion = '1.3.4' }
-	)
-
-	#Function to add required modules to Azure Automation account
-	function AddingModules-toAutomationAccount {
-		param(
-			[Parameter(mandatory = $true)]
-			[string]$ResourceGroupName,
-
-			[Parameter(mandatory = $true)]
-			[string]$AutomationAccountName,
-
-			[Parameter(mandatory = $true)]
-			[string]$ModuleName,
-
-			# if not specified latest version will be imported
-			[Parameter(mandatory = $false)]
-			[string]$ModuleVersion
-		)
-
-
-		$Url = "https://www.powershellgallery.com/api/v2/Search()?`$filter=IsLatestVersion&searchTerm=%27$ModuleName $ModuleVersion%27&targetFramework=%27%27&includePrerelease=false&`$skip=0&`$top=40"
-
-		[array]$SearchResult = Invoke-RestMethod -Method Get -Uri $Url
-		if ($SearchResult.Count -ne 1) {
-			$SearchResult = $SearchResult[0]
-		}
-
-		if (!$SearchResult) {
-			Write-Error "Could not find module '$ModuleName' on PowerShell Gallery."
-		}
-		elseif ($SearchResult.Count -and $SearchResult.Length -gt 1) {
-			Write-Error "Module name '$ModuleName' returned multiple results. Please specify an exact module name."
-		}
-		else {
-			$PackageDetails = Invoke-RestMethod -Method Get -Uri $SearchResult.Id
-
-			if (!$ModuleVersion) {
-				$ModuleVersion = $PackageDetails.entry.properties.version
-			}
-
-			$ModuleContentUrl = "https://www.powershellgallery.com/api/v2/package/$ModuleName/$ModuleVersion"
-
-			# Test if the module/version combination exists
-			try {
-				Invoke-RestMethod $ModuleContentUrl -ErrorAction Stop | Out-Null
-				$Stop = $False
-			}
-			catch {
-				Write-Error "Module with name '$ModuleName' of version '$ModuleVersion' does not exist. Are you sure the version specified is correct?"
-				$Stop = $True
-			}
-
-			if (!$Stop) {
-
-				# Find the actual blob storage location of the module
-				do {
-					$ActualUrl = $ModuleContentUrl
-					$ModuleContentUrl = (Invoke-WebRequest -Uri $ModuleContentUrl -MaximumRedirection 0 -UseBasicParsing -ErrorAction Ignore).Headers.Location
-				} while ($ModuleContentUrl -ne $Null)
-
-				New-AzAutomationModule `
- 					-ResourceGroupName $ResourceGroupName `
- 					-AutomationAccountName $AutomationAccountName `
- 					-Name $ModuleName `
- 					-ContentLink $ActualUrl
-			}
-		}
-	}
-
-	#Function to check if the module is imported
-	function Check-IfModuleIsImported {
-		param(
-			[Parameter(mandatory = $true)]
-			[string]$ResourceGroupName,
-
-			[Parameter(mandatory = $true)]
-			[string]$AutomationAccountName,
-
-			[Parameter(mandatory = $true)]
-			[string]$ModuleName
-		)
-
-		$IsModuleImported = $false
-		while (!$IsModuleImported) {
-			$IsModule = Get-AzAutomationModule -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -Name $ModuleName -ErrorAction SilentlyContinue
-			if ($IsModule.ProvisioningState -eq "Succeeded") {
-				$IsModuleImported = $true
-				Write-Output "Successfully imported $ModuleName module into Automation Account modules..."
-			}
-			else {
-				Write-Output "Waiting for import module $ModuleName into Automation Account modules ..."
-			}
-		}
-	}
-
     #Check if the Webhook URI exists in automation variable
     $WebhookURI = Get-AzAutomationVariable -Name "WebhookURI" -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -ErrorAction SilentlyContinue
     if (!$WebhookURI) {
@@ -243,20 +116,6 @@ if ($RoleAssignment.RoleDefinitionName -eq "Owner" -or $RoleAssignment.RoleDefin
         Write-Output "Webhook URI stored in Azure Automation Acccount variables"
         $WebhookURI = Get-AzAutomationVariable -Name "WebhookURI" -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -ErrorAction SilentlyContinue
     }
-
-	Required modules imported from Automation Account Modules gallery for Scale Script execution
-	foreach ($Module in $RequiredModules) {
-		# Check if the required modules are imported 
-		$ImportedModule = Get-AzAutomationModule -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -Name $Module.ModuleName -ErrorAction SilentlyContinue
-		if ($ImportedModule -eq $Null) {
-			AddingModules-toAutomationAccount -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -ModuleName $Module.ModuleName
-			Check-IfModuleIsImported -ModuleName $Module.ModuleName -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName
-		}
-		elseif ($ImportedModule.version -ne $Module.ModuleVersion) {
-			AddingModules-toAutomationAccount -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -ModuleName $Module.ModuleName
-			Check-IfModuleIsImported -ModuleName $Module.ModuleName -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName
-		}
-	}
 
     function CreateSelfSignedCertificate([string] $certificateName, [string] $selfSignedCertPlainPassword,
         [string] $certPath, [string] $certPathCer, [string] $selfSignedCertNoOfMonthsUntilExpired ) {
@@ -277,21 +136,24 @@ if ($RoleAssignment.RoleDefinitionName -eq "Owner" -or $RoleAssignment.RoleDefin
 
         # Requires Application Developer Role, but works with Application administrator or GLOBAL ADMIN
         $Application = New-AzADApplication -DisplayName $connectionassetname -HomePage ("http://" + $connectionassetname) -IdentifierUris ("http://" + $keyId)
-        # Requires Application administrator or GLOBAL ADMIN
+		
+		# Requires Application administrator or GLOBAL ADMIN
         $ApplicationCredential = New-AzADAppCredential -ApplicationId $Application.ApplicationId -CertValue $keyValue -StartDate $PfxCert.NotBefore -EndDate $PfxCert.NotAfter
-        # Requires Application administrator or GLOBAL ADMIN
+		
+		# Requires Application administrator or GLOBAL ADMIN
         $ServicePrincipal = New-AzADServicePrincipal -ApplicationId $Application.ApplicationId
         $GetServicePrincipal = Get-AzADServicePrincipal -ObjectId $ServicePrincipal.Id
 
         # Sleep here for a few seconds to allow the service principal application to become active (ordinarily takes a few seconds)
         Sleep -s 15
-		# Requires User Access Administrator or Owner.
 		
+		# Requires User Access Administrator or Owner.
         $RoleExists = Get-AzRoleAssignment -ServicePrincipalName $Application.ApplicationId -ErrorAction SilentlyContinue
 
         if (!$RoleExists) {
             New-AzRoleAssignment -RoleDefinitionName Contributor -ApplicationId $Application.ApplicationId | Write-Verbose -ErrorAction SilentlyContinue
-        }
+		}
+		
         return $Application.ApplicationId.ToString();
     }
 
@@ -341,42 +203,6 @@ if ($RoleAssignment.RoleDefinitionName -eq "Owner" -or $RoleAssignment.RoleDefin
 
     # Create an Automation connection asset named AzureRunAsConnection in the Automation account. This connection uses the service principal.
     CreateAutomationConnectionAsset $ResourceGroupName $AutomationAccountName $ConnectionAssetName $ConnectionTypeName $ConnectionFieldValues
-
-    if ($CreateClassicRunAsAccount) {
-        # Create a Run As account by using a service principal
-        $ClassicRunAsAccountCertifcateAssetName = "AzureClassicRunAsCertificate"
-        $ClassicRunAsAccountConnectionAssetName = "AzureClassicRunAsConnection"
-        $ClassicRunAsAccountConnectionTypeName = "AzureClassicCertificate "
-        $UploadMessage = "Please upload the .cer format of #CERT# to the Management store by following the steps below." + [Environment]::NewLine +
-        "Log in to the Microsoft Azure portal (https://portal.azure.com) and select Subscriptions -> Management Certificates." + [Environment]::NewLine +
-        "Then click Upload and upload the .cer format of #CERT#"
-
-        if ($EnterpriseCertPathForClassicRunAsAccount -and $EnterpriseCertPlainPasswordForClassicRunAsAccount ) {
-            $PfxCertPathForClassicRunAsAccount = $EnterpriseCertPathForClassicRunAsAccount
-            $PfxCertPlainPasswordForClassicRunAsAccount = $EnterpriseCertPlainPasswordForClassicRunAsAccount
-            $UploadMessage = $UploadMessage.Replace("#CERT#", $PfxCertPathForClassicRunAsAccount)
-        }
-        else {
-            $ClassicRunAsAccountCertificateName = $AutomationAccountName + $ClassicRunAsAccountCertifcateAssetName
-            $PfxCertPathForClassicRunAsAccount = Join-Path $env:TEMP ($ClassicRunAsAccountCertificateName + ".pfx")
-            $PfxCertPlainPasswordForClassicRunAsAccount = $SelfSignedCertPlainPassword
-            $CerCertPathForClassicRunAsAccount = Join-Path $env:TEMP ($ClassicRunAsAccountCertificateName + ".cer")
-            $UploadMessage = $UploadMessage.Replace("#CERT#", $CerCertPathForClassicRunAsAccount)
-            CreateSelfSignedCertificate $ClassicRunAsAccountCertificateName $PfxCertPlainPasswordForClassicRunAsAccount $PfxCertPathForClassicRunAsAccount $CerCertPathForClassicRunAsAccount $SelfSignedCertNoOfMonthsUntilExpired
-        }
-
-        # Create the Automation certificate asset
-        CreateAutomationCertificateAsset $ResourceGroupName $AutomationAccountName $ClassicRunAsAccountCertifcateAssetName $PfxCertPathForClassicRunAsAccount $PfxCertPlainPasswordForClassicRunAsAccount $false
-
-        # Populate the ConnectionFieldValues
-        $SubscriptionName = $subscription.Subscription.Name
-        $ClassicRunAsAccountConnectionFieldValues = @{"SubscriptionName" = $SubscriptionName; "SubscriptionId" = $SubscriptionId; "CertificateAssetName" = $ClassicRunAsAccountCertifcateAssetName}
-
-        # Create an Automation connection asset named AzureRunAsConnection in the Automation account. This connection uses the service principal.
-        CreateAutomationConnectionAsset $ResourceGroupName $AutomationAccountName $ClassicRunAsAccountConnectionAssetName $ClassicRunAsAccountConnectionTypeName   $ClassicRunAsAccountConnectionFieldValues
-
-        Write-Host -ForegroundColor red       $UploadMessage
-	}
 	
 	if ($WorkspaceName) 
 	{
@@ -406,8 +232,6 @@ if ($RoleAssignment.RoleDefinitionName -eq "Owner" -or $RoleAssignment.RoleDefin
 			$authorization = 'SharedKey {0}:{1}' -f $customerId,$encodedHash
 			return $authorization
 		}
-
-		
 
 		# Create the function to create and post the request
 		function Post-LogAnalyticsData ($customerId,$sharedKey,$body,$logType)
@@ -446,7 +270,6 @@ if ($RoleAssignment.RoleDefinitionName -eq "Owner" -or $RoleAssignment.RoleDefin
 		$TimeStampField = Get-Date
 		$TimeStampField = $TimeStampField.GetDateTimeFormats(115)
 
-
 		# Submit the data to the API endpoint
 
 		#Custom WVDTenantScale Table
@@ -460,7 +283,6 @@ if ($RoleAssignment.RoleDefinitionName -eq "Owner" -or $RoleAssignment.RoleDefin
 "@
 
 		Post-LogAnalyticsData -customerId $LogAnalyticsWorkspaceId -sharedKey $LogAnalyticsPrimaryKey -Body ([System.Text.Encoding]::UTF8.GetBytes($CustomLogWVDTenantScale)) -logType $TenantScaleLogType
-
 
 		Write-Output "Log Analytics workspace id:$LogAnalyticsWorkspaceId"
 		Write-Output "Log Analytics workspace primarykey:$LogAnalyticsPrimaryKey"
