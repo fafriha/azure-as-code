@@ -9,6 +9,21 @@ resource "azurerm_automation_account" "wvd_scaling_tool" {
   sku_name = "Basic"
 }
 
+## This runbook will scale session hosts automatically
+resource "azurerm_automation_runbook" "wvd_scaling_tool" {
+  name                    = var.wvd_runbook_name
+  location                = azurerm_resource_group.wvd.location
+  resource_group_name     = azurerm_resource_group.wvd.name
+  automation_account_name = azurerm_automation_account.wvd_scaling_tool.name
+  log_verbose             = "true"
+  log_progress            = "true"
+  runbook_type            = "PowerShell"
+
+  publish_content_link {
+    uri = "https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/PowerShell/ScaleSessionHosts.ps1"
+  }
+}
+
 resource "null_resource" "wvd_scaling_tool" {
   provisioner "local-exec" {
     command = "&{Invoke-WebRequest -Uri $Uri -OutFile; & $OutFile -SubscriptionID $SubscriptionId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -Location $Location	-WorkspaceName $WorkspaceName	-SelfSignedCertPlainPassword $SelfSignedCertPlainPassword -RunbookName $RunbookName -WebhookName $WebhookName -AADTenantId $AADTenantId -SvcPrincipalApplicationId $SvcPrincipalApplicationId -SvcPrincipalSecret $SvcPrincipalSecret}"
@@ -34,21 +49,6 @@ resource "null_resource" "wvd_scaling_tool" {
   }
 }
 
-## This runbook will scale session hosts automatically
-resource "azurerm_automation_runbook" "wvd_scaling_tool" {
-  name                    = var.wvd_runbook_name
-  location                = azurerm_resource_group.wvd.location
-  resource_group_name     = azurerm_resource_group.wvd.name
-  automation_account_name = azurerm_automation_account.wvd_scaling_tool.name
-  log_verbose             = "true"
-  log_progress            = "true"
-  runbook_type            = "PowerShell"
-
-  publish_content_link {
-    uri = "https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/PowerShell/ScaleSessionHosts.ps1"
-  }
-}
-
 ## This logic app will trigger the runbook created above
 resource "azurerm_logic_app_workflow" "wvd_scaling_tool" {
   name                  = var.wvd_logic_app_workflow_name
@@ -59,7 +59,7 @@ resource "azurerm_logic_app_workflow" "wvd_scaling_tool" {
 ## This trigger will start the custom action to run the runbook created above
 resource "azurerm_logic_app_trigger_recurrence" "wvd_scaling_tool" {
   name         = "Reccurence"
-  logic_app_id = azurerm_logic_app_workflow.wvd.id
+  logic_app_id = azurerm_logic_app_workflow.wvd_scaling_tool.id
   frequency    = "Minute"
   interval     = var.wvd_logic_app_trigger_recurrence
 }
@@ -68,6 +68,7 @@ resource "azurerm_logic_app_trigger_recurrence" "wvd_scaling_tool" {
 resource "azurerm_logic_app_action_custom" "wvd_scaling_tool" {
   name         = "HTTP Webhook"
   logic_app_id = azurerm_logic_app_workflow.wvd_scaling_tool.id
+  depends_on   = [null_resource.wvd_scaling_tool]
 
   body = <<BODY
 {

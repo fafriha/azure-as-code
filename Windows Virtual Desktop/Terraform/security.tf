@@ -30,7 +30,7 @@ resource "azurerm_key_vault" "wvd" {
   name                            = var.wvd_key_vault_name
   location                        = azurerm_resource_group.wvd.location
   resource_group_name             = azurerm_resource_group.wvd.name
-  tenant_id                       = var.global_aad_tenant_id
+  tenant_id                       = data.azurerm_client_config.current.tenant_id
   enabled_for_deployment          = true
   enabled_for_disk_encryption     = true
   enabled_for_template_deployment = true
@@ -54,29 +54,29 @@ resource "azurerm_key_vault" "wvd" {
 
 ## The terraform service principal will be secured as a key vault secret
 resource "azurerm_key_vault_secret" "global_terraform_app" {
-  name         = var.global_terraform_app_client_id
-  value        = var.global_terraform_app_client_secret
+  name         = var.global_terraform_app_id
+  value        = var.global_terraform_app_secret
   key_vault_id = azurerm_key_vault.wvd.id
 }
 
 ## The Windows Virtual Desktop tenant service principal will be secured as a key vault secret
 resource "azurerm_key_vault_secret" "wvd_tenant_app" {
-  name         = var.wvd_tenant_app_client_id
-  value        = var.wvd_tenant_app_client_secret
+  name         = var.wvd_tenant_app_id
+  value        = var.wvd_tenant_app_secret
   key_vault_id = azurerm_key_vault.wvd.id
 }
 
 ## The sessions hosts local administrator account will be secured as a key vault secret
 resource "azurerm_key_vault_secret" "wvd_local_admin_account" {
-  name         = var.wvd_local_admin_name
-  value        = var.wvd_local_admin_value
+  name         = var.wvd_local_admin_username
+  value        = var.wvd_local_admin_password
   key_vault_id = azurerm_key_vault.wvd.id
 }
 
 ## The domain join service account will be secured as a key vault secret
 resource "azurerm_key_vault_secret" "wvd_domain_join_account" {
-  name         = var.wvd_domain_join_name
-  value        = var.wvd_domain_join_value
+  name         = var.wvd_domain_join_username
+  value        = var.wvd_domain_join_password
   key_vault_id = azurerm_key_vault.wvd.id
 }
 

@@ -112,7 +112,7 @@ resource "azurerm_virtual_machine_extension" "wvd_join_hostpool" {
         "TenantName":"${var.wvd_tenant_name}",
         "HostPoolName":"${var.wvd_host_pool_name}",
         "Hours":"${var.wvd_registration_expiration_hours}",
-        "isServicePrincipal":"${var.wvd_is_service_principal}",
+        "isServicePrincipal":"true",
         "AadTenantId":"${var.global_aad_tenant_id}"
   }
 }

@@ -244,19 +244,19 @@ if ($RoleAssignment.RoleDefinitionName -eq "Owner" -or $RoleAssignment.RoleDefin
         $WebhookURI = Get-AzAutomationVariable -Name "WebhookURI" -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -ErrorAction SilentlyContinue
     }
 
-	# Required modules imported from Automation Account Modules gallery for Scale Script execution
-	# foreach ($Module in $RequiredModules) {
-	# 	# Check if the required modules are imported 
-	# 	$ImportedModule = Get-AzAutomationModule -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -Name $Module.ModuleName -ErrorAction SilentlyContinue
-	# 	if ($ImportedModule -eq $Null) {
-	# 		AddingModules-toAutomationAccount -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -ModuleName $Module.ModuleName
-	# 		Check-IfModuleIsImported -ModuleName $Module.ModuleName -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName
-	# 	}
-	# 	elseif ($ImportedModule.version -ne $Module.ModuleVersion) {
-	# 		AddingModules-toAutomationAccount -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -ModuleName $Module.ModuleName
-	# 		Check-IfModuleIsImported -ModuleName $Module.ModuleName -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName
-	# 	}
-	# }
+	Required modules imported from Automation Account Modules gallery for Scale Script execution
+	foreach ($Module in $RequiredModules) {
+		# Check if the required modules are imported 
+		$ImportedModule = Get-AzAutomationModule -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -Name $Module.ModuleName -ErrorAction SilentlyContinue
+		if ($ImportedModule -eq $Null) {
+			AddingModules-toAutomationAccount -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -ModuleName $Module.ModuleName
+			Check-IfModuleIsImported -ModuleName $Module.ModuleName -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName
+		}
+		elseif ($ImportedModule.version -ne $Module.ModuleVersion) {
+			AddingModules-toAutomationAccount -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -ModuleName $Module.ModuleName
+			Check-IfModuleIsImported -ModuleName $Module.ModuleName -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName
+		}
+	}
 
     function CreateSelfSignedCertificate([string] $certificateName, [string] $selfSignedCertPlainPassword,
         [string] $certPath, [string] $certPathCer, [string] $selfSignedCertNoOfMonthsUntilExpired ) {
@@ -378,7 +378,8 @@ if ($RoleAssignment.RoleDefinitionName -eq "Owner" -or $RoleAssignment.RoleDefin
         Write-Host -ForegroundColor red       $UploadMessage
 	}
 	
-	if ($WorkspaceName) {
+	if ($WorkspaceName) 
+	{
 		#Check if the log analytics workspace exists
 		$LAWorkspace = Get-AzOperationalInsightsWorkspace | Where-Object { $_.Name -eq $WorkspaceName }
 		if (!$LAWorkspace) {
@@ -465,7 +466,9 @@ if ($RoleAssignment.RoleDefinitionName -eq "Owner" -or $RoleAssignment.RoleDefin
 		Write-Output "Log Analytics workspace primarykey:$LogAnalyticsPrimaryKey"
 		Write-Output "Automation Account Name:$AutomationAccountName"
 		Write-Output "Webhook URI: $($WebhookURI.value)"
-	} else {
+	} 
+	else 
+	{
 		Write-Output "Automation Account Name:$AutomationAccountName"
 		Write-Output "Webhook URI: $($WebhookURI.value)"
 	}

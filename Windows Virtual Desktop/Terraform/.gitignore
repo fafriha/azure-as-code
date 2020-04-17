@@ -1,2 +1,5 @@
 connection.tf
 variables.tf
+*.exe
+*.tfstate
+lock.json
