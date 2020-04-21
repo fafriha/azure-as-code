@@ -226,8 +226,9 @@ function Load-Module ($ModuleName) {
 # Connect to Azure
 Connect-AzAccount -ServicePrincipal -Credential $Creds -Tenant $AADTenantId 
 
+$Context = Get-AzContext
 # Get the azure context
-if ($null -eq (Get-AzContext))
+if ($null -eq $Context)
 {
 	Write-Error "Please authenticate to Azure using Connect-AzAccount cmdlet and then run this script"
 	EXIT 1
