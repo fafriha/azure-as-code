@@ -285,25 +285,23 @@ if (($RoleAssignment.RoleDefinitionName -eq "Owner") -or ($RoleAssignment.RoleDe
 	#Check if the Runbook exists in the automation account
     $Runbook = Get-AzAutomationRunbook -Name "ScaleSessionHosts" -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -ErrorAction SilentlyContinue
 	
-	if ($Runbook) 
+	if (!$Runbook) 
 	{
-        #Check if the Webhook URI exists in automation variable
-		$WebhookURI = Get-AzAutomationVariable -Name "WebhookURI" -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -ErrorAction SilentlyContinue
-		
-		if (!$WebhookURI) 
-		{
-			$Webhook = New-AzAutomationWebhook -Name "WebhookURI" -RunbookName $runbookName -IsEnabled $True -ExpiryTime (Get-Date).AddYears(5) -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -Force
-			Write-Output "Automation Account Webhook is created with name '$WebhookName'"
-
-			$URIofWebhook = $Webhook.WebhookURI | Out-String
-			New-AzAutomationVariable -Name "WebhookURI" -Encrypted $false -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -Value $URIofWebhook
-			Write-Output "Webhook URI stored in Azure Automation Acccount variables"
-		}
+		$Runbook = Import-AzAutomationRunbook -Path C:\Temp\ScaleSessionHosts.ps1 -ResourceGroup $ResourceGroupName -AutomationAccountName $AutomationAccountName -Type PowerShell -Published
+		Write-Output "The runbook is created with name ScaleSessionHosts"
 	}
-	else
+
+	#Check if the Webhook URI exists in automation variable
+	$WebhookURI = Get-AzAutomationVariable -Name "WebhookURI" -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -ErrorAction SilentlyContinue
+		
+	if (!$WebhookURI) 
 	{
-		Write-Error "Provided runbook doesn't exist in your subscription."
-		EXIT 1
+		$Webhook = New-AzAutomationWebhook -Name "WebhookURI" -RunbookName "ScaleSessionHosts" -IsEnabled $True -ExpiryTime (Get-Date).AddYears(5) -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -Force
+		Write-Output "Automation Account Webhook is created with name '$WebhookName'"
+
+		$URIofWebhook = $Webhook.WebhookURI | Out-String
+		New-AzAutomationVariable -Name "WebhookURI" -Encrypted $false -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -Value $URIofWebhook
+		Write-Output "Webhook URI stored in Azure Automation Acccount variables"
 	}
 
 	###### End of webhook and automation variable creation ######

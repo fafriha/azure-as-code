@@ -73,27 +73,28 @@ resource "azurerm_automation_module" "wvd_automation_module" {
   }
 }
 
-## This runbook will scale session hosts automatically
-resource "azurerm_automation_runbook" "wvd_scaling_tool" {
-  name                    = "ScaleSessionHosts"
-  location                = azurerm_resource_group.wvd.location
-  resource_group_name     = azurerm_resource_group.wvd.name
-  automation_account_name = azurerm_automation_account.wvd_scaling_tool.name
-  log_verbose             = "true"
-  log_progress            = "true"
-  runbook_type            = "PowerShell"
-  description             = "Part of the scaling tool for Windows Virtual Desktop session hosts."
+# ## This runbook will scale session hosts automatically
+# resource "azurerm_automation_runbook" "wvd_scaling_tool" {
+#   name                    = "ScaleSessionHosts"
+#   location                = azurerm_resource_group.wvd.location
+#   resource_group_name     = azurerm_resource_group.wvd.name
+#   automation_account_name = azurerm_automation_account.wvd_scaling_tool.name
+#   log_verbose             = "true"
+#   log_progress            = "true"
+#   runbook_type            = "PowerShell"
+#   description             = "Part of the scaling tool for Windows Virtual Desktop session hosts."
 
-  publish_content_link {
-    uri = "https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/PowerShell/ScaleSessionHosts.ps1"
-  }
-}
+#   publish_content_link {
+#     uri = "https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/PowerShell/ScaleSessionHosts.ps1"
+#   }
+# }
 
 resource "null_resource" "wvd_scaling_tool" {
   provisioner "local-exec" {
     command = <<EOT
-      Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/PowerShell/SetAutomationAccount.ps1' -OutFile 'C:\\temp\\SetAutomationAccount.ps1';
-      & 'C:\\temp\\SetAutomationAccount.ps1' -SubscriptionId ${var.global_subscription_id} -ResourceGroupName ${azurerm_resource_group.wvd.name} -AutomationAccountName ${azurerm_automation_account.wvd_scaling_tool.name} -Location ${azurerm_resource_group.wvd.location} -WorkspaceName ${azurerm_log_analytics_workspace.wvd_monitoring.name} -SelfSignedCertPlainPassword "P@ssw0rd1!" -RunbookName "ScaleSessionHosts" -WebhookName ${var.wvd_webhook_name} -AADTenantId ${var.global_aad_tenant_id} -SvcPrincipalApplicationId ${azurerm_key_vault_secret.global_terraform_app.name} -SvcPrincipalSecret ${azurerm_key_vault_secret.global_terraform_app.value}
+      Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/PowerShell/SetAutomationAccount.ps1' -OutFile 'C:\\Temp\\SetAutomationAccount.ps1';
+      Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/PowerShell/ScaleSessionHosts.ps1' -OutFile 'C:\\Temp\\ScaleSessionHosts.ps1';
+      & 'C:\\temp\\SetAutomationAccount.ps1' -SubscriptionId ${var.global_subscription_id} -ResourceGroupName ${azurerm_resource_group.wvd.name} -AutomationAccountName ${azurerm_automation_account.wvd_scaling_tool.name} -Location ${azurerm_resource_group.wvd.location} -WorkspaceName ${azurerm_log_analytics_workspace.wvd_monitoring.name} -SelfSignedCertPlainPassword "P@ssw0rd1!" -AADTenantId ${var.global_aad_tenant_id} -SvcPrincipalApplicationId ${azurerm_key_vault_secret.global_terraform_app.name} -SvcPrincipalSecret ${azurerm_key_vault_secret.global_terraform_app.value}
 
     EOT
 
@@ -106,7 +107,7 @@ resource "azurerm_logic_app_workflow" "wvd_scaling_tool" {
   name                  = var.wvd_logic_app_workflow_name
   location              = azurerm_resource_group.wvd.location
   resource_group_name   = azurerm_resource_group.wvd.name
-  depends_on   = [null_resource.wvd_scaling_tool]
+  depends_on            = [null_resource.wvd_scaling_tool]
 }
 
 ## This trigger will start the custom action to run the runbook created above
