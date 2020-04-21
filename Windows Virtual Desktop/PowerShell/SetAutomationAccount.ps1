@@ -71,13 +71,18 @@ param(
 
 ####################### Settings #######################
 
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser -Force -Confirm:$false
-Import-Module Az.Resources
-Import-Module Az.Accounts
-Import-Module Az.OperationalInsights
-Import-Module Az.Automation
-Enable-AzureRmAlias
 $ErrorActionPreference = "Stop"
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser -Force -Confirm:$false
+
+$RequiredModules = "Az.Accounts", "Az.Resources", "Az.OperatinalInsights", "Az.Automation"
+
+foreach ($Module in $RequiredModules)
+{
+	Load-Module $Module
+}
+
+Enable-AzureRmAlias
+
 $SvcPrincipalSecuredSecret = $SvcPrincipalSecret | ConvertTo-SecureString -AsPlainText -Force
 $Creds = New-Object System.Management.Automation.PSCredential -ArgumentList ($SvcPrincipalApplicationId, $SvcPrincipalSecuredSecret)
 
@@ -186,6 +191,35 @@ function CreateAutomationConnectionAsset ([string] $resourceGroupName, [string] 
 	New-AzAutomationConnection -ResourceGroupName $ResourceGroupName -AutomationAccountName $automationAccountName -Name $connectionAssetName -ConnectionTypeName $connectionTypeName -ConnectionFieldValues $connectionFieldValues
 }
 
+function Load-Module ($ModuleName) {
+
+    # If module is imported say that and do nothing
+    if (Get-Module | Where-Object {$_.Name -eq $ModuleName}) {
+        write-host "Module $ModuleName is already imported."
+    }
+    else {
+
+        # If module is not imported, but available on disk then import
+        if (Get-Module -ListAvailable | Where-Object {$_.Name -eq $ModuleName}) {
+            Import-Module $ModuleName -Verbose
+        }
+        else {
+
+            # If module is not imported, not available on disk, but is in online gallery then install and import
+            if (Find-Module -Name $ModuleName | Where-Object {$_.Name -eq $ModuleName}) {
+                Install-Module -Name $ModuleName -Force -Verbose -Scope CurrentUser
+                Import-Module $ModuleName -Verbose
+            }
+            else {
+
+                # If module is not imported, not available and not in online gallery then abort
+                write-host "Module $ModuleName not imported, not available and not in online gallery, exiting."
+                EXIT 1
+            }
+        }
+    }
+}
+
 ####################### End of functions #######################
 
 ####################### Main #######################
@@ -196,7 +230,7 @@ Connect-AzAccount -ServicePrincipal -Credential $Creds -Tenant $AADTenantId
 if ($null -eq (Get-AzContext))
 {
 	Write-Error "Please authenticate to Azure using Connect-AzAccount cmdlet and then run this script"
-	exit
+	EXIT 1
 }
 
 # Select the subscription
@@ -268,7 +302,7 @@ if (($RoleAssignment.RoleDefinitionName -eq "Owner") -or ($RoleAssignment.RoleDe
 	else
 	{
 		Write-Error "Provided runbook doesn't exist in your subscription."
-		exit
+		EXIT 1
 	}
 
 	###### End of webhook and automation variable creation ######
@@ -283,7 +317,7 @@ if (($RoleAssignment.RoleDefinitionName -eq "Owner") -or ($RoleAssignment.RoleDe
 		if (!$LAWorkspace) 
 		{
 			Write-Error "Provided log analytics workspace doesn't exist in your Subscription."
-			exit
+			EXIT 1
 		}
 
 		$WorkSpace = Get-AzOperationalInsightsWorkspaceSharedKeys -ResourceGroupName $LAWorkspace.ResourceGroupName -Name $WorkspaceName -WarningAction Ignore
@@ -328,6 +362,7 @@ if (($RoleAssignment.RoleDefinitionName -eq "Owner") -or ($RoleAssignment.RoleDe
 else
 {
 	Write-Output "Authenticated user should have the Owner/Contributor permissions"
+	EXIT 1
 }
 
 ####################### End of main #######################

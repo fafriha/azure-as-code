@@ -106,6 +106,7 @@ resource "azurerm_logic_app_workflow" "wvd_scaling_tool" {
   name                  = var.wvd_logic_app_workflow_name
   location              = azurerm_resource_group.wvd.location
   resource_group_name   = azurerm_resource_group.wvd.name
+  depends_on   = [null_resource.wvd_scaling_tool]
 }
 
 ## This trigger will start the custom action to run the runbook created above
@@ -114,6 +115,7 @@ resource "azurerm_logic_app_trigger_recurrence" "wvd_scaling_tool" {
   logic_app_id = azurerm_logic_app_workflow.wvd_scaling_tool.id
   frequency    = "Minute"
   interval     = var.wvd_logic_app_trigger_recurrence
+  depends_on   = [null_resource.wvd_scaling_tool]
 }
 
 ## This action will call a webhook to run the runbook created above
