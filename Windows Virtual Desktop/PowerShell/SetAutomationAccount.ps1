@@ -72,7 +72,7 @@ param(
 ####################### Settings #######################
 
 $ErrorActionPreference = "Stop"
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser -Force -Confirm:$false
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser -Force -Confirm:$false
 
 $SvcPrincipalSecuredSecret = $SvcPrincipalSecret | ConvertTo-SecureString -AsPlainText -Force
 $Creds = New-Object System.Management.Automation.PSCredential -ArgumentList ($SvcPrincipalApplicationId, $SvcPrincipalSecuredSecret)
@@ -182,27 +182,30 @@ function CreateAutomationConnectionAsset ([string] $resourceGroupName, [string] 
 	New-AzAutomationConnection -ResourceGroupName $ResourceGroupName -AutomationAccountName $automationAccountName -Name $connectionAssetName -ConnectionTypeName $connectionTypeName -ConnectionFieldValues $connectionFieldValues
 }
 
-function Load-Module ($ModuleName) {
-
+function Load-Module ($ModuleName) 
+{
     # If module is imported say that and do nothing
-    if (Get-Module | Where-Object {$_.Name -eq $ModuleName}) {
+	if (Get-Module | Where-Object {$_.Name -eq $ModuleName}) 
+	{
         write-host "Module $ModuleName is already imported."
     }
-    else {
-
+	else 
+	{
         # If module is not imported, but available on disk then import
-        if (Get-Module -ListAvailable | Where-Object {$_.Name -eq $ModuleName}) {
+		if (Get-Module -ListAvailable | Where-Object {$_.Name -eq $ModuleName}) 
+		{
             Import-Module $ModuleName -Verbose
         }
-        else {
-
+		else
+		{
             # If module is not imported, not available on disk, but is in online gallery then install and import
-            if (Find-Module -Name $ModuleName | Where-Object {$_.Name -eq $ModuleName}) {
+			if (Find-Module -Name $ModuleName | Where-Object {$_.Name -eq $ModuleName}) 
+			{
                 Install-Module -Name $ModuleName -Force -Verbose -Scope CurrentUser
                 Import-Module $ModuleName -Verbose
             }
-            else {
-
+			else 
+			{
                 # If module is not imported, not available and not in online gallery then abort
                 write-host "Module $ModuleName not imported, not available and not in online gallery, exiting."
                 EXIT 1
