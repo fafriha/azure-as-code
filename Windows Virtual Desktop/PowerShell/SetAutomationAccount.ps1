@@ -74,15 +74,6 @@ param(
 $ErrorActionPreference = "Stop"
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser -Force -Confirm:$false
 
-$RequiredModules = "Az.Accounts", "Az.Resources", "Az.OperatinalInsights", "Az.Automation"
-
-foreach ($Module in $RequiredModules)
-{
-	Load-Module $Module
-}
-
-Enable-AzureRmAlias
-
 $SvcPrincipalSecuredSecret = $SvcPrincipalSecret | ConvertTo-SecureString -AsPlainText -Force
 $Creds = New-Object System.Management.Automation.PSCredential -ArgumentList ($SvcPrincipalApplicationId, $SvcPrincipalSecuredSecret)
 
@@ -223,6 +214,16 @@ function Load-Module ($ModuleName) {
 ####################### End of functions #######################
 
 ####################### Main #######################
+#Import modules
+$RequiredModules = "Az.Accounts", "Az.Resources", "Az.OperatinalInsights", "Az.Automation"
+
+foreach ($Module in $RequiredModules)
+{
+	Load-Module $Module
+}
+
+Enable-AzureRmAlias
+
 # Connect to Azure
 Connect-AzAccount -ServicePrincipal -Credential $Creds -Tenant $AADTenantId 
 
