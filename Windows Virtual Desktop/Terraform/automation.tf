@@ -94,7 +94,7 @@ resource "null_resource" "wvd_scaling_tool" {
     command = <<EOT
       Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/PowerShell/SetAutomationAccount.ps1' -OutFile 'C:\\Temp\\SetAutomationAccount.ps1';
       Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/PowerShell/ScaleSessionHosts.ps1' -OutFile 'C:\\Temp\\ScaleSessionHosts.ps1';
-      & 'C:\\temp\\SetAutomationAccount.ps1' -SubscriptionId ${var.global_subscription_id} -ResourceGroupName ${azurerm_resource_group.wvd.name} -AutomationAccountName ${azurerm_automation_account.wvd_scaling_tool.name} -Location ${azurerm_resource_group.wvd.location} -WorkspaceName ${azurerm_log_analytics_workspace.wvd_monitoring.name} -SelfSignedCertPlainPassword "P@ssw0rd1!" -AADTenantId ${var.global_aad_tenant_id} -SvcPrincipalApplicationId ${azurerm_key_vault_secret.global_terraform_app.name} -SvcPrincipalSecret ${azurerm_key_vault_secret.global_terraform_app.value}
+      & 'C:\\Temp\\SetAutomationAccount.ps1' -SubscriptionId ${var.global_subscription_id} -ResourceGroupName ${azurerm_resource_group.wvd.name} -AutomationAccountName ${azurerm_automation_account.wvd_scaling_tool.name} -Location ${azurerm_resource_group.wvd.location} -WorkspaceName ${azurerm_log_analytics_workspace.wvd_monitoring.name} -SelfSignedCertPlainPassword "P@ssw0rd1!" -AADTenantId ${var.global_aad_tenant_id} -SvcPrincipalApplicationId ${azurerm_key_vault_secret.global_terraform_app.name} -SvcPrincipalSecret ${azurerm_key_vault_secret.global_terraform_app.value}
 
     EOT
 
