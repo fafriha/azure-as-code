@@ -73,21 +73,21 @@ resource "azurerm_automation_module" "wvd_automation_module" {
   }
 }
 
-# ## This runbook will scale session hosts automatically
-# resource "azurerm_automation_runbook" "wvd_scaling_tool" {
-#   name                    = "ScaleSessionHosts"
-#   location                = azurerm_resource_group.wvd.location
-#   resource_group_name     = azurerm_resource_group.wvd.name
-#   automation_account_name = azurerm_automation_account.wvd_scaling_tool.name
-#   log_verbose             = "true"
-#   log_progress            = "true"
-#   runbook_type            = "PowerShell"
-#   description             = "Part of the scaling tool for Windows Virtual Desktop session hosts."
+## This runbook will scale session hosts automatically
+resource "azurerm_automation_runbook" "wvd_scaling_tool" {
+  name                    = "ScaleSessionHosts"
+  location                = azurerm_resource_group.wvd.location
+  resource_group_name     = azurerm_resource_group.wvd.name
+  automation_account_name = azurerm_automation_account.wvd_scaling_tool.name
+  log_verbose             = "true"
+  log_progress            = "true"
+  runbook_type            = "PowerShell"
+  description             = "Part of the scaling tool for Windows Virtual Desktop session hosts."
 
-#   publish_content_link {
-#     uri = "https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/PowerShell/ScaleSessionHosts.ps1"
-#   }
-# }
+  publish_content_link {
+    uri = "https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/PowerShell/ScaleSessionHosts.ps1"
+  }
+}
 
 resource "null_resource" "wvd_scaling_tool" {
   provisioner "local-exec" {
