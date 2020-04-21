@@ -72,12 +72,12 @@ resource "azurerm_public_ip" "wvd_bastion" {
 ## Each session host will have a single network interface
 resource "azurerm_network_interface" "wvd_hosts" {
   count                     = var.wvd_rdsh_count
-  name                      = "nic-azprd-frc-${var.wvd_vm_prefix}0${count.index+1}-0${count.index+1}"
+  name                      = "nic-azprd-frc-${var.wvd_vm_prefix}0${count.index+1}-01"
   location                  = azurerm_resource_group.wvd.location
   resource_group_name       = azurerm_resource_group.wvd.name
 
   ip_configuration {
-    name                          = "ipc-azprd-frc-${var.wvd_vm_prefix}0${count.index+1}-0${count.index+1}"
+    name                          = "ipc-azprd-frc-${var.wvd_vm_prefix}0${count.index+1}-01"
     subnet_id                     = azurerm_subnet.wvd_clients.id
     private_ip_address_allocation = "dynamic"
   }
