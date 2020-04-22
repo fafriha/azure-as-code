@@ -34,7 +34,7 @@ resource "azurerm_key_vault" "wvd" {
   enabled_for_deployment          = true
   enabled_for_disk_encryption     = true
   enabled_for_template_deployment = true
-  soft_delete_enabled             = true
+  soft_delete_enabled             = false
   purge_protection_enabled        = false
 
   sku_name = "standard"

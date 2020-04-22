@@ -194,20 +194,20 @@ function Load-Module ($ModuleName)
         # If module is not imported, but available on disk then import
 		if (Get-Module -ListAvailable | Where-Object {$_.Name -eq $ModuleName}) 
 		{
-            Import-Module $ModuleName -Verbose
+            Import-Module $ModuleName
         }
 		else
 		{
             # If module is not imported, not available on disk, but is in online gallery then install and import
 			if (Find-Module -Name $ModuleName | Where-Object {$_.Name -eq $ModuleName}) 
 			{
-                Install-Module -Name $ModuleName -Force -Verbose -Scope CurrentUser
-                Import-Module $ModuleName -Verbose
+                Install-Module -Name $ModuleName -Force -Scope CurrentUser
+                Import-Module $ModuleName
             }
 			else 
 			{
                 # If module is not imported, not available and not in online gallery then abort
-                write-host "Module $ModuleName not imported, not available and not in online gallery, exiting."
+                Write-Host "Module $ModuleName not imported, not available and not in online gallery, exiting."
                 EXIT 1
             }
         }
@@ -218,7 +218,7 @@ function Load-Module ($ModuleName)
 
 ####################### Main #######################
 #Import modules
-$RequiredModules = "Az.Accounts", "Az.Resources", "Az.OperatinalInsights", "Az.Automation"
+$RequiredModules = "Az.Accounts", "Az.Resources", "Az.OperationalInsights", "Az.Automation"
 
 foreach ($Module in $RequiredModules)
 {
