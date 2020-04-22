@@ -142,9 +142,9 @@ resource "azurerm_virtual_machine_extension" "wvd_fslogix" {
 {
     "modulesURL": "https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/PowerShell/Configuration.zip",
     "configurationFunction": "Configuration.ps1\\OffloadUserProfiles",
-     "properties": 
-        "FSLogixAgentPath":"C:\\DeployAgent\\FSLogixAgentInstall\\FSLogixAppsSetup.exe"
-        "UserProfileTargetPath":"${azurerm_storage_share.wvd.url}"
+     "properties": {
+        "FSLogixAgentPath": "C:\\DeployAgent\\FSLogixAgentInstall\\FSLogixAppsSetup.exe",
+        "UserProfileTargetPath": "${azurerm_storage_share.wvd.url}"
   }
 }
 SETTINGS
