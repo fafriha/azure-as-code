@@ -12,3 +12,9 @@ Windows Virtual Desktop/PowerShell/Configuration/Script-TestHostPoolExists.ps1
 Windows Virtual Desktop/PowerShell/Configuration_old.zip
 Windows Virtual Desktop/PowerShell/DeployAgent.zip
 Windows Virtual Desktop/PowerShell/Configuration_ko.zip
+Windows Virtual Desktop/PowerShell/Configuration/AddDefaultUsers.ps1
+Windows Virtual Desktop/PowerShell/Configuration/CleanupOldRdshSessionHosts.ps1
+Windows Virtual Desktop/PowerShell/Configuration/CreateHostPool.ps1
+Windows Virtual Desktop/PowerShell/Configuration/RegisterSessionHost.ps1
+Windows Virtual Desktop/PowerShell/Configuration/TestCleanupOldRdshSessionHosts.ps1
+Windows Virtual Desktop/PowerShell/Configuration/TestHostPoolExists.ps1

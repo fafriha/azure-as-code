@@ -127,29 +127,6 @@ SETTINGS
 PROTECTED_SETTINGS
 }
 
-# This extension will deploy the FSlogix agent to all session hosts
-resource "azurerm_virtual_machine_extension" "wvd_fslogix" {
-  count                      = var.wvd_rdsh_count
-  name                       = "ext-userprofiles-offload"
-  virtual_machine_id         = azurerm_windows_virtual_machine.wvd_hosts.*.id[count.index]
-  publisher                  = "Microsoft.Powershell"
-  type                       = "DSC"
-  type_handler_version       = "2.73"
-  auto_upgrade_minor_version = true
-  depends_on                 = [azurerm_virtual_machine_extension.wvd_join_hostpool]
-
-  settings = <<SETTINGS
-{
-    "modulesURL": "https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/PowerShell/Configuration.zip",
-    "configurationFunction": "Configuration.ps1\\OffloadUserProfiles",
-     "properties": {
-        "FSLogixAgentPath": "C:\\DeployAgent\\FSLogixAgentInstall\\FSLogixAppsSetup.exe",
-        "UserProfileTargetPath": "${azurerm_storage_share.wvd.url}"
-  }
-}
-SETTINGS
-}
-
 ## This extension will deploy the Sepago agent to enchance the monitorng experiencee
 # resource "azurerm_virtual_machine_extension" "wvd_sepago" {
 #   count                      = var.wvd_rdsh_count
