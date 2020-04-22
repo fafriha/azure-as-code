@@ -53,39 +53,39 @@ resource "azurerm_windows_virtual_machine" "wvd_hosts" {
 # protectedsettings
 # }
 
-# ## This extension will join all session hosts to the domain
-# resource "azurerm_virtual_machine_extension" "wvd_join_domain" {
-#   count                      = var.wvd_rdsh_count
-#   name                       = "ext-domain-join"
-#   virtual_machine_id         = azurerm_windows_virtual_machine.wvd_hosts.*.id[count.index]
-#   publisher                  = "Microsoft.Compute"
-#   type                       = "JsonADDomainExtension"
-#   type_handler_version       = "1.3"
-#   auto_upgrade_minor_version = true
+## This extension will join all session hosts to the domain
+resource "azurerm_virtual_machine_extension" "wvd_join_domain" {
+  count                      = var.wvd_rdsh_count
+  name                       = "ext-domain-join"
+  virtual_machine_id         = azurerm_windows_virtual_machine.wvd_hosts.*.id[count.index]
+  publisher                  = "Microsoft.Compute"
+  type                       = "JsonADDomainExtension"
+  type_handler_version       = "1.3"
+  auto_upgrade_minor_version = true
 
-#   lifecycle {
-#     ignore_changes = [
-#       settings,
-#       protected_settings,
-#     ]
-#   }
+  lifecycle {
+    ignore_changes = [
+      settings,
+      protected_settings,
+    ]
+  }
 
-#   settings = <<SETTINGS
-#     {
-#       "Name": "${var.wvd_domain_name}",
-#       "OUPath": "${var.wvd_ou_path}",
-#       "User": "${azurerm_key_vault_secret.wvd_domain_join_account.name}@${var.wvd_domain_name}",
-#       "Restart": "true",
-#       "Options": "3"
-#     }
-# SETTINGS
+  settings = <<SETTINGS
+    {
+      "Name": "${var.wvd_domain_name}",
+      "OUPath": "${var.wvd_ou_path}",
+      "User": "${azurerm_key_vault_secret.wvd_domain_join_account.name}@${var.wvd_domain_name}",
+      "Restart": "true",
+      "Options": "3"
+    }
+SETTINGS
 
-#   protected_settings = <<PROTECTED_SETTINGS
-#   {
-#     "Password": "${azurerm_key_vault_secret.wvd_domain_join_account.value}"
-#   }
-# PROTECTED_SETTINGS
-# }
+  protected_settings = <<PROTECTED_SETTINGS
+  {
+    "Password": "${azurerm_key_vault_secret.wvd_domain_join_account.value}"
+  }
+PROTECTED_SETTINGS
+}
 
 ## This extension will join all session hosts to the Windows Virtual Desktop host pool
 resource "azurerm_virtual_machine_extension" "wvd_join_hostpool" {
