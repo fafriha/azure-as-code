@@ -179,7 +179,7 @@ function CreateAutomationCertificateAsset ([string] $resourceGroupName, [string]
 function CreateAutomationConnectionAsset ([string] $resourceGroupName, [string] $automationAccountName, [string] $connectionAssetName, [string] $connectionTypeName, [System.Collections.Hashtable] $connectionFieldValues ) 
 {
 	Remove-AzAutomationConnection -ResourceGroupName $resourceGroupName -AutomationAccountName $automationAccountName -Name $connectionAssetName -Force -ErrorAction SilentlyContinue
-	New-AzAutomationConnection -ResourceGroupName $ResourceGroupName -AutomationAccountName $automationAccountName -Name $connectionAssetName -ConnectionTypeName $connectionTypeName -ConnectionFieldValues $connectionFieldValues
+	$null = New-AzAutomationConnection -ResourceGroupName $ResourceGroupName -AutomationAccountName $automationAccountName -Name $connectionAssetName -ConnectionTypeName $connectionTypeName -ConnectionFieldValues $connectionFieldValues
 }
 
 function Load-Module ($ModuleName) 
@@ -228,7 +228,7 @@ foreach ($Module in $RequiredModules)
 Enable-AzureRmAlias
 
 # Connect to Azure
-Connect-AzAccount -ServicePrincipal -Credential $Creds -Tenant $AADTenantId 
+$null = Connect-AzAccount -ServicePrincipal -Credential $Creds -Tenant $AADTenantId 
 
 $Context = Get-AzContext
 # Get the azure context
@@ -240,7 +240,7 @@ if ($null -eq $Context)
 
 # Select the subscription
 $Subscription = Select-AzSubscription -SubscriptionId $SubscriptionId
-Set-AzContext -SubscriptionObject $Subscription.ExtendedProperties
+$null = Set-AzContext -SubscriptionObject $Subscription.ExtendedProperties
 
 # Get the Role Assignment of the authenticated user
 $RoleAssignment = (Get-AzRoleAssignment -ServicePrincipalName $SvcPrincipalApplicationId)
@@ -347,16 +347,6 @@ if (($RoleAssignment.RoleDefinitionName -eq "Owner") -or ($RoleAssignment.RoleDe
 "@
 
 		Post-LogAnalyticsData -customerId $LogAnalyticsWorkspaceId -sharedKey $LogAnalyticsPrimaryKey -Body ([System.Text.Encoding]::UTF8.GetBytes($CustomLogWVDTenantScale)) -logType $TenantScaleLogType
-
-		Write-Output "Log Analytics workspace id:$LogAnalyticsWorkspaceId"
-		Write-Output "Log Analytics workspace primarykey:$LogAnalyticsPrimaryKey"
-		Write-Output "Automation Account Name:$AutomationAccountName"
-		Write-Output "Webhook URI: $($WebhookURI.value)"
-	} 
-	else 
-	{
-		Write-Output "Automation Account Name:$AutomationAccountName"
-		Write-Output "Webhook URI: $($WebhookURI.value)"
 	}
 
 	###### End of sending automation account logs to log analytics ######
