@@ -128,45 +128,27 @@ SETTINGS
 PROTECTED_SETTINGS
 }
 
-## This extension will deploy the FSlogix agent to all session hosts
-# resource "azurerm_virtual_machine_extension" "wvd_fslogix" {
-#   count                      = var.wvd_rdsh_count
-#   name                       = "ext-sepago-add"
-#   virtual_machine_id         = azurerm_windows_virtual_machine.wvd.*.id[count.index]
-#   publisher                  = "Microsoft.Powershell"
-#   type                       = "DSC"
-#   type_handler_version       = "2.73"
-#   auto_upgrade_minor_version = true
+# This extension will deploy the FSlogix agent to all session hosts
+resource "azurerm_virtual_machine_extension" "wvd_fslogix" {
+  count                      = var.wvd_rdsh_count
+  name                       = "ext-userprofiles-offload"
+  virtual_machine_id         = azurerm_windows_virtual_machine.wvd.*.id[count.index]
+  publisher                  = "Microsoft.Powershell"
+  type                       = "DSC"
+  type_handler_version       = "2.73"
+  auto_upgrade_minor_version = true
+  depends_on                 = [azurerm_virtual_machine_extension.wvd_join_hostpool]
 
-#   settings = <<SETTINGS
-# {
-#     "modulesURL": "https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/PowerShell/Configuration.zip",
-#     "configurationFunction": "Configuration.ps1\\AdditionalSessionHosts",
-#      "properties": {
-#         "TenantAdminCredentials":{
-#             "userName":"${var.wvd_tenant_app_id}",
-#             "password":"PrivateSettingsRef:tenantAdminPassword"
-#         },
-#         "RDBrokerURL": "https://rdbroker.wvd.microsoft.com",
-#         "DefinedTenantGroupName":"${var.wvd_tenant_group_name}",
-#         "TenantName":"${var.wvd_tenant_name}",
-#         "HostPoolName":"${var.wvd_host_pool_name}",
-#         "Hours":"${var.wvd_registration_expiration_hours}",
-#         "isServicePrincipal":"${var.wvd_is_service_principal}",
-#         "AadTenantId":"${var.aad_tenant_id}"
-#   }
-# }
-
-# SETTINGS
-
-#   protected_settings = <<PROTECTED_SETTINGS
-#   {
-#     "items":{
-#     "tenantAdminPassword": "${data.azurerm_key_vault_secret.wvd_tenant_app.value}"
-#   }
-# }
-# PROTECTED_SETTINGS
-# }
+  settings = <<SETTINGS
+{
+    "modulesURL": "https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/PowerShell/Configuration.zip",
+    "configurationFunction": "Configuration.ps1\\OffloadUserProfiles",
+     "properties": {
+        "UserProfileTargetPath":"${azurerm_storage_share.wvd.url}"
+  }
+}
+SETTINGS
+}
 
 ## This extension will deploy the Sepago agent to enchance the monitorng experiencee
 # resource "azurerm_virtual_machine_extension" "wvd_sepago" {
