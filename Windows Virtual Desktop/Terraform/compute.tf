@@ -96,7 +96,6 @@ resource "azurerm_virtual_machine_extension" "wvd_join_hostpool" {
   type                       = "DSC"
   type_handler_version       = "2.73"
   auto_upgrade_minor_version = true
-  #depends_on                 = [azurerm_virtual_machine_extension.wvd_join_domain]
 
   settings = <<SETTINGS
 {
@@ -132,7 +131,7 @@ PROTECTED_SETTINGS
 resource "azurerm_virtual_machine_extension" "wvd_fslogix" {
   count                      = var.wvd_rdsh_count
   name                       = "ext-userprofiles-offload"
-  virtual_machine_id         = azurerm_windows_virtual_machine.wvd.*.id[count.index]
+  virtual_machine_id         = azurerm_windows_virtual_machine.wvd_hosts.*.id[count.index]
   publisher                  = "Microsoft.Powershell"
   type                       = "DSC"
   type_handler_version       = "2.73"
@@ -154,7 +153,7 @@ SETTINGS
 # resource "azurerm_virtual_machine_extension" "wvd_sepago" {
 #   count                      = var.wvd_rdsh_count
 #   name                       = "ext-sepago-add"
-#   virtual_machine_id         = azurerm_windows_virtual_machine.wvd.*.id[count.index]
+#   virtual_machine_id         = azurerm_windows_virtual_machine.wvd_hosts.*.id[count.index]
 #   publisher                  = "Microsoft.Powershell"
 #   type                       = "DSC"
 #   type_handler_version       = "2.73"
