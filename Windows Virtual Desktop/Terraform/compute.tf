@@ -42,13 +42,13 @@ resource "azurerm_windows_virtual_machine" "wvd_hosts" {
 
 #   settings = <<SETTINGS
 # 	{
-# 	  "workspaceId": "${azurerm_log_analytics_workspace.wvd_monitoring.workspace_id}"
+# 	  "workspaceId": "${azurerm_log_analytics_workspace.wvd.workspace_id}"
 # 	}
 # SETTINGS
 
 #   protected_settings = <<protectedsettings
 #   {
-#     "workspaceKey": "${azurerm_log_analytics_workspace.wvd_monitoring.primary_shared_key}"
+#     "workspaceKey": "${azurerm_log_analytics_workspace.wvd.primary_shared_key}"
 #   }
 # protectedsettings
 # }
