@@ -9,7 +9,6 @@ resource "azurerm_automation_account" "wvd_scaling_tool" {
   sku_name = "Basic"
 }
 
-
 resource "azurerm_automation_module" "wvd_rds_module" {
   name                    = "Microsoft.RDInfra.RDPowershell"
   resource_group_name     = azurerm_resource_group.wvd.name

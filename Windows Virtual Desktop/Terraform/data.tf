@@ -28,3 +28,8 @@ data "azurerm_automation_variable_string" "wvd_scaling_tool" {
   automation_account_name = azurerm_automation_account.wvd_scaling_tool.name
   depends_on              = [null_resource.wvd_scaling_tool]
 }
+
+data "azurerm_image" "wvd" {
+  name                    = "windows10-img"
+  resource_group_name     = azurerm_resource_group.wvd.name
+}
