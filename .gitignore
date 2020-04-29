@@ -19,3 +19,7 @@ Windows Virtual Desktop/PowerShell/Configuration/TestHostPoolExists.ps1
 Windows Virtual Desktop/PowerShell/Configuration/DeployAgent.zip
 Windows Virtual Desktop/Packer/windows10.json
 Windows Virtual Desktop/PowerShell/Configuration/DeployAgent/DeployAgent.ps1
+Data processing/Terraform/.terraform/plugins/windows_amd64/lock.json
+Data processing/Terraform/.terraform/plugins/windows_amd64/terraform-provider-azurerm_v2.7.0_x5.exe
+Data processing/Terraform/terraform.tfstate
+Data processing/Terraform/terraform.tfstate.backup
