@@ -17,3 +17,5 @@ Windows Virtual Desktop/PowerShell/Configuration/RegisterSessionHost.ps1
 Windows Virtual Desktop/PowerShell/Configuration/TestCleanupOldRdshSessionHosts.ps1
 Windows Virtual Desktop/PowerShell/Configuration/TestHostPoolExists.ps1
 Windows Virtual Desktop/PowerShell/Configuration/DeployAgent.zip
+Windows Virtual Desktop/Packer/windows10.json
+Windows Virtual Desktop/PowerShell/Configuration/DeployAgent/DeployAgent.ps1
