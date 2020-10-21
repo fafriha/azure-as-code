@@ -1,25 +1,10 @@
-Windows Virtual Desktop/Terraform/.terraform.tfstate.lock.info
-Windows Virtual Desktop/PowerShell/Configuration/Configuration.ps1
-Windows Virtual Desktop/PowerShell/Configuration/Functions.ps1
-Windows Virtual Desktop/PowerShell/Configuration/PowerShellModules.zip
-Windows Virtual Desktop/PowerShell/Configuration/Script-AddDefaultUsers.ps1
-Windows Virtual Desktop/PowerShell/Configuration/Script-CleanupOldRdshSessionHosts.ps1
-Windows Virtual Desktop/PowerShell/Configuration/Script-CreateHostPool.ps1
-Windows Virtual Desktop/PowerShell/Configuration/Script-RegisterSessionHost.ps1
-Windows Virtual Desktop/PowerShell/Configuration/Script-TestCleanupOldRdshSessionHosts.ps1
-Windows Virtual Desktop/PowerShell/Configuration/Script-TestHostPoolExists.ps1
-Windows Virtual Desktop/PowerShell/Configuration_old.zip
-Windows Virtual Desktop/PowerShell/Configuration_ko.zip
-Windows Virtual Desktop/PowerShell/Configuration/AddDefaultUsers.ps1
-Windows Virtual Desktop/PowerShell/Configuration/CleanupOldRdshSessionHosts.ps1
-Windows Virtual Desktop/PowerShell/Configuration/CreateHostPool.ps1
-Windows Virtual Desktop/PowerShell/Configuration/RegisterSessionHost.ps1
-Windows Virtual Desktop/PowerShell/Configuration/TestCleanupOldRdshSessionHosts.ps1
-Windows Virtual Desktop/PowerShell/Configuration/TestHostPoolExists.ps1
-Windows Virtual Desktop/PowerShell/Configuration/DeployAgent.zip
-Windows Virtual Desktop/Packer/windows10.json
-Windows Virtual Desktop/PowerShell/Configuration/DeployAgent/DeployAgent.ps1
-Data processing/Terraform/.terraform/plugins/windows_amd64/lock.json
-Data processing/Terraform/.terraform/plugins/windows_amd64/terraform-provider-azurerm_v2.7.0_x5.exe
-Data processing/Terraform/terraform.tfstate
-Data processing/Terraform/terraform.tfstate.backup
+# Old versions
+0.1 - Common
+0.2 - Spring 20
+0.99 - zzz
+*terraform.*
+variables.tf
+0.3 - Fall 20/
+Dev Test Lab/Terraform/.terraform/plugins/windows_amd64/lock.json
+Windows Virtual Desktop/Binaries/Agents.zip
+Dev Test Lab/Terraform/.terraform/plugins/windows_amd64/terraform-provider-azurerm_v2.11.0_x5.exe
