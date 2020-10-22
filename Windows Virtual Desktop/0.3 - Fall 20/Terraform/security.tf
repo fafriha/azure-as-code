@@ -56,14 +56,14 @@ resource "azurerm_key_vault_secret" "wvd_domain_join_account" {
   depends_on   = [azurerm_role_assignment.wvd_sp]
 }
 
-## The registration token will be secured as a key vault secret
-resource "azurerm_key_vault_secret" "wvd_registration_info" {
-  for_each     = var.wvd_host_pools
-  name         = each.value.name
-  value        = azurerm_virtual_desktop_host_pool.wvd[each.value.name].registration_info[0].token
-  key_vault_id = azurerm_key_vault.wvd.id
-  depends_on   = [azurerm_role_assignment.wvd_sp]
-}
+# ## The registration token will be secured as a key vault secret
+# resource "azurerm_key_vault_secret" "wvd_registration_info" {
+#   for_each     = var.wvd_host_pools
+#   name         = each.value.name
+#   value        = azurerm_virtual_desktop_host_pool.wvd[each.value.name].registration_info[0].token
+#   key_vault_id = azurerm_key_vault.wvd.id
+#   depends_on   = [azurerm_role_assignment.wvd_sp]
+# }
 
 ## The bastion host will secure RDP connections to all session hosts
 resource "azurerm_bastion_host" "wvd_bastion" {

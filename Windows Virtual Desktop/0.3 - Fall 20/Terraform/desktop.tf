@@ -11,9 +11,9 @@ resource "azurerm_virtual_desktop_host_pool" "wvd" {
   personal_desktop_assignment_type = each.value.personal_desktop_assignment_type
   maximum_sessions_allowed         = each.value.maximum_sessions_allowed
 
-  registration_info {
-    expiration_date = each.value.expiration_date
-  }
+  # registration_info {
+  #   expiration_date = each.value.expiration_date
+  # }
 }
 
 resource "azurerm_virtual_desktop_application_group" "wvd" {

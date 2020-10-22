@@ -29,7 +29,7 @@ resource "azurerm_function_app" "wvd" {
     FUNCTIONS_WORKER_RUNTIME      = "powershell"
     FUNCTION_APP_EDIT_MODE        = "readonly"
     HTTPS_ONLY                    = "true"
-    #WEBSITE_RUN_FROM_PACKAGE      = each.value.package_uri
+    WEBSITE_RUN_FROM_PACKAGE      = each.value.package_uri
     AzureWebJobsDisableHomepage   = "true"
   }
 }
