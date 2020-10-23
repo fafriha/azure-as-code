@@ -6,3 +6,10 @@
 #   sku                       = "PerGB2018"
 #   retention_in_days         = 30
 # }
+
+resource "azurerm_application_insights" "wvd" {
+  name                = var.wvd_app_insights["name"]
+  location            = azurerm_resource_group.wvd.location
+  resource_group_name = azurerm_resource_group.wvd.name
+  application_type    = var.wvd_app_insights["type"]
+}

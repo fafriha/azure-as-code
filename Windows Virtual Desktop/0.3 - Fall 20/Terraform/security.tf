@@ -65,18 +65,18 @@ resource "azurerm_key_vault_secret" "wvd_domain_join_account" {
 #   depends_on   = [azurerm_role_assignment.wvd_sp]
 # }
 
-## The bastion host will secure RDP connections to all session hosts
-resource "azurerm_bastion_host" "wvd_bastion" {
-  name                = var.wvd_bastion_name
-  location            = azurerm_resource_group.wvd.location
-  resource_group_name = azurerm_resource_group.wvd.name
+# ## The bastion host will secure RDP connections to all session hosts
+# resource "azurerm_bastion_host" "wvd_bastion" {
+#   name                = var.wvd_bastion_name
+#   location            = azurerm_resource_group.wvd.location
+#   resource_group_name = azurerm_resource_group.wvd.name
 
-  ip_configuration {
-    name                 = "ipc-azprd-frc-${var.wvd_bastion_name}"
-    subnet_id            = azurerm_subnet.wvd_bastion.id
-    public_ip_address_id = azurerm_public_ip.wvd_bastion.id
-  }
-}
+#   ip_configuration {
+#     name                 = "ipc-azprd-frc-${var.wvd_bastion_name}"
+#     subnet_id            = azurerm_subnet.wvd_bastion.id
+#     public_ip_address_id = azurerm_public_ip.wvd_bastion.id
+#   }
+# }
 
 ## Adding MSIs as Contributor and Key Vault Secrets Officer
 resource "azurerm_role_assignment" "wvd_sp" {
