@@ -11,9 +11,9 @@ resource "azurerm_virtual_desktop_host_pool" "wvd" {
   personal_desktop_assignment_type = each.value.personal_desktop_assignment_type
   maximum_sessions_allowed         = each.value.maximum_sessions_allowed
 
-  # registration_info {
-  #   expiration_date = each.value.expiration_date
-  # }
+  registration_info {
+    expiration_date = each.value.expiration_date
+  }
 }
 
 resource "azurerm_virtual_desktop_application_group" "wvd" {
@@ -22,10 +22,9 @@ resource "azurerm_virtual_desktop_application_group" "wvd" {
   type                = each.value.type
   location            = each.value.location
   resource_group_name = azurerm_resource_group.wvd.name
-  host_pool_id        = "/subscriptions/${var.global_subscription_id}/resourceGroups/${var.wvd_resource_group["name"]}/providers/Microsoft.DesktopVirtualization/hostpools/${each.value.host_pool_name}"
+  host_pool_id        = azurerm_virtual_desktop_host_pool.wvd[each.value.host_pool_name].id
   friendly_name       = each.value.friendly_name
   description         = each.value.description
-  depends_on          = [azurerm_virtual_desktop_host_pool.wvd]
 }
 
 resource "azurerm_virtual_desktop_workspace" "wvd" {

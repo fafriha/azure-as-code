@@ -81,9 +81,9 @@ resource "azurerm_key_vault_secret" "wvd_domain_join_account" {
 ## Adding MSIs as Contributor and Key Vault Secrets Officer
 resource "azurerm_role_assignment" "wvd_sp" {
   count                = length(local.sp_roles)
-  scope                = local.sp_roles[count.index].role != "Contributor" ? azurerm_key_vault.wvd.id : azurerm_resource_group.wvd.id
+  scope                = local.sp_roles[count.index].role != "Contributor" ? azurerm_key_vault.wvd.id : 0
   role_definition_name = local.sp_roles[count.index].role
-  principal_id         = local.sp_roles[count.index].name != "Terraform Service Principal" ? azurerm_function_app.wvd[local.sp_roles[count.index].name].identity[0].principal_id : data.azurerm_client_config.current.object_id
+  principal_id         = local.sp_roles[count.index].name != "Terraform Service Principal" ? 0 : data.azurerm_client_config.current.object_id
 }
 
 ## Adding users to application groups
