@@ -71,7 +71,7 @@ resource "azurerm_virtual_machine_extension" "wvd_deploy_agents" {
 
   settings = <<SETTINGS
     {
-        "fileUris": ["https://gist.githubusercontent.com/mcasperson/c815ac880df481418ff2e199ea1d0a46/raw/5d4fc583b28ecb27807d8ba90ec5f636387b00a3/chocolatey.ps1"]
+        "fileUris": ["https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/0.3%20-%20Fall%2020/PowerShell/Configurations/Install-WVDAgents.ps1"]
     }
   SETTINGS
 }
