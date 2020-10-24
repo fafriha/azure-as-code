@@ -65,7 +65,7 @@ resource "azurerm_virtual_machine_extension" "wvd_deploy_agents" {
 
   protected_settings = <<PROTECTED_SETTINGS
     {
-      "commandToExecute": "powershell.exe -Command \"./Install-WVDAgents -RegistrationToken ${azurerm_virtual_desktop_host_pool.wvd[each.value.tags.hostpool].registration_info[0].token}; exit 0;\""
+      "commandToExecute": "powershell.exe -Command \"./Install-WVDAgents.ps1 -RegistrationToken ${azurerm_virtual_desktop_host_pool.wvd[each.value.tags.hostpool].registration_info[0].token}; exit 0;\""
     }
   PROTECTED_SETTINGS
 
