@@ -3,7 +3,4 @@ windows-virtual-desktop/Terraform/.terraform*
 *tfstate*
 variables.tf
 dev-test-lab
-windows-virtual-desktop/20H1
 windows-virtual-desktop/common
-windows-virtual-desktop/20H1/Terraform/.terraform/plugins/selections.json
-windows-virtual-desktop/20H2
