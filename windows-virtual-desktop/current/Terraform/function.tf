@@ -1,3 +1,4 @@
+################################################### Production ################################################
 # ## Azure function
 # resource "azurerm_app_service_plan" "wvd" {
 #   name                = var.wvd_app_service_plan["name"]
@@ -35,3 +36,5 @@
 #     APPINSIGHTS_INSTRUMENTATIONKEY        = azurerm_application_insights.wvd.instrumentation_key
 #   }
 # }
+
+################################################### Canary ################################################

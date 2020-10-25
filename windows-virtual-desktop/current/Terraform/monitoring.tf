@@ -1,3 +1,4 @@
+################################################### Production & Canary ################################################
 ## This log analytics workspace will be used to momintor all session hosts
 resource "azurerm_log_analytics_workspace" "wvd" {
   name                      = var.wvd_log_analytics_workspace_name
@@ -6,6 +7,8 @@ resource "azurerm_log_analytics_workspace" "wvd" {
   sku                       = "PerGB2018"
   retention_in_days         = 30
 }
+
+#Workbook
 
 # resource "azurerm_application_insights" "wvd" {
 #   name                = var.wvd_app_insights["name"]

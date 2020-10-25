@@ -1,4 +1,5 @@
-################################################### Hub ################################################
+################################################### Production ################################################
+
 # This peering to the hub virtual network will allow domain controllers to communicate with all session hosts
 resource "azurerm_virtual_network_peering" "hub_peering" {
   name                      = var.hub_virtual_network["peering_name"]
@@ -7,8 +8,6 @@ resource "azurerm_virtual_network_peering" "hub_peering" {
   remote_virtual_network_id = azurerm_virtual_network.wvd.id
   allow_gateway_transit     = "true"
 }
-
-################################################### Windows Virtual Desktop ################################################
 
 ## This virtual network will host all session hosts
 resource "azurerm_virtual_network" "wvd" {
@@ -54,7 +53,9 @@ resource "azurerm_public_ip" "wvd_bastion" {
   sku                 = "Standard"
 }
 
-## Each session host will have a single network interface
+################################################### Production & Canary ################################################
+
+## Each session host from the canary environment will have a single network interface
 resource "azurerm_network_interface" "wvd_hosts" {
   for_each                  = {for s in local.session_hosts : format("%s-%02d-01", s.vm_prefix, s.index+1) => s}
   name                      = "nic-${each.key}"
@@ -63,7 +64,17 @@ resource "azurerm_network_interface" "wvd_hosts" {
 
   ip_configuration {
     name                          = "ipc-${each.key}"
-    subnet_id                     = azurerm_subnet.wvd_clients.id
+    subnet_id                     = var.wvd_host_pools[each.value.host_pool_name].validation_environment != "True" ? azurerm_subnet.wvd_clients.id : azurerm_subnet.wvd_canary.id
     private_ip_address_allocation = "dynamic"
   }
+}
+
+################################################### Canary ################################################
+
+## This subnet will host all Windows 10 session hosts targeted by canary deployments
+resource "azurerm_subnet" "wvd_canary" {
+  name                 = var.wvd_virtual_network["canary_subnet_name"]
+  resource_group_name  = azurerm_resource_group.wvd.name
+  virtual_network_name = azurerm_virtual_network.wvd.name
+  address_prefixes     = [var.wvd_virtual_network["canary_subnet_address_prefix"]]
 }

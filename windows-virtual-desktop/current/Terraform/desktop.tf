@@ -1,9 +1,11 @@
-## The h virtual machines will be used as Windows Virtual Desktop session hosts
+################################################### Production & Canary ################################################
+## The virtual machines will be used as Windows Virtual Desktop session hosts
 resource "azurerm_virtual_desktop_host_pool" "wvd" {
   for_each                         = var.wvd_host_pools
   name                             = each.value.name
   location                         = each.value.location
   resource_group_name              = azurerm_resource_group.wvd.name
+  #validation_environment           = each.value.validation_environment
   type                             = each.value.type
   load_balancer_type               = each.value.load_balancer_type 
   friendly_name                    = each.value.friendly_name

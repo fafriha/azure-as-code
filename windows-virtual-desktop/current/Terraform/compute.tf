@@ -1,3 +1,4 @@
+################################################### Production & Canary ################################################
 ## These virtual machines will be used as Windows Virtual Desktop session hosts
 resource "azurerm_windows_virtual_machine" "wvd_hosts" {
   for_each                  = {for s in local.session_hosts : format("%s-%02d", s.vm_prefix, s.index+1) => s}
@@ -14,7 +15,7 @@ resource "azurerm_windows_virtual_machine" "wvd_hosts" {
   source_image_reference {
     publisher = "MicrosoftWindowsDesktop"
     offer     = "office-365"
-    sku       = "19h2-evd-o365pp"
+    sku       = "20h2-evd-o365pp"
     version   = "latest"
   }
 
@@ -53,6 +54,40 @@ SETTINGS
     "workspaceKey": "${azurerm_log_analytics_workspace.wvd.primary_shared_key}"
   }
 protectedsettings
+}
+
+## This extension will join all session hosts to the domain
+resource "azurerm_virtual_machine_extension" "wvd_join_domain" {
+  for_each                   = azurerm_windows_virtual_machine.wvd_hosts
+  name                       = "DomainJoin"
+  virtual_machine_id         = azurerm_windows_virtual_machine.wvd_hosts[each.key].id
+  publisher                  = "Microsoft.Compute"
+  type                       = "JsonADDomainExtension"
+  type_handler_version       = "1.3"
+  auto_upgrade_minor_version = true
+
+  lifecycle {
+    ignore_changes = [
+      settings,
+      protected_settings,
+    ]
+  }
+
+  settings = <<SETTINGS
+    {
+      "Name": "${var.wvd_domain["name"]}",
+      
+      "User": "${azurerm_key_vault_secret.wvd_domain_join_account.name}@${var.wvd_domain["name"]}",
+      "Restart": "true",
+      "Options": "3"
+    }
+SETTINGS
+
+  protected_settings = <<PROTECTED_SETTINGS
+  {
+    "Password": "${azurerm_key_vault_secret.wvd_domain_join_account.value}"
+  }
+PROTECTED_SETTINGS
 }
 
 resource "azurerm_virtual_machine_extension" "wvd_deploy_agents" {
