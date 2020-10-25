@@ -65,13 +65,13 @@ resource "azurerm_virtual_machine_extension" "wvd_deploy_agents" {
 
   protected_settings = <<PROTECTED_SETTINGS
     {
-      "commandToExecute": "powershell.exe -Command \"./Install-WVDAgents.ps1 -RegistrationToken ${azurerm_virtual_desktop_host_pool.wvd[each.value.tags.hostpool].registration_info[0].token}; exit 0;\""
+      "commandToExecute": "powershell.exe -executionpolicy bypass -command \"./Install-WVDAgents.ps1 -RegistrationToken ${azurerm_virtual_desktop_host_pool.wvd[each.value.tags.hostpool].registration_info[0].token}; exit 0;\""
     }
   PROTECTED_SETTINGS
 
   settings = <<SETTINGS
     {
-        "fileUris": ["https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/Windows%20Virtual%20Desktop/0.3%20-%20Fall%2020/PowerShell/Configurations/Install-WVDAgents.ps1"]
+        "fileUris": ["https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/windows-virtual-desktop/current/PowerShell/Configurations/Install-WVDAgents.ps1"]
     }
   SETTINGS
 }

@@ -40,6 +40,7 @@ catch
 }
 finally
 {
-    Write-Host "End of execution."
+    Write-Host "End of execution. Restarting"
     $LASTEXITCODE
+    Restart-Computer -Force
 }
