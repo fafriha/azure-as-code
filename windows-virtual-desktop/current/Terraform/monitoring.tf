@@ -8,11 +8,11 @@ resource "azurerm_log_analytics_workspace" "wvd" {
   retention_in_days         = 30
 }
 
-#Workbook
-
 # resource "azurerm_application_insights" "wvd" {
 #   name                = var.wvd_app_insights["name"]
 #   location            = azurerm_resource_group.wvd.location
 #   resource_group_name = azurerm_resource_group.wvd.name
 #   application_type    = var.wvd_app_insights["type"]
 # }
+
+## Reserved for workbook creation using ARM template

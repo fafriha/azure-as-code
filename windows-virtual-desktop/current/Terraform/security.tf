@@ -81,7 +81,7 @@ resource "azurerm_bastion_host" "wvd_bastion" {
 ## Adding MSIs as Contributor and Key Vault Secrets Officer
 resource "azurerm_role_assignment" "wvd_sp" {
   count                = length(local.sp_roles)
-  scope                = local.sp_roles[count.index].role != "Contributor" ? azurerm_key_vault.wvd.id : 0
+  scope                = local.sp_roles[count.index].role != "Contributor" ? azurerm_key_vault.wvd.id : azurerm_resource_group.wvd.id
   role_definition_name = local.sp_roles[count.index].role
   principal_id         = local.sp_roles[count.index].name != "Terraform Service Principal" ? 0 : data.azurerm_client_config.current.object_id
 }

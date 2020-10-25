@@ -6,3 +6,5 @@ dev-test-lab
 windows-virtual-desktop/current/Terraform/.terraform/plugins/registry.terraform.io/hashicorp/azurerm/2.33.0/windows_amd64/terraform-provider-azurerm_v2.33.0_x5.exe
 windows-virtual-desktop/current/Terraform/.terraform/plugins/registry.terraform.io/hashicorp/azuread/1.0.0/windows_amd64/terraform-provider-azuread_v1.0.0_x5.exe
 windows-virtual-desktop/current/Terraform/.terraform/plugins/selections.json
+windows-virtual-desktop/current/Terraform/eventgrid.tf
+windows-virtual-desktop/current/Terraform/function.tf

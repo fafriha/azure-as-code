@@ -7,7 +7,7 @@ resource "azurerm_windows_virtual_machine" "wvd_hosts" {
   resource_group_name       = azurerm_resource_group.wvd.name
   network_interface_ids     = [azurerm_network_interface.wvd_hosts["${each.key}-01"].id]
   size                      = each.value.vm_size
-  zone                      = each.value.index+1
+  zone                      = each.value.index%3+1
   admin_username            = azurerm_key_vault_secret.wvd_local_admin_account.name
   admin_password            = azurerm_key_vault_secret.wvd_local_admin_account.value
   enable_automatic_updates  = false
@@ -65,6 +65,7 @@ resource "azurerm_virtual_machine_extension" "wvd_join_domain" {
   type                       = "JsonADDomainExtension"
   type_handler_version       = "1.3"
   auto_upgrade_minor_version = true
+  depends_on                 = [azurerm_virtual_machine_extension.wvd_join_log_analytics_workspace]
 
   lifecycle {
     ignore_changes = [
@@ -92,11 +93,12 @@ PROTECTED_SETTINGS
 
 resource "azurerm_virtual_machine_extension" "wvd_deploy_agents" {
   for_each                   = azurerm_windows_virtual_machine.wvd_hosts
-  name                       = "WindowsVirtualDesktopAgents"
+  name                       = "WVDesktopAgents"
   virtual_machine_id         = azurerm_windows_virtual_machine.wvd_hosts[each.key].id
   publisher                  = "Microsoft.Compute"
   type                       = "CustomScriptExtension"
   type_handler_version       = "1.10"
+  depends_on                 = [azurerm_virtual_machine_extension.wvd_join_domain]
 
   protected_settings = <<PROTECTED_SETTINGS
     {
