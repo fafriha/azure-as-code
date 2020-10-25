@@ -1,10 +1,9 @@
 # Old versions
-0.1 - Common
-0.2 - Spring 20
-0.99 - zzz
-*terraform.*
+windows-virtual-desktop/Terraform/.terraform*
+*tfstate*
 variables.tf
-Dev Test Lab/Terraform/.terraform/plugins/windows_amd64/lock.json
-Windows Virtual Desktop/Binaries/Agents.zip
-Dev Test Lab/Terraform/.terraform/plugins/windows_amd64/terraform-provider-azurerm_v2.11.0_x5.exe
-Windows Virtual Desktop/0.3 - Fall 20/Terraform/.terraform/plugins/selections.json
+dev-test-lab
+windows-virtual-desktop/20H1
+windows-virtual-desktop/common
+windows-virtual-desktop/20H1/Terraform/.terraform/plugins/selections.json
+windows-virtual-desktop/20H2
