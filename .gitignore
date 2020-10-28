@@ -8,3 +8,4 @@ windows-virtual-desktop/current/Terraform/.terraform/plugins/registry.terraform.
 windows-virtual-desktop/current/Terraform/.terraform/plugins/selections.json
 windows-virtual-desktop/current/Terraform/eventgrid.tf
 windows-virtual-desktop/current/Terraform/function.tf
+*

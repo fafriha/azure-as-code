@@ -91,24 +91,24 @@ SETTINGS
 PROTECTED_SETTINGS
 }
 
-resource "azurerm_virtual_machine_extension" "wvd_deploy_agents" {
-  for_each                   = azurerm_windows_virtual_machine.wvd_hosts
-  name                       = "WVDesktopAgents"
-  virtual_machine_id         = azurerm_windows_virtual_machine.wvd_hosts[each.key].id
-  publisher                  = "Microsoft.Compute"
-  type                       = "CustomScriptExtension"
-  type_handler_version       = "1.10"
-  depends_on                 = [azurerm_virtual_machine_extension.wvd_join_domain]
+# resource "azurerm_virtual_machine_extension" "wvd_deploy_agents" {
+#   for_each                   = azurerm_windows_virtual_machine.wvd_hosts
+#   name                       = "WVDesktopAgents"
+#   virtual_machine_id         = azurerm_windows_virtual_machine.wvd_hosts[each.key].id
+#   publisher                  = "Microsoft.Compute"
+#   type                       = "CustomScriptExtension"
+#   type_handler_version       = "1.10"
+#   depends_on                 = [azurerm_virtual_machine_extension.wvd_join_domain]
 
-  protected_settings = <<PROTECTED_SETTINGS
-    {
-      "commandToExecute": "powershell.exe -executionpolicy bypass -command \"./Install-WVDAgents.ps1 -RegistrationToken ${azurerm_virtual_desktop_host_pool.wvd[each.value.tags.hostpool].registration_info[0].token}; exit 0;\""
-    }
-  PROTECTED_SETTINGS
+#   protected_settings = <<PROTECTED_SETTINGS
+#     {
+#       "commandToExecute": "powershell.exe -executionpolicy bypass -command \"./Install-WVDAgents.ps1 -RegistrationToken ${azurerm_virtual_desktop_host_pool.wvd[each.value.tags.hostpool].registration_info[0].token}\""
+#     }
+#   PROTECTED_SETTINGS
 
-  settings = <<SETTINGS
-    {
-        "fileUris": ["https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/windows-virtual-desktop/current/PowerShell/Configurations/Install-WVDAgents.ps1"]
-    }
-  SETTINGS
-}
+#   settings = <<SETTINGS
+#     {
+#         "fileUris": ["https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/windows-virtual-desktop/current/PowerShell/Configurations/Install-WVDAgents.ps1"]
+#     }
+#   SETTINGS
+# }
