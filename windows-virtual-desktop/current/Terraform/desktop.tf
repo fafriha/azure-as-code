@@ -5,7 +5,7 @@ resource "azurerm_virtual_desktop_host_pool" "wvd" {
   name                             = each.value.name
   location                         = each.value.location
   resource_group_name              = azurerm_resource_group.wvd.name
-  #validation_environment           = each.value.validation_environment
+  validate_environment             = each.value.validate_environment
   type                             = each.value.type
   load_balancer_type               = each.value.load_balancer_type 
   friendly_name                    = each.value.friendly_name

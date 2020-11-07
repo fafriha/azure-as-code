@@ -6,7 +6,7 @@ resource "azurerm_virtual_network_peering" "hub_peering" {
   resource_group_name       = var.hub_resource_group_name
   virtual_network_name      = var.hub_virtual_network["name"]
   remote_virtual_network_id = azurerm_virtual_network.wvd.id
-  allow_gateway_transit     = "true"
+  allow_gateway_transit     = "false"
 }
 
 ## This virtual network will host all session hosts
@@ -24,7 +24,7 @@ resource "azurerm_virtual_network_peering" "wvd_peering" {
   resource_group_name       = azurerm_resource_group.wvd.name
   virtual_network_name      = azurerm_virtual_network.wvd.name
   remote_virtual_network_id = data.azurerm_virtual_network.hub.id
-  use_remote_gateways       = "true"
+  use_remote_gateways       = "false"
   allow_forwarded_traffic   = "true"
 }
 
@@ -64,7 +64,7 @@ resource "azurerm_network_interface" "wvd_hosts" {
 
   ip_configuration {
     name                          = "ipc-${each.key}"
-    subnet_id                     = var.wvd_host_pools[each.value.host_pool_name].validation_environment != "True" ? azurerm_subnet.wvd_clients.id : azurerm_subnet.wvd_canary.id
+    subnet_id                     = var.wvd_host_pools[each.value.host_pool_name].validate_environment != "True" ? azurerm_subnet.wvd_clients.id : azurerm_subnet.wvd_canary.id
     private_ip_address_allocation = "dynamic"
   }
 }

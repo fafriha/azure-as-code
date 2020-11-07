@@ -56,14 +56,14 @@ resource "azurerm_key_vault_secret" "wvd_domain_join_account" {
   depends_on   = [azurerm_role_assignment.wvd_sp]
 }
 
-# ## The registration token will be secured as a key vault secret
-# resource "azurerm_key_vault_secret" "wvd_registration_info" {
-#   for_each     = var.wvd_host_pools
-#   name         = each.value.name
-#   value        = azurerm_virtual_desktop_host_pool.wvd[each.value.name].registration_info[0].token
-#   key_vault_id = azurerm_key_vault.wvd.id
-#   depends_on   = [azurerm_role_assignment.wvd_sp]
-# }
+## The registration token will be secured as a key vault secret
+resource "azurerm_key_vault_secret" "wvd_registration_info" {
+  for_each     = var.wvd_host_pools
+  name         = each.value.name
+  value        = azurerm_virtual_desktop_host_pool.wvd[each.value.name].registration_info[0].token
+  key_vault_id = azurerm_key_vault.wvd.id
+  depends_on   = [azurerm_role_assignment.wvd_sp]
+}
 
 ## The bastion host will secure RDP connections to all session hosts
 resource "azurerm_bastion_host" "wvd_bastion" {
@@ -86,10 +86,10 @@ resource "azurerm_role_assignment" "wvd_sp" {
   principal_id         = local.sp_roles[count.index].name != "Terraform Service Principal" ? 0 : data.azurerm_client_config.current.object_id
 }
 
-## Adding users to application groups
-resource "azurerm_role_assignment" "wvd_users" {
-  count                = length(local.application_groups)
-  scope                = azurerm_virtual_desktop_application_group.wvd[local.application_groups[count.index].name].id
-  role_definition_name = "Desktop virtualization user"
-  principal_id         = data.azuread_user.wvd[local.application_groups[count.index].user].id
-}
+# ## Adding users to application groups
+# resource "azurerm_role_assignment" "wvd_users" {
+#   count                = length(local.application_groups)
+#   scope                = azurerm_virtual_desktop_application_group.wvd[local.application_groups[count.index].name].id
+#   role_definition_name = "Desktop virtualization user"
+#   principal_id         = data.azuread_user.wvd[local.application_groups[count.index].user].id
+# }

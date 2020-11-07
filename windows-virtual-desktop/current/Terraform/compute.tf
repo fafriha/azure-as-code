@@ -56,40 +56,40 @@ SETTINGS
 protectedsettings
 }
 
-## This extension will join all session hosts to the domain
-resource "azurerm_virtual_machine_extension" "wvd_join_domain" {
-  for_each                   = azurerm_windows_virtual_machine.wvd_hosts
-  name                       = "DomainJoin"
-  virtual_machine_id         = azurerm_windows_virtual_machine.wvd_hosts[each.key].id
-  publisher                  = "Microsoft.Compute"
-  type                       = "JsonADDomainExtension"
-  type_handler_version       = "1.3"
-  auto_upgrade_minor_version = true
-  depends_on                 = [azurerm_virtual_machine_extension.wvd_join_log_analytics_workspace]
+# ## This extension will join all session hosts to the domain
+# resource "azurerm_virtual_machine_extension" "wvd_join_domain" {
+#   for_each                   = azurerm_windows_virtual_machine.wvd_hosts
+#   name                       = "DomainJoin"
+#   virtual_machine_id         = azurerm_windows_virtual_machine.wvd_hosts[each.key].id
+#   publisher                  = "Microsoft.Compute"
+#   type                       = "JsonADDomainExtension"
+#   type_handler_version       = "1.3"
+#   auto_upgrade_minor_version = true
+#   depends_on                 = [azurerm_virtual_machine_extension.wvd_join_log_analytics_workspace]
 
-  lifecycle {
-    ignore_changes = [
-      settings,
-      protected_settings,
-    ]
-  }
+#   lifecycle {
+#     ignore_changes = [
+#       settings,
+#       protected_settings,
+#     ]
+#   }
 
-  settings = <<SETTINGS
-    {
-      "Name": "${var.wvd_domain["name"]}",
+#   settings = <<SETTINGS
+#     {
+#       "Name": "${var.wvd_domain["name"]}",
       
-      "User": "${azurerm_key_vault_secret.wvd_domain_join_account.name}@${var.wvd_domain["name"]}",
-      "Restart": "true",
-      "Options": "3"
-    }
-SETTINGS
+#       "User": "${azurerm_key_vault_secret.wvd_domain_join_account.name}@${var.wvd_domain["name"]}",
+#       "Restart": "true",
+#       "Options": "3"
+#     }
+# SETTINGS
 
-  protected_settings = <<PROTECTED_SETTINGS
-  {
-    "Password": "${azurerm_key_vault_secret.wvd_domain_join_account.value}"
-  }
-PROTECTED_SETTINGS
-}
+#   protected_settings = <<PROTECTED_SETTINGS
+#   {
+#     "Password": "${azurerm_key_vault_secret.wvd_domain_join_account.value}"
+#   }
+# PROTECTED_SETTINGS
+# }
 
 # resource "azurerm_virtual_machine_extension" "wvd_deploy_agents" {
 #   for_each                   = azurerm_windows_virtual_machine.wvd_hosts

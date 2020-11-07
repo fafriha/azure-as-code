@@ -1,0 +1,66 @@
+{
+  "variables": 
+  {
+    "client_id": "",
+    "client_secret": "",
+    "tenant_id": "",
+    "subscription_id": "",
+    "location": "francecentral",
+    "managed_image_resource_group_name": "rg-azprd-frc-img-01",
+    "managed_image_name": "image-azprd-frc-wvd-01",
+    "playbook_path": "",
+    "os_type": "Windows",
+    "image_publisher": "MicrosoftWindowsDesktop",
+    "image_offer": "office-365",
+    "image_sku": "19h2-evd-o365pp",
+    "vm_size": "Standard_F72s_v2"
+  },
+  "builders": 
+  [
+    {
+      "type": "azure-arm",
+
+      "communicator": "winrm",
+      "winrm_use_ssl": true,
+      "winrm_insecure": true,
+      "winrm_timeout": "5m",
+      "winrm_username": "packer",
+
+      "client_id": "{{user `client_id`}}",
+      "client_secret": "{{user `client_secret`}}",
+      "subscription_id": "{{user `subscription_id`}}",
+      "tenant_id": "{{user `tenant_id`}}",
+      
+      "os_type": "{{user `os_type`}}",
+      "image_publisher": "{{user `image_publisher`}}",
+      "image_offer": "{{user `image_offer`}}",
+      "image_sku": "{{user `image_sku`}}",
+
+      "managed_image_resource_group_name": "{{user `managed_image_resource_group_name`}}",
+      "managed_image_name": "{{user `managed_image_name`}}",
+
+      "location": "{{user `location`}}",
+      "vm_size": "{{user `vm_size`}}",
+
+      "async_resourcegroup_delete": true
+    }
+  ],
+  "provisioners": 
+  [
+    {
+      "type": "powershell",
+      "inline": 
+      [ 
+        "echo '>>> Copying agents ...'",
+        "$password = ConvertTo-SecureString -String '' -AsPlainText -Force",
+        "$credential = New-Object System.Management.Automation.PSCredential -ArgumentList 'Azure\\saazprdfrcimg01', $password",
+        "$null = New-PSDrive -Name Z -PSProvider FileSystem -Root '\\\\saazprdfrcimg01.file.core.windows.net\\fs-azprd-frc-img-01' -Credential $credential",
+        "Copy-Item -Path Z:\\* -Destination C:\\Agents",
+
+        "echo '>>> Sysprepping virtual machine ...'",
+        "& $env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /quiet /quit",
+        "while($true) {$imageState = Get-ItemProperty HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Setup\\State | Select ImageState; if($imageState.ImageState -ne 'IMAGE_STATE_GENERALIZE_RESEAL_TO_OOBE') {Write-Output $imageState.ImageState; Start-Sleep -s 10} else {break}}"
+      ]
+    }
+  ]
+}
