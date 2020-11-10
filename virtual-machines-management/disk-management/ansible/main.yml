@@ -1,0 +1,62 @@
+---
+- name: demo
+  hosts: all
+  gather_facts: yes
+  user: root
+
+  vars_files:
+  - default_vars.yml
+
+  tasks:
+  - name: Create a new primary partition on /dev/sdc
+    parted:
+     device: /dev/sdc
+     number: 1
+     state: present
+
+  - name: Create an XFS filesystem on partition /dev/sdc1
+    filesystem:
+     fstype: xfs
+     dev: /dev/sdc1
+
+  - name: Mount /dev/sdc1 on target folder
+    mount:
+     path: "{{ target_mountpoint }}"
+     src: /dev/sdc1
+     state: mounted
+     fstype: xfs
+
+  - name: Copy authorized SSH keys
+    copy:
+     src: "{{ source_authorized_keys }}"
+     dest: "{{ destination_authorized_keys }}"
+
+  - name: "Install Docker prerequisites"
+    package:
+     name:
+     - "yum-utils"
+     - "device-mapper-persistent-data"
+     - "lvm2"
+     state: latest
+
+  - name: Add Docker repo
+    get_url:
+     url: https://download.docker.com/linux/centos/docker-ce.repo
+     dest: /etc/yum.repos.d/docer-ce.repo
+
+  - name: Install Docker-ce
+    package:
+     name: docker-ce
+     state: latest
+
+  - name: Start Docker service
+    service:
+     name: docker
+     state: started
+     enabled: yes
+
+  - name: clone private repo
+    git:
+     repo: "{{ source_repo }}"
+     dest: "{{ destination_repo }}"
+    delegate_to: localhost
