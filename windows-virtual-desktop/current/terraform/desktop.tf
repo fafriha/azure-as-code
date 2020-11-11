@@ -7,7 +7,7 @@ resource "azurerm_virtual_desktop_host_pool" "wvd" {
   resource_group_name              = azurerm_resource_group.wvd.name
   validate_environment             = each.value.validate_environment
   type                             = each.value.type
-  load_balancer_type               = each.value.load_balancer_type 
+  load_balancer_type               = each.value.load_balancer_type
   friendly_name                    = each.value.friendly_name
   description                      = each.value.description
   personal_desktop_assignment_type = each.value.personal_desktop_assignment_type
@@ -39,7 +39,7 @@ resource "azurerm_virtual_desktop_workspace" "wvd" {
 }
 
 resource "azurerm_virtual_desktop_workspace_application_group_association" "wvd" {
-  for_each             = {for wks in local.workspaces : wks.name => wks}
+  for_each             = { for wks in local.workspaces : wks.name => wks }
   workspace_id         = azurerm_virtual_desktop_workspace.wvd[each.key].id
   application_group_id = azurerm_virtual_desktop_application_group.wvd[each.value.application_group_name].id
 }
