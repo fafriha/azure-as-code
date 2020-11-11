@@ -14,17 +14,6 @@ variable "hub_resource_group_name" {
   default     = "rg-prd-frc-hub-01"
 }
 
-variable "tf_backend" {
-  description = "[Mandatory] [Import] Enter the name of your hub virtual network to which your domain controllers are connected to"
-  type        = map(string)
-  default = {
-    "resource_group_name"  = "rg-prd-frc-tf-01"
-    "storage_account_name" = "saprdfrctf01"
-    "container_name"       = "windows-virtual-desktop"
-    "blob_name"            = "prd-terraform.tfstate"
-  }
-}
-
 variable "hub_virtual_network" {
   description = "[Mandatory] [Import] Enter the name of your hub virtual network to which your domain controllers are connected to"
   type        = map(string)
