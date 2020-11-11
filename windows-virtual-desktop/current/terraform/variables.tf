@@ -35,7 +35,7 @@ variable "wvd_host_pools" {
       "load_balancer_type"               = "DepthFirst"
       "personal_desktop_assignment_type" = "Automatic"
       "maximum_sessions_allowed"         = 16
-      "expiration_date"                  = "2020-11-10T18:46:43Z"
+      "expiration_date"                  = "2020-12-10T18:46:43Z"
       "friendly_name"                    = "Canary"
       "description"                      = "Dedicated to canary deployments."
       "location"                         = "EastUs"
@@ -50,7 +50,7 @@ variable "wvd_host_pools" {
       "load_balancer_type"               = "Persistent"
       "personal_desktop_assignment_type" = "Automatic"
       "maximum_sessions_allowed"         = 16
-      "expiration_date"                  = "2020-11-10T18:46:43Z"
+      "expiration_date"                  = "2020-12-10T18:46:43Z"
       "friendly_name"                    = "Office"
       "description"                      = "Dedicated to medium workload type (Microsoft Word, CLIs, ...)."
       "location"                         = "EastUs"
