@@ -26,10 +26,10 @@ resource "azurerm_function_app" "wvd" {
   }
 
   app_settings = {
-    FUNCTIONS_WORKER_RUNTIME              = each.value.runtime
-    HTTPS_ONLY                            = each.value.https_only
-    WEBSITE_RUN_FROM_PACKAGE              = each.value.package_uri
-    AzureWebJobsDisableHomepage           = each.value.disable_homepage
+    FUNCTIONS_WORKER_RUNTIME    = each.value.runtime
+    HTTPS_ONLY                  = each.value.https_only
+    WEBSITE_RUN_FROM_PACKAGE    = each.value.package_uri
+    AzureWebJobsDisableHomepage = each.value.disable_homepage
     #AzureWebJobsSecretStorageType         = each.value.secrets_storage
     AzureWebJobsSecretStorageKeyVaultName = azurerm_key_vault.wvd.name
     APPINSIGHTS_INSTRUMENTATIONKEY        = azurerm_application_insights.wvd.instrumentation_key
