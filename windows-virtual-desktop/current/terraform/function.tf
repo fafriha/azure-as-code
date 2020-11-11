@@ -22,7 +22,7 @@ resource "azurerm_function_app" "wvd" {
   version                    = each.value.version
 
   identity {
-      type = "SystemAssigned"
+    type = "SystemAssigned"
   }
 
   app_settings = {
