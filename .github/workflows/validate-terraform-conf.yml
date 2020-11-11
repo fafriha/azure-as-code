@@ -18,11 +18,11 @@ jobs:
         run: terraform init
 
       - name: Format configuration
-        run: terraform fmt -check
+        run: terraform fmt
 
       - name: Create execution plan
-        run: terraform plan
+        run: terraform plan -var="subscription_id=${{SUBSCRIPTION_ID}}" -var='terraform_sp={"client_id":"${{SP_DEV_TERRAFORM_ID}}", "client_secret":"${{SP_DEV_TERRAFROM_SECRET}}"}' -var="aad_tenant_id=${{AAD_TENANT_ID}}" -var='wvd_domain_join_account={"username":"${{SP_JOINDOMAIN_ID}}", "password":"${{SP_JOINDOMAIN_SECRET}}"}' -var='wvd_local_admin_account={"username":"${{SP_LOCALADMIN_ID}}", "password":"${{SP_LOCALADMIN_SECRET}}"}'
 
       - name: Apply execution plan
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var="subscription_id=${{SUBSCRIPTION_ID}}" -var='terraform_sp={"client_id":"${{SP_DEV_TERRAFORM_ID}}", "client_secret":"${{SP_DEV_TERRAFROM_SECRET}}"}' -var="aad_tenant_id=${{AAD_TENANT_ID}}" -var='wvd_domain_join_account={"username":"${{SP_JOINDOMAIN_ID}}", "password":"${{SP_JOINDOMAIN_SECRET}}"}' -var='wvd_local_admin_account={"username":"${{SP_LOCALADMIN_ID}}", "password":"${{SP_LOCALADMIN_SECRET}}"}'
