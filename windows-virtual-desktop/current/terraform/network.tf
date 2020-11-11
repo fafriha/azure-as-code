@@ -15,7 +15,7 @@ resource "azurerm_virtual_network" "wvd" {
   address_space       = [var.wvd_virtual_network["address_space"]]
   location            = azurerm_resource_group.wvd.location
   resource_group_name = azurerm_resource_group.wvd.name
-  dns_servers         = [var.wvd_virtual_network["dns_servers"]]
+  dns_servers         = [data.azurerm_virtual_network.hub.dns_servers]
 }
 
 ## This peering to the hub virtual network will allow session hosts to communicate with the domain controllers
