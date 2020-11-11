@@ -1,4 +1,4 @@
-name: Validate Terraform configuration
+name: validate-terraform-conf
 on:
   push:
     branches: [ master ]
