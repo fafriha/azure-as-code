@@ -1,3 +1,2 @@
 windows-virtual-desktop/current/terraform/.terraform*
-windows-virtual-desktop/current/terraform/terraform.tfstate
-windows-virtual-desktop/current/terraform/variables.tf
+windows-virtual-desktop/current/terraform/terraform.tfstate*

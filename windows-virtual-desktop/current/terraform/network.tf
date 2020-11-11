@@ -11,11 +11,11 @@ resource "azurerm_virtual_network_peering" "hub_peering" {
 
 ## This virtual network will host all session hosts
 resource "azurerm_virtual_network" "wvd" {
-  name                      = var.wvd_virtual_network["name"]
-  address_space             = [var.wvd_virtual_network["address_space"]]
-  location                  = azurerm_resource_group.wvd.location
-  resource_group_name       = azurerm_resource_group.wvd.name
-  dns_servers               = [var.wvd_virtual_network["dns_servers"]]
+  name                = var.wvd_virtual_network["name"]
+  address_space       = [var.wvd_virtual_network["address_space"]]
+  location            = azurerm_resource_group.wvd.location
+  resource_group_name = azurerm_resource_group.wvd.name
+  dns_servers         = [var.wvd_virtual_network["dns_servers"]]
 }
 
 ## This peering to the hub virtual network will allow session hosts to communicate with the domain controllers
@@ -57,10 +57,10 @@ resource "azurerm_public_ip" "wvd_bastion" {
 
 ## Each session host from the canary environment will have a single network interface
 resource "azurerm_network_interface" "wvd_hosts" {
-  for_each                  = {for s in local.session_hosts : format("%s-%02d-01", s.vm_prefix, s.index+1) => s}
-  name                      = "nic-${each.key}"
-  location                  = azurerm_resource_group.wvd.location
-  resource_group_name       = azurerm_resource_group.wvd.name
+  for_each            = { for s in local.session_hosts : format("%s-%02d-01", s.vm_prefix, s.index + 1) => s }
+  name                = "nic-${each.key}"
+  location            = azurerm_resource_group.wvd.location
+  resource_group_name = azurerm_resource_group.wvd.name
 
   ip_configuration {
     name                          = "ipc-${each.key}"
