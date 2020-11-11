@@ -32,7 +32,7 @@ jobs:
           
       - name: Apply execution plan
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        run: terraform plan 
+        run: terraform apply -auto-approve
               -var "aad_tenant_id=${{ secrets.AAD_TENANT_ID }}" 
               -var "subscription_id=${{ secrets.SUBSCRIPTION_ID }}" 
               -var 'terraform_sp={"client_id":"${{ secrets.SP_DEV_TERRAFORM_ID }}","client_secret":"${{ secrets.SP_DEV_TERRAFORM_SECRET }}"}' 
