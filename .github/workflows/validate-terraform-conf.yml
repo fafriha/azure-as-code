@@ -6,7 +6,7 @@ on:
     branches: [ master ]
 jobs:
   integrate:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     defaults:
       run:
         shell: pwsh
@@ -47,4 +47,4 @@ jobs:
               -var terraform_sp='{\"client_id\":\"${{ secrets.SP_DEV_TERRAFORM_ID }}\",\"client_secret\":\"${{ secrets.SP_DEV_TERRAFROM_SECRET }}\"}' `
               -var wvd_domain_join_account='{\"username\":\"${{ secrets.SP_JOINDOMAIN_ID }}\",\"password\":\"${{ secrets.SP_JOINDOMAIN_SECRET }}\"}' `
               -var wvd_local_admin_account='{\"username\":\"${{ secrets.SP_LOCALADMIN_ID }}\",\"password\":\"${{ secrets.SP_LOCALADMIN_SECRET }}\"}'          
-          azPSVersion: latest"password":"${{ secrets.SP_JOINDOMAIN_SECRET }}"}' -var='wvd_local_admin_account={"username":"${{ secrets.SP_LOCALADMIN_ID }}", "password":"${{ secrets.SP_LOCALADMIN_SECRET }}"}'
+          azPSVersion: latest
