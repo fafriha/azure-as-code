@@ -1,0 +1,28 @@
+name: Validate Terraform configuration
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./windows-virtual-desktop/current/terraform
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Initialize environment
+        run: terraform init
+
+      - name: Format configuration
+        run: terraform fmt -check
+
+      - name: Create execution plan
+        run: terraform plan
+
+      - name: Apply execution plan
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        run: terraform apply -auto-approve
