@@ -5,11 +5,11 @@ on:
   pull_request:
     branches: [ master ]
 jobs:
-  validate:
+  integrate:
     runs-on: ubuntu-latest
     defaults:
       run:
-        shell: bash
+        shell: pwsh
         working-directory: ./windows-virtual-desktop/current/terraform
     steps:
       - uses: actions/checkout@v2
@@ -26,3 +26,16 @@ jobs:
       - name: Apply execution plan
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: terraform apply -auto-approve -var="subscription_id=${{ secrets.SUBSCRIPTION_ID }}" -var='terraform_sp={"client_id":"${{ secrets.SP_DEV_TERRAFORM_ID }}", "client_secret":"${{ secrets.SP_DEV_TERRAFROM_SECRET }}"}' -var="aad_tenant_id=${{ secrets.AAD_TENANT_ID }}" -var='wvd_domain_join_account={"username":"${{ secrets.SP_JOINDOMAIN_ID }}", "password":"${{ secrets.SP_JOINDOMAIN_SECRET }}"}' -var='wvd_local_admin_account={"username":"${{ secrets.SP_LOCALADMIN_ID }}", "password":"${{ secrets.SP_LOCALADMIN_SECRET }}"}'
+  #deploy:
+  #    runs-on: ubuntu-latest
+  #    defaults:
+  #      run:
+  #        shell: bash
+  #        working-directory: ./windows-virtual-desktop/current/terraform
+  #    steps:
+  #      - name: Initialize environment
+  #        run: terraform init
+  #        
+  #      - name: Apply execution plan
+  #        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+  #        run: terraform apply -auto-approve -var="subscription_id=${{ secrets.SUBSCRIPTION_ID }}" -var='terraform_sp={"client_id":"${{ secrets.SP_DEV_TERRAFORM_ID }}", "client_secret":"${{ secrets.SP_DEV_TERRAFROM_SECRET }}"}' -var="aad_tenant_id=${{ secrets.AAD_TENANT_ID }}" -var='wvd_domain_join_account={"username":"${{ secrets.SP_JOINDOMAIN_ID }}", "password":"${{ secrets.SP_JOINDOMAIN_SECRET }}"}' -var='wvd_local_admin_account={"username":"${{ secrets.SP_LOCALADMIN_ID }}", "password":"${{ secrets.SP_LOCALADMIN_SECRET }}"}'
