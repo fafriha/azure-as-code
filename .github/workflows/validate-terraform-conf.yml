@@ -11,18 +11,18 @@ on:
     branches: [ master ]
     
 jobs:
-  integration-and-deployment:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
-      - name: Initialize environment
+      - name: Initialize
         run: terraform init
 
-      - name: Format configuration
+      - name: Format
         run: terraform fmt
 
-      - name: Create execution plan
+      - name: Plan
         run: terraform plan 
               -var "aad_tenant_id=${{ secrets.AAD_TENANT_ID }}"
               -var "subscription_id=${{ secrets.SUBSCRIPTION_ID }}"
@@ -30,7 +30,7 @@ jobs:
               -var 'wvd_domain_join_account={"username":"${{ secrets.SP_JOINDOMAIN_ID }}","password":"${{ secrets.SP_JOINDOMAIN_SECRET }}"}'
               -var 'wvd_local_admin_account={"username":"${{ secrets.SP_LOCALADMIN_ID }}","password":"${{ secrets.SP_LOCALADMIN_SECRET }}"}'          
           
-      - name: Apply execution plan
+      - name: Apply
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: terraform apply -auto-approve
               -var "aad_tenant_id=${{ secrets.AAD_TENANT_ID }}" 
@@ -38,3 +38,7 @@ jobs:
               -var 'terraform_sp={"client_id":"${{ secrets.SP_DEV_TERRAFORM_ID }}","client_secret":"${{ secrets.SP_DEV_TERRAFORM_SECRET }}"}' 
               -var 'wvd_domain_join_account={"username":"${{ secrets.SP_JOINDOMAIN_ID }}","password":"${{ secrets.SP_JOINDOMAIN_SECRET }}"}' 
               -var 'wvd_local_admin_account={"username":"${{ secrets.SP_LOCALADMIN_ID }}","password":"${{ secrets.SP_LOCALADMIN_SECRET }}"}'          
+      
+      - name: Destroy
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        run: terraform destroy
