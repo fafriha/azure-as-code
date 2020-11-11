@@ -21,12 +21,23 @@ jobs:
         run: terraform fmt
 
       - name: Create execution plan
-        run: terraform plan `
+        uses: Azure/powershell@v1
+        with:
+          inlineScript: terraform plan `
               -var aad_tenant_id=${{ secrets.AAD_TENANT_ID }} `
               -var subscription_id=${{ secrets.SUBSCRIPTION_ID }} `
               -var terraform_sp='{\"client_id\":\"${{ secrets.SP_DEV_TERRAFORM_ID }}\",\"client_secret\":\"${{ secrets.SP_DEV_TERRAFROM_SECRET }}\"}' `
               -var wvd_domain_join_account='{\"username\":\"${{ secrets.SP_JOINDOMAIN_ID }}\",\"password\":\"${{ secrets.SP_JOINDOMAIN_SECRET }}\"}' `
-              -var wvd_local_admin_account='{\"username\":\"${{ secrets.SP_LOCALADMIN_ID }}\",\"password\":\"${{ secrets.SP_LOCALADMIN_SECRET }}\"}'
+              -var wvd_local_admin_account='{\"username\":\"${{ secrets.SP_LOCALADMIN_ID }}\",\"password\":\"${{ secrets.SP_LOCALADMIN_SECRET }}\"}'          
+          azPSVersion: latest
+          
+      #- name: Create execution plan
+       # run: terraform plan `
+       #       -var aad_tenant_id=${{ secrets.AAD_TENANT_ID }} `
+        #      -var subscription_id=${{ secrets.SUBSCRIPTION_ID }} `
+         #     -var terraform_sp='{\"client_id\":\"${{ secrets.SP_DEV_TERRAFORM_ID }}\",\"client_secret\":\"${{ secrets.SP_DEV_TERRAFROM_SECRET }}\"}' `
+          #    -var wvd_domain_join_account='{\"username\":\"${{ secrets.SP_JOINDOMAIN_ID }}\",\"password\":\"${{ secrets.SP_JOINDOMAIN_SECRET }}\"}' `
+           #   -var wvd_local_admin_account='{\"username\":\"${{ secrets.SP_LOCALADMIN_ID }}\",\"password\":\"${{ secrets.SP_LOCALADMIN_SECRET }}\"}'
                
       - name: Apply execution plan
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
