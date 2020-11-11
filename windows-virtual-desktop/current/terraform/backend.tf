@@ -1,8 +1,8 @@
 terraform {
   backend "azurerm" {
-    resource_group_name  = var.tf_backend["resource_group_name"]
-    storage_account_name = var.tf_backend["storage_account_name"]
-    container_name       = var.tf_backend["container_name"]
-    key                  = var.tf_backend["blob_name"]
+    resource_group_name  = "rg-prd-frc-tf-01"
+    storage_account_name = "saprdfrctf01"
+    container_name       = "windows-virtual-desktop"
+    key                  = "prd-terraform.tfstate"
   }
 }
