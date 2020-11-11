@@ -1,3 +1,3 @@
 # azure-as-code
-![Terraform code validated](https://github.com/faroukfriha/azure-as-code/workflows/validate-terraform-conf/badge.svg)
-![Code scan](https://github.com/faroukfriha/azure-as-code/workflows/Code%20scan/badge.svg)
+![Windows Virtual Desktop](https://github.com/faroukfriha/azure-as-code/workflows/Windows%20Virtual%20Desktop/badge.svg)
+![Code](https://github.com/faroukfriha/azure-as-code/workflows/Code/badge.svg)
