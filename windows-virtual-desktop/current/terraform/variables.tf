@@ -66,7 +66,7 @@ variable "wvd_application_group" {
       "location"       = "EastUs"
       "friendly_name"  = "Canary"
       "description"    = "Dedicated to canary deployments."
-      "host_pool_name" = "hp-can-frc-wvd-01"
+      "hostpool_name" = "hp-can-frc-wvd-01"
       "users"          = ["user@company.com"] #WARNING - Adding users to application groups required User Access Administrator or Owner rights
     },
     ag-prd-frc-wvd-02 = {
@@ -75,7 +75,7 @@ variable "wvd_application_group" {
       "location"       = "EastUs"
       "friendly_name"  = "Office"
       "description"    = "Dedicated to medium workload type (Microsoft Word, CLIs, ...)."
-      "host_pool_name" = "hp-prd-frc-wvd-02"
+      "hostpool_name" = "hp-prd-frc-wvd-02"
       "users"          = ["user@company.com"] #WARNING - Adding users to application groups required User Access Administrator or Owner rights
     }
   }
