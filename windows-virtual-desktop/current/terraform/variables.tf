@@ -56,6 +56,7 @@ variable "wvd_hostpool" {
   }
 }
 
+###### WARNING ##### Adding users to application groups requires User Access Administrator or Owner rights
 variable "wvd_application_group" {
   description = "Please provide the required information to create a WVD application group."
   type        = map(any)
@@ -67,7 +68,7 @@ variable "wvd_application_group" {
       "friendly_name"  = "Canary"
       "description"    = "Dedicated to canary deployments."
       "hostpool_name"  = "hp-can-frc-wvd-01"
-      #"users"          = ["user@company.com"] WARNING - Adding users to application groups required User Access Administrator or Owner rights
+      "users"          = ["user@company.com"] 
     },
     ag-prd-frc-wvd-02 = {
       "name"           = "ag-prd-frc-wvd-02"
@@ -76,7 +77,7 @@ variable "wvd_application_group" {
       "friendly_name"  = "Office"
       "description"    = "Dedicated to medium workload type (Microsoft Word, CLIs, ...)."
       "hostpool_name"  = "hp-prd-frc-wvd-02"
-      #"users"          = ["user@company.com"] WARNING - Adding users to application groups required User Access Administrator or Owner rights
+      "users"          = ["user@company.com"]
     }
   }
 }
