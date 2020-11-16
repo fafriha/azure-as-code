@@ -1,16 +1,15 @@
 
 # Azure as Code
 
+![Maintenance](https://img.shields.io/maintenance/yes/2020?style=for-the-badge&logo=awesome-lists&logoColor=white)
 ![GitHub followers](https://img.shields.io/github/followers/faroukfriha?style=for-the-badge&logo=github)
 ![Forks](https://img.shields.io/github/forks/faroukfriha/azure-as-code?style=for-the-badge&logo=github)
 ![Commits](https://img.shields.io/github/commit-activity/w/faroukfriha/azure-as-code?style=for-the-badge&logo=github)
-![Last commit](https://img.shields.io/github/last-commit/faroukfriha/azure-as-code?style=for-the-badge)
+![Last commit](https://img.shields.io/github/last-commit/faroukfriha/azure-as-code?style=for-the-badge&logo=github)
 
 
 ## Windows Virtual Destkop
-![Windows Virtual Desktop](https://github.com/faroukfriha/azure-as-code/workflows/Windows%20Virtual%20Desktop/badge.svg)
-
-
+![Windows Virtual Desktop](https://img.shields.io/github/workflow/status/faroukfriha/azure-as-code/Windows%20Virtual%20Desktop/master?logo=github-actions&logoColor=white&style=for-the-badge)
 
 ## Azure Kubernetes Services
 
@@ -70,11 +69,6 @@ Copy and paste the content of the script named StopStartClassicVMs.ps1 to your A
 Coming soon
 
 ---
-
-## Status
-
-![Maintenance](https://img.shields.io/maintenance/yes/2020?style=flat-square)
-
 
 ## Languages
 
