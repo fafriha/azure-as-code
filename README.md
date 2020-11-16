@@ -1,9 +1,9 @@
 
 # Azure as Code
 
-![Forks](https://img.shields.io/github/forks/fafriha/azure-as-code?style=for-the-badge&logo=github)
-![Commits](https://img.shields.io/github/commit-activity/m/fafriha/azure-as-code?style=for-the-badge&logo=github)
-![Downloads](https://img.shields.io/github/downloads/fafriha/azure-as-code/total?style=for-the-badge&logo=github)
+![Forks](https://img.shields.io/github/forks/faroukfriha/azure-as-code?style=for-the-badge&logo=github)
+![Commits](https://img.shields.io/github/commit-activity/m/faroukfriha/azure-as-code?style=for-the-badge&logo=github)
+![Downloads](https://img.shields.io/github/downloads/faroukfriha/azure-as-code/total?style=for-the-badge&logo=github)
 
 ## Windows Virtual Destkop
 ![Windows Virtual Desktop](https://github.com/faroukfriha/azure-as-code/workflows/Windows%20Virtual%20Desktop/badge.svg)
