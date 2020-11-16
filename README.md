@@ -71,12 +71,16 @@ Coming soon
 
 ## Languages
 
-![Terraform](https://img.shields.io/badge/powershell-%235391FE.svg?&style=for-the-badge&logo=powershell&logoColor=white) ![Terraform](https://img.shields.io/badge/terraform-%23623CE4.svg?&style=for-the-badge&logo=terraform&logoColor=white) ![Terraform](https://img.shields.io/badge/python-%233776AB.svg?&style=for-the-badge&logo=python&logoColor=white)
-![Terraform](https://img.shields.io/badge/chocolatey-%2380B5E3.svg?&style=for-the-badge&logo=chocolatey&logoColor=white)
-![Terraform](https://img.shields.io/badge/json-%23000000.svg?&style=for-the-badge&logo=json) 
+![Terraform](https://img.shields.io/badge/terraform-%23623CE4.svg?&style=for-the-badge&logo=terraform&logoColor=white) 
+![PowerShell](https://img.shields.io/badge/powershell-%235391FE.svg?&style=for-the-badge&logo=powershell&logoColor=white) 
+![Python](https://img.shields.io/badge/python-%233776AB.svg?&style=for-the-badge&logo=python&logoColor=white)
+![Chocolatey](https://img.shields.io/badge/chocolatey-%2380B5E3.svg?&style=for-the-badge&logo=chocolatey&logoColor=white)
+![JSON](https://img.shields.io/badge/json-%23000000.svg?&style=for-the-badge&logo=json) 
 
 ## Author
-[![Linkedin](https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/faroukfriha) [![Twitter](https://img.shields.io/badge/twitter-%231DA1F2.svg?&style=for-the-badge&logo=twitter&logoColor=white)](https://www.twitter.com/faroukfriha) [![GitHub](https://img.shields.io/badge/github-%23181717.svg?&style=for-the-badge&logo=github)](https://www.github.com/faroukfriha)
+[![Linkedin](https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/faroukfriha) 
+[![Twitter](https://img.shields.io/badge/twitter-%231DA1F2.svg?&style=for-the-badge&logo=twitter&logoColor=white)](https://www.twitter.com/faroukfriha) 
+[![GitHub](https://img.shields.io/badge/github-%23181717.svg?&style=for-the-badge&logo=github)](https://www.github.com/faroukfriha)
 
 ## License
-![License](https://img.shields.io/github/license/faroukfriha/azure-as-code?style=for-the-badge&logo=open-source-initiative&logoColor=white) 
+[![License](https://img.shields.io/badge/MIT-%233DA639.svg?&style=for-the-badge&logoColor=white&logo=open-source-initiative&color=black)](https://opensource.org/licenses/MIT)
