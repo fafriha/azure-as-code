@@ -17,7 +17,7 @@ resource "azurerm_virtual_desktop_host_pool" "wvd_hostpool" {
   }
 }
 
-# Creating all application groups
+## Creating all application groups
 resource "azurerm_virtual_desktop_application_group" "wvd_application_group" {
   for_each            = var.wvd_application_group
   name                = each.value.name
@@ -29,7 +29,7 @@ resource "azurerm_virtual_desktop_application_group" "wvd_application_group" {
   description         = each.value.description
 }
 
-# Creating all workspaces
+## Creating all workspaces
 resource "azurerm_virtual_desktop_workspace" "wvd_workspace" {
   for_each            = var.wvd_workspace
   name                = each.value.name
@@ -39,7 +39,7 @@ resource "azurerm_virtual_desktop_workspace" "wvd_workspace" {
   description         = each.value.description
 }
 
-# Including application groups to relevant workspaces
+## Including application groups to relevant workspaces
 resource "azurerm_virtual_desktop_workspace_application_group_association" "none" {
   for_each             = { for wks in local.workspaces : wks.name => wks }
   workspace_id         = azurerm_virtual_desktop_workspace.wvd_workspace[each.key].id
