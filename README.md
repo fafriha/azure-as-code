@@ -3,7 +3,8 @@
 
 ![GitHub followers](https://img.shields.io/github/followers/faroukfriha?style=for-the-badge&logo=github)
 ![Forks](https://img.shields.io/github/forks/faroukfriha/azure-as-code?style=for-the-badge&logo=github)
-![Commits](https://img.shields.io/github/commit-activity/m/faroukfriha/azure-as-code?style=for-the-badge&logo=github)
+![Commits](https://img.shields.io/github/commit-activity/w/faroukfriha/azure-as-code?style=for-the-badge&logo=github)
+![Last commit](https://img.shields.io/github/last-commit/faroukfriha/azure-as-code?style=for-the-badge)
 
 
 ## Windows Virtual Destkop
