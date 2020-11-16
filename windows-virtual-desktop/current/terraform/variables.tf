@@ -116,7 +116,7 @@ variable "wvd_networking" {
     "clients_subnet_name"           = "snet-prd-frc-wvd-01"
     "clients_subnet_address_prefix" = "192.168.1.0/27"
     "public_ip_name"                = "pip-prd-frc-wvd-01"
-    "network_securiy_group_name"    = "nsg-prd-frc-wvd-01"
+    "network_security_group_name"    = "nsg-prd-frc-wvd-01"
     "bastion_name"                  = "bas-prd-frc-wvd-01"
   }
 }

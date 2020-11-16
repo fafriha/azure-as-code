@@ -52,7 +52,7 @@ resource "azurerm_subnet" "wvd_bastion" {
 
 ## Creating a Public IP for the Bastion instance
 resource "azurerm_public_ip" "wvd_bastion" {
-  name                = var.wvd_networking["publc_ip_name"]
+  name                = var.wvd_networking["public_ip_name"]
   location            = azurerm_resource_group.wvd_resource_group.location
   resource_group_name = azurerm_resource_group.wvd_resource_group.name
   allocation_method   = "Static"
