@@ -1,6 +1,11 @@
 
 # Azure as Code
-![License](https://img.shields.io/github/license/fafriha/azure-as-code?style=for-the-badge&logo=open-source-initiative&logoColor=white) ![GitHub commits](https://img.shields.io/github/commit-activity/m/fafriha/azure-as-code?style=for-the-badge&logo=github) ![GitHub all releases](https://img.shields.io/github/downloads/fafriha/azure-as-code/total?style=for-the-badge&logo=github) ![GitHub forks](https://img.shields.io/github/forks/fafriha/azure-as-code?style=for-the-badge&logo=github) ![GitHub followers](https://img.shields.io/github/followers/fafriha?style=for-the-badge&logo=github)
+![License](https://img.shields.io/github/license/fafriha/azure-as-code?style=for-the-badge&logo=open-source-initiative&logoColor=white) 
+
+![Followers](https://img.shields.io/github/followers/fafriha?style=for-the-badge&logo=github)
+![Forks](https://img.shields.io/github/forks/fafriha/azure-as-code?style=for-the-badge&logo=github)
+![Commits](https://img.shields.io/github/commit-activity/m/fafriha/azure-as-code?style=for-the-badge&logo=github)
+![Downloads](https://img.shields.io/github/downloads/fafriha/azure-as-code/total?style=for-the-badge&logo=github)
 
 ## Windows Virtual Destkop
 ![Windows Virtual Desktop](https://github.com/faroukfriha/azure-as-code/workflows/Windows%20Virtual%20Desktop/badge.svg)
