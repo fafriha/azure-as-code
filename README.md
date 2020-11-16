@@ -7,7 +7,6 @@
 ![Commits](https://img.shields.io/github/commit-activity/m/faroukfriha/azure-as-code?style=for-the-badge&logo=github)
 ![Last commit](https://img.shields.io/github/last-commit/faroukfriha/azure-as-code?style=for-the-badge&logo=github)
 
-
 ## Windows Virtual Destkop
 ![Windows Virtual Desktop](https://img.shields.io/github/workflow/status/faroukfriha/azure-as-code/Windows%20Virtual%20Desktop/master?logo=github-actions&logoColor=white&style=for-the-badge)
 
