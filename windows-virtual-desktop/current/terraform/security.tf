@@ -84,10 +84,11 @@ resource "azurerm_role_assignment" "wvd_sp" {
   principal_id         = local.sp_roles[count.index].name != "Terraform Service Principal" ? azurerm_function_app.wvd_function[local.sp_roles[count.index].name].identity.0.principal_id : data.azurerm_client_config.current.object_id
 }
 
-## Adding users to application groups
-resource "azurerm_role_assignment" "wvd_users" {
-  count                = length(local.application_groups)
-  scope                = azurerm_virtual_desktop_application_group.wvd_application_group[local.application_groups[count.index].name].id
-  role_definition_name = "Desktop virtualization user"
-  principal_id         = data.azuread_user.wvd_users[local.application_groups[count.index].user].id
-}
+# ## Adding users to application groups
+# #### WARNING - Adding users to application groups required User Access Administrator or Owner rights
+# resource "azurerm_role_assignment" "wvd_users" {
+#   count                = length(local.application_groups)
+#   scope                = azurerm_virtual_desktop_application_group.wvd_application_group[local.application_groups[count.index].name].id
+#   role_definition_name = "Desktop virtualization user"
+#   principal_id         = data.azuread_user.wvd_users[local.application_groups[count.index].user].id
+# }
