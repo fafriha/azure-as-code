@@ -1,8 +1,6 @@
 
 # Azure as Code
-![License](https://img.shields.io/github/license/fafriha/azure-as-code?style=for-the-badge&logo=open-source-initiative&logoColor=white) 
 
-![Followers](https://img.shields.io/github/followers/fafriha?style=for-the-badge&logo=github)
 ![Forks](https://img.shields.io/github/forks/fafriha/azure-as-code?style=for-the-badge&logo=github)
 ![Commits](https://img.shields.io/github/commit-activity/m/fafriha/azure-as-code?style=for-the-badge&logo=github)
 ![Downloads](https://img.shields.io/github/downloads/fafriha/azure-as-code/total?style=for-the-badge&logo=github)
@@ -84,3 +82,6 @@ Coming soon
 
 ## Author
 [![Linkedin](https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/faroukfriha) [![Twitter](https://img.shields.io/badge/twitter-%231DA1F2.svg?&style=for-the-badge&logo=twitter&logoColor=white)](https://www.twitter.com/faroukfriha) [![GitHub](https://img.shields.io/badge/github-%23181717.svg?&style=for-the-badge&logo=github)](https://www.github.com/faroukfriha)
+
+## License
+![License](https://img.shields.io/github/license/fafriha/azure-as-code?style=for-the-badge&logo=open-source-initiative&logoColor=white) 
