@@ -1,20 +1,38 @@
-## Creating a basic network security to deny all inboud traffic (should be disabled if using a firewall)
+## Creating a network security group to secure session hosts (should be disabled if already using a Bastion in a hub)
 resource "azurerm_network_security_group" "wvd_network_security_group" {
   name                = var.wvd_networking["network_security_group_name"]
   location            = azurerm_resource_group.wvd_resource_group.location
   resource_group_name = azurerm_resource_group.wvd_resource_group.name
+}
 
-  security_rule {
-    name                       = "DenyAllInbound"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Deny"
-    protocol                   = "*"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
+## Creating a security rule to allow Bastion traffic to canary hosts (should be disabled if already using a Bastion in a hub)
+resource "azurerm_network_security_rule" "wvd_allow_bastion" {
+  name                        = "AllowAzureBastionInbound"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "*"
+  source_address_prefix       = azurerm_subnet.wvd_bastion.address_prefix
+  destination_address_prefix  = azurerm_subnet.wvd_canary.address_prefix
+  resource_group_name         = azurerm_resource_group.wvd_resource_group.name
+  network_security_group_name = azurerm_network_security_group.wvd_network_security_group.name
+}
+
+## Creating a basic network security group to deny all inboud traffic to production hosts (should be disabled if already using a Bastion in a hub)
+resource "azurerm_network_security_rule" "wvd_deny_all" {
+  name                        = "DenyAllInbound"
+  priority                    = 4096
+  direction                   = "Inbound"
+  access                      = "Deny"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "*"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.wvd_resource_group.name
+  network_security_group_name = azurerm_network_security_group.wvd_network_security_group.name
 }
 
 ## Associating the network security group with subnets hosting session hosts

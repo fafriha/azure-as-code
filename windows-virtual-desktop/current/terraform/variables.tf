@@ -116,7 +116,7 @@ variable "wvd_networking" {
     "clients_subnet_name"           = "snet-prd-frc-wvd-01"
     "clients_subnet_address_prefix" = "192.168.1.0/27"
     "public_ip_name"                = "pip-prd-frc-wvd-01"
-    "network_security_group_name"    = "nsg-prd-frc-wvd-01"
+    "network_security_group_name"   = "nsg-prd-frc-wvd-01"
     "bastion_name"                  = "bas-prd-frc-wvd-01"
   }
 }
@@ -211,7 +211,7 @@ variable "wvd_function" {
       "https_only"       = "true"
       "disable_homepage" = "true"
       "secrets_storage"  = "keyvault"
-      "package_uri"      = "https://github.com/faroukfriha/azure-as-code/raw/master/windows-virtual-desktop/current/powershell/functions/Renew-RegistrationTokenAfterExpiration.zip"
+      "package_uri"      = "https://github.com/faroukfriha/azure-as-code/raw/master/windows-virtual-desktop/current/powershell/function/Renew-RegistrationTokenAfterExpiration.zip"
     }
   }
 }

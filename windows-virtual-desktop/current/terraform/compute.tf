@@ -108,7 +108,7 @@ resource "azurerm_virtual_machine_extension" "wvd_join_hostpool" {
 
   settings = <<SETTINGS
     {
-        "fileUris": ["https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/windows-virtual-desktop/current/powershell/Install-WVDAgents.ps1"]
+        "fileUris": ["https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/windows-virtual-desktop/current/powershell/script/Install-WVDAgents.ps1"]
     }
   SETTINGS
 }
