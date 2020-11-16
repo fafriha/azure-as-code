@@ -6,23 +6,28 @@
 
 ## Azure Kubernetes Services
 
+Coming soon
+
 ## Azure AD
 ### Sort applications
-
+Coming soon
 ## Virtual machines management
 The following functions/runbooks/scripts will help you managed all of your resources in your Azure subscriptions.
 ### Monitor
 #### Datadog
+Coming soon
 #### Dynatrace
+Coming soon
 #### Azure Monitor
+Coming soon
 ### Storage
 #### Mount disks on virtual machine creation
+Coming soon
 ### Metadata
 #### Rename virtual machines
+Coming soon
 ### Cost
-
 #### StopStartVMs
-
 ##### Description
 
 This PowerShell Workflow Runbook connects to Azure using an Automation Run As account, retrieves the power status of Azure VMs and turns off / on  in parallel those that are turned on / off. You can attach a recurring schedule to this runbook to run it at a specific time.
@@ -54,3 +59,4 @@ This PowerShell Workflow Runbook connects to Azure using an Automation Classic R
 Copy and paste the content of the script named StopStartClassicVMs.ps1 to your Azure Automation Runbook or integrate this repository to your Azure Automation account as shown [here](https://docs.microsoft.com/en-us/azure/automation/automation-source-control-integration#step-2--set-up-source-control-in-azure-automation).
 
 ## Dev/Test Labs
+Coming soon
