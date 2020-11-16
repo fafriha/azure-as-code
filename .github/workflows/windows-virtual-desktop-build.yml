@@ -16,6 +16,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Destroy
+        run: terraform destroy -auto-approve
+
       - name: Initialize
         run: terraform init 
               -backend-config="tenant_id=${{ secrets.AAD_TENANT_ID }}"

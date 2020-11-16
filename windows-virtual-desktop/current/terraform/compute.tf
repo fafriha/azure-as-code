@@ -75,9 +75,9 @@ resource "azurerm_virtual_machine_extension" "wvd_join_domain" {
 
   settings = <<SETTINGS
     {
-      "Name": "${var.wvd_domain["name"]}",
-
-      "User": "${azurerm_key_vault_secret.wvd_domain_join_account.name}@${var.wvd_domain["name"]}",
+      "Name": "${var.wvd_domain["domain_name"]}",
+      "OUPath": "${var.wvd_domain["ou_path"]}",
+      "User": "${azurerm_key_vault_secret.wvd_domain_join_account.name}@${var.wvd_domain["domain_name"]}",
       "Restart": "true",
       "Options": "3"
     }

@@ -145,7 +145,7 @@ variable "wvd_domain" {
   description = "Please provide the required information about your exsiting Active Directory domain."
   type        = map(string)
   default = {
-    "name"    = "friha.fr"
+    "domain_name"    = "friha.fr"
     "ou_path" = "OU=EMEA,DC=friha,DC=fr"
   }
 }

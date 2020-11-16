@@ -41,5 +41,6 @@ catch
 finally
 {
     Write-Host "End of execution. Restarting"
+    Restart-Computr -Force
     $LASTEXITCODE
 }

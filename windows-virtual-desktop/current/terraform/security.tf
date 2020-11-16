@@ -41,6 +41,12 @@ resource "azurerm_subnet_network_security_group_association" "none" {
   network_security_group_id = azurerm_network_security_group.wvd_network_security_group.id
 }
 
+## Associating the network security group with subnets hosting session hosts
+resource "azurerm_subnet_network_security_group_association" "none" {
+  subnet_id                 = azurerm_subnet.wvd_canary.id
+  network_security_group_id = azurerm_network_security_group.wvd_network_security_group.id
+}
+
 ## Creating an Azure Key Vault to store all secrets
 resource "azurerm_key_vault" "wvd_key_vault" {
   name                            = var.wvd_key_vault_name
