@@ -40,7 +40,7 @@ catch
 }
 finally
 {
-    Write-Host "End of execution. Restarting"
+    Write-Host "Restarting..."
     Restart-Computr -Force
     $LASTEXITCODE
 }
