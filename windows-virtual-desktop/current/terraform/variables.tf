@@ -1,32 +1,26 @@
-################################################### Hub ################################################
+################################################### Mandatory ################################################
 
-variable "hub_resource_group_name" {
-  description = "[Mandatory] [Import] Enter the name of your existing hub resource group which contains or allows you to communicate with your core resources (domain controllers, dns servers, firewall, ...)"
-  default     = "rg-prd-frc-hub-01"
-}
-
-variable "hub_virtual_network" {
-  description = "[Mandatory] [Import] Enter the name of your hub virtual network to which your domain controllers are connected to"
-  type        = map(string)
+variable "hub_resources" {
+  description = "Please provide the information of your existing hub's resources and the desired name of the peering to the WVD's virtual network."
   default = {
-    "name"         = "vnet-prd-frc-hub-01"
-    "peering_name" = "peer-prd-frc-hub-to-wvd-01"
+    "resource_group_name"      = "rg-prd-frc-hub-01"
+    "virtual_network_name"     = "vnet-prd-frc-hub-01"
+    "peering_name"             = "peer-prd-frc-hub-to-wvd-01"
+    "default_route_table_name" = "rt-prd-frc-default-01"
   }
 }
-
-################################################### Windows Virtual Desktop ################################################
 
 variable "wvd_resource_group" {
-  description = "[Mandatory] [Create] Provide the required information to create the resource group in which all Windows Virtual Desktop resources will de deployed."
+  description = "Please provide a name and a location for the resource group that will contain all WVD related resources."
   type        = map(string)
   default = {
-    "name"     = "rg-prd-frc-wvd-01"
-    "location" = "francecentral"
+    "resource_group_name" = "rg-prd-frc-wvd-01"
+    "location"            = "francecentral"
   }
 }
 
-variable "wvd_host_pools" {
-  description = "[Mandatory] [Import] Provide the required information about the host pool you wan to create."
+variable "wvd_hostpool" {
+  description = "Please provide the required information to create a WVD hostpool."
   type        = map(any)
   default = {
     hp-can-frc-wvd-01 = {
@@ -62,8 +56,8 @@ variable "wvd_host_pools" {
   }
 }
 
-variable "wvd_application_groups" {
-  description = "[Mandatory] [Import] Enter the required informations to create the application group."
+variable "wvd_application_group" {
+  description = "Please provide the required information to create a WVD application group."
   type        = map(any)
   default = {
     ag-can-frc-wvd-01 = {
@@ -87,8 +81,8 @@ variable "wvd_application_groups" {
   }
 }
 
-variable "wvd_workspaces" {
-  description = "[Mandatory] [Create] Enter the information related to the workspace that will contain application groups."
+variable "wvd_workspace" {
+  description = "Please provide the required information to create a WVD workspace."
   type        = map(any)
   default = {
     wks-can-frc-wvd-01 = {
@@ -108,11 +102,11 @@ variable "wvd_workspaces" {
   }
 }
 
-variable "wvd_virtual_network" {
-  description = "[Mandatory] [Create] Enter the name of the virtual network that will host all session hosts."
+variable "wvd_networking" {
+  description = "Please provide the required networking information for the environment."
   type        = map(any)
   default = {
-    "name"                          = "vnet-prd-frc-wvd-01"
+    "virtual_network_name"          = "vnet-prd-frc-wvd-01"
     "address_space"                 = "192.168.1.0/24"
     "peering_name"                  = "peer-prd-frc-wvd-to-core-01"
     "bastion_subnet_name"           = "AzureBastionSubnet"
@@ -121,31 +115,13 @@ variable "wvd_virtual_network" {
     "canary_subnet_address_prefix"  = "192.168.1.192/27"
     "clients_subnet_name"           = "snet-prd-frc-wvd-01"
     "clients_subnet_address_prefix" = "192.168.1.0/27"
-    "default_route_table_name"      = "rt-prd-frc-default-01"
+    "public_ip_name"                = "pip-prd-frc-wvd-01"
+    "network_securiy_group_name"    = "nsg-prd-frc-wvd-01"
+    "bastion_name"                  = "bas-prd-frc-wvd-01"
   }
 }
 
-variable "wvd_network_security_group_name" {
-  description = "[Mandatory] [Create] Enter the name of the network security group that will secure the incoming and outgoing hosts internal traffic."
-  default     = "nsg-prd-frc-wvd-01"
-}
-
-variable "wvd_log_analytics_workspace_name" {
-  description = "[Mandatory] [Create] Enter the name of the log analytics workspace that will be part of the monitoring solution."
-  default     = "log-prd-frc-wvd-01"
-}
-
-variable "wvd_public_ip_name" {
-  description = "[Mandatory] [Create] Enter the name of the public IP address that will be assigned to the bastion host."
-  default     = "pip-prd-frc-wvd-01"
-}
-
-variable "wvd_bastion_name" {
-  description = "[Mandatory] [Create] Enter the name of the bastion host that will allow you to connect securely to all session hosts."
-  default     = "bas-prd-frc-wvd-01"
-}
-
-variable "wvd_storage_accounts" {
+variable "wvd_storage" {
   description = "[Mandatory] [Create] Enter the name of the storage account that will host all user profiles."
   type        = map(string)
   default = {
@@ -161,12 +137,12 @@ variable "wvd_storage_accounts" {
 }
 
 variable "wvd_key_vault_name" {
-  description = "[Mandatory] [Create] Enter the name of the key vault that will store all passwords and secrets securely."
+  description = "Please provide a name for the key vault."
   default     = "kv-prd-frc-wvd-01"
 }
 
 variable "wvd_domain" {
-  description = "[Mandatory] [Import] Enter the name of your domain to join the sesion hosts to."
+  description = "Please provide the required information about your exsiting Active Directory domain."
   type        = map(string)
   default = {
     "name"    = "friha.fr"
@@ -175,7 +151,7 @@ variable "wvd_domain" {
 }
 
 variable "wvd_domain_join_account" {
-  description = "[Mandatory] [Import] Provide the required information about the service account used to join machines to the domain."
+  description = "Please provide the required information about your existing domain join service account."
   type        = map(string)
   default = {
     "username" = ""
@@ -184,7 +160,7 @@ variable "wvd_domain_join_account" {
 }
 
 variable "wvd_local_admin_account" {
-  description = "[Mandatory] [Import] Provide the required information about the account that wil be the local administrator of all session hosts."
+  description = "Please provide the required information for the local administrator account."
   type        = map(string)
   default = {
     "username" = ""
@@ -192,28 +168,18 @@ variable "wvd_local_admin_account" {
   }
 }
 
-variable "wvd_app_service_plan" {
-  description = "[Mandatory] "
+variable "wvd_monitoring" {
+  description = "Please provide the required information about for monitoring resources."
   type        = map(string)
   default = {
-    "name" = "asp-prd-frc-wvd-01"
-    "kind" = "FunctionApp"
-    "tier" = "Dynamic"
-    "size" = "Y1"
-  }
-}
-
-variable "wvd_app_insights" {
-  description = "[Mandatory] "
-  type        = map(string)
-  default = {
-    "name" = "ai-prd-frc-wvd-01"
-    "type" = "web"
+    "log_analytics_workspace_name" = "log-prd-frc-wvd-01"
+    "app_insights_name"            = "ai-prd-frc-wvd-01"
+    "app_insights_type"            = "web"
   }
 }
 
 variable "wvd_events" {
-  description = "[Mandatory] [Import] "
+  description = "Please provide the required informations for the pusblished events."
   type        = map(string)
   default = {
     "topic_name"        = "topic-prd-frc-wvd-01"
@@ -223,8 +189,19 @@ variable "wvd_events" {
   }
 }
 
-variable "wvd_functions" {
-  description = "[Mandatory] [Import] "
+variable "wvd_app_service_plan" {
+  description = "Please provide the required information about the app service plan that will host the function."
+  type        = map(string)
+  default = {
+    "name" = "asp-prd-frc-wvd-01"
+    "kind" = "FunctionApp"
+    "tier" = "Dynamic"
+    "size" = "Y1"
+  }
+}
+
+variable "wvd_function" {
+  description = "Please provide the required information for the functions"
   type        = map(any)
   default = {
     fa-prd-frc-wvd-01 = {
@@ -240,7 +217,7 @@ variable "wvd_functions" {
 }
 
 variable "wvd_sp_roles" {
-  description = "[Mandatory] [Import] "
+  description = "Please provide the required informations about the Managed Identity of the Function App and the Terraform Service Principal."
   type        = map(any)
   default = {
     fa-prd-frc-wvd-01 = {
@@ -254,8 +231,27 @@ variable "wvd_sp_roles" {
   }
 }
 
+variable "terraform_sp" {
+  description = "Please provide the required information about your existing Terraform Service Principal."
+  type        = map(string)
+  default = {
+    "client_id"     = ""
+    "client_secret" = ""
+  }
+}
+
+variable "aad_tenant_id" {
+  description = "Please provide the ID of your existing Azure AD tenant."
+  default     = ""
+}
+
+variable "subscription_id" {
+  description = "Please provide the ID of your existing subscription."
+  default     = ""
+}
+
 ################################################### Locals ################################################
-## Flatening inputs into a collection where each element corresponds to a single resource
+## Flatening inputs into collections where each element corresponds to a single resource
 locals {
 
   sp_roles = flatten([
@@ -269,19 +265,19 @@ locals {
   ])
 
   session_hosts = flatten([
-    for hp in var.wvd_host_pools : [
+    for hp in var.wvd_hostpool : [
       for i in range(hp.vm_count) :
       {
-        vm_size        = hp.vm_size
-        vm_prefix      = hp.vm_prefix
-        host_pool_name = hp.name
-        index          = i
+        vm_size       = hp.vm_size
+        vm_prefix     = hp.vm_prefix
+        hostpool_name = hp.name
+        index         = i
       }
     ]
   ])
 
   application_groups = flatten([
-    for ag in var.wvd_application_groups : [
+    for ag in var.wvd_application_group : [
       for i in range(length(ag.users)) :
       {
         name = ag.name
@@ -291,7 +287,7 @@ locals {
   ])
 
   workspaces = flatten([
-    for wks in var.wvd_workspaces : [
+    for wks in var.wvd_workspace : [
       for i in range(length(wks.application_group_name)) :
       {
         name                   = wks.name
@@ -299,25 +295,4 @@ locals {
       }
     ]
   ])
-}
-
-################################################### Global ################################################
-
-variable "terraform_sp" {
-  description = "[Mandatory] [Import] Enter the application (client) ID of the Terraform app you created."
-  type        = map(string)
-  default = {
-    "client_id"     = ""
-    "client_secret" = ""
-  }
-}
-
-variable "aad_tenant_id" {
-  description = "[Mandatory] [Import] Enter the ID of your Azure Active Directory tenant."
-  default     = ""
-}
-
-variable "subscription_id" {
-  description = "[Mandatory] [Import] Enter the Id of your subscription in which you want to deploy all resources."
-  default     = ""
 }

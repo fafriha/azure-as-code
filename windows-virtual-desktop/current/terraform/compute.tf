@@ -1,10 +1,9 @@
-################################################### Production & Canary ################################################
-## These virtual machines will be used as Windows Virtual Desktop session hosts
+## Creating sessions hosts from the latest W10 marketplace image
 resource "azurerm_windows_virtual_machine" "wvd_hosts" {
   for_each                 = { for s in local.session_hosts : format("%s-%02d", s.vm_prefix, s.index + 1) => s }
   name                     = each.key
-  location                 = azurerm_resource_group.wvd.location
-  resource_group_name      = azurerm_resource_group.wvd.name
+  location                 = azurerm_resource_group.wvd_resource_group.location
+  resource_group_name      = azurerm_resource_group.wvd_resource_group.name
   network_interface_ids    = [azurerm_network_interface.wvd_hosts["${each.key}-01"].id]
   size                     = each.value.vm_size
   zone                     = each.value.index % 3 + 1
@@ -29,14 +28,14 @@ resource "azurerm_windows_virtual_machine" "wvd_hosts" {
   }
 
   tags = {
-    hostpool = each.value.host_pool_name
+    hostpool = each.value.hostpool_name
   }
 }
 
-## This extension will join all session hosts to the log analytics workspace
+## Joinging sessions hosts to a Log Analytis Workspace
 resource "azurerm_virtual_machine_extension" "wvd_join_log_analytics_workspace" {
   for_each                   = azurerm_windows_virtual_machine.wvd_hosts
-  name                       = "LogAnalytics"
+  name                       = "JoinLogAnalyticsWorkspace"
   virtual_machine_id         = azurerm_windows_virtual_machine.wvd_hosts[each.key].id
   publisher                  = "Microsoft.EnterpriseCloud.Monitoring"
   type                       = "MicrosoftMonitoringAgent"
@@ -45,21 +44,21 @@ resource "azurerm_virtual_machine_extension" "wvd_join_log_analytics_workspace" 
 
   settings = <<SETTINGS
 	{
-	  "workspaceId": "${azurerm_log_analytics_workspace.wvd.workspace_id}"
+	  "workspaceId": "${azurerm_log_analytics_workspace.wvd_log_analytics_workspace.workspace_id}"
 	}
 SETTINGS
 
   protected_settings = <<protectedsettings
   {
-    "workspaceKey": "${azurerm_log_analytics_workspace.wvd.primary_shared_key}"
+    "workspaceKey": "${azurerm_log_analytics_workspace.wvd_log_analytics_workspace.primary_shared_key}"
   }
 protectedsettings
 }
 
-## This extension will join all session hosts to the domain
+## Joining session hosts to the domain
 resource "azurerm_virtual_machine_extension" "wvd_join_domain" {
   for_each                   = azurerm_windows_virtual_machine.wvd_hosts
-  name                       = "DomainJoin"
+  name                       = "JoinDomain"
   virtual_machine_id         = azurerm_windows_virtual_machine.wvd_hosts[each.key].id
   publisher                  = "Microsoft.Compute"
   type                       = "JsonADDomainExtension"
@@ -91,9 +90,10 @@ SETTINGS
 PROTECTED_SETTINGS
 }
 
-resource "azurerm_virtual_machine_extension" "wvd_deploy_agents" {
+## Joining session hosts to the host pool
+resource "azurerm_virtual_machine_extension" "wvd_join_hostpool" {
   for_each             = azurerm_windows_virtual_machine.wvd_hosts
-  name                 = "WVDesktopAgents"
+  name                 = "JoinHostpool"
   virtual_machine_id   = azurerm_windows_virtual_machine.wvd_hosts[each.key].id
   publisher            = "Microsoft.Compute"
   type                 = "CustomScriptExtension"
@@ -102,7 +102,7 @@ resource "azurerm_virtual_machine_extension" "wvd_deploy_agents" {
 
   protected_settings = <<PROTECTED_SETTINGS
     {
-      "commandToExecute": "powershell.exe -executionpolicy bypass -command \"./Install-WVDAgents.ps1 -RegistrationToken ${azurerm_virtual_desktop_host_pool.wvd[each.value.tags.hostpool].registration_info[0].token}\""
+      "commandToExecute": "powershell.exe -executionpolicy bypass -command \"./Install-WVDAgents.ps1 -RegistrationToken ${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token}\""
     }
   PROTECTED_SETTINGS
 

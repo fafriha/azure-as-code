@@ -1,4 +1,4 @@
-## Configuring Azure providers
+## Configuring Azure RM provider
 provider "azurerm" {
   subscription_id = var.subscription_id
   client_id       = var.terraform_sp["client_id"]
@@ -11,6 +11,7 @@ provider "azurerm" {
   }
 }
 
+## Configuring Azure AD provider
 provider "azuread" {
   client_id     = var.terraform_sp["client_id"]
   client_secret = var.terraform_sp["client_secret"]
