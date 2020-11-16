@@ -36,13 +36,13 @@ resource "azurerm_network_security_rule" "wvd_deny_all" {
 }
 
 ## Associating the network security group with subnets hosting session hosts
-resource "azurerm_subnet_network_security_group_association" "none" {
+resource "azurerm_subnet_network_security_group_association" "wvd_deny_inbound_traffic" {
   subnet_id                 = azurerm_subnet.wvd_clients.id
   network_security_group_id = azurerm_network_security_group.wvd_network_security_group.id
 }
 
 ## Associating the network security group with subnets hosting session hosts
-resource "azurerm_subnet_network_security_group_association" "none" {
+resource "azurerm_subnet_network_security_group_association" "wvd_allow_bastion_traffic" {
   subnet_id                 = azurerm_subnet.wvd_canary.id
   network_security_group_id = azurerm_network_security_group.wvd_network_security_group.id
 }
