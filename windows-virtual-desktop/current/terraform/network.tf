@@ -11,7 +11,7 @@ resource "azurerm_virtual_network" "wvd_virtual_network" {
 resource "azurerm_virtual_network_peering" "hub_peering" {
   name                      = var.hub_resources["peering_name"]
   resource_group_name       = var.hub_resources["resource_group_name"]
-  virtual_network_name      = var.hub_resources["virtual_name_name"]
+  virtual_network_name      = var.hub_resources["virtual_network_name"]
   remote_virtual_network_id = azurerm_virtual_network.wvd_virtual_network.id
   allow_gateway_transit     = "false"
 }
