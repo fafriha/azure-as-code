@@ -1,4 +1,4 @@
-name: validate-terraform-conf
+name: Windows Virtual Desktop
 defaults:
   run:
     shell: bash
