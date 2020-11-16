@@ -16,15 +16,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Destroy
-        run: terraform destroy -auto-approve
-
       - name: Initialize
         run: terraform init 
               -backend-config="tenant_id=${{ secrets.AAD_TENANT_ID }}"
               -backend-config="subscription_id=${{ secrets.SUBSCRIPTION_ID }}"
               -backend-config="client_id=${{ secrets.SP_DEV_TERRAFORM_ID }}"
               -backend-config="client_secret=${{ secrets.SP_DEV_TERRAFORM_SECRET }}"
+
+      - name: Destroy
+        run: terraform destroy -auto-approve
 
       - name: Format
         run: terraform fmt
