@@ -1,8 +1,11 @@
+
 # Azure as Code
-![Code](https://github.com/faroukfriha/azure-as-code/workflows/Code/badge.svg)
+![License](https://img.shields.io/github/license/fafriha/azure-as-code?style=for-the-badge&logo=open-source-initiative&logoColor=white) ![GitHub commits](https://img.shields.io/github/commit-activity/m/fafriha/azure-as-code?style=for-the-badge&logo=github) ![GitHub all releases](https://img.shields.io/github/downloads/fafriha/azure-as-code/total?style=for-the-badge&logo=github) ![GitHub forks](https://img.shields.io/github/forks/fafriha/azure-as-code?style=for-the-badge&logo=github) ![GitHub followers](https://img.shields.io/github/followers/fafriha?style=for-the-badge&logo=github)
 
 ## Windows Virtual Destkop
 ![Windows Virtual Desktop](https://github.com/faroukfriha/azure-as-code/workflows/Windows%20Virtual%20Desktop/badge.svg)
+
+
 
 ## Azure Kubernetes Services
 
@@ -60,3 +63,19 @@ Copy and paste the content of the script named StopStartClassicVMs.ps1 to your A
 
 ## Dev/Test Labs
 Coming soon
+
+---
+
+## Status
+
+![Maintenance](https://img.shields.io/maintenance/yes/2020?style=flat-square)
+
+
+## Languages
+
+![Terraform](https://img.shields.io/badge/powershell-%235391FE.svg?&style=for-the-badge&logo=powershell&logoColor=white) ![Terraform](https://img.shields.io/badge/terraform-%23623CE4.svg?&style=for-the-badge&logo=terraform&logoColor=white) ![Terraform](https://img.shields.io/badge/python-%233776AB.svg?&style=for-the-badge&logo=python&logoColor=white)
+![Terraform](https://img.shields.io/badge/chocolatey-%2380B5E3.svg?&style=for-the-badge&logo=chocolatey&logoColor=white)
+![Terraform](https://img.shields.io/badge/json-%23000000.svg?&style=for-the-badge&logo=json) 
+
+## Author
+[![Linkedin](https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/faroukfriha) [![Twitter](https://img.shields.io/badge/twitter-%231DA1F2.svg?&style=for-the-badge&logo=twitter&logoColor=white)](https://www.twitter.com/faroukfriha) [![GitHub](https://img.shields.io/badge/github-%23181717.svg?&style=for-the-badge&logo=github)](https://www.github.com/faroukfriha)
