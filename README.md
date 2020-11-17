@@ -8,7 +8,7 @@
 ![Last commit](https://img.shields.io/github/last-commit/faroukfriha/azure-as-code?style=for-the-badge&logo=github)
 
 ## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
 
 ## Table of contents
 
@@ -31,68 +31,63 @@ Let people know what your project can do specifically. Provide context and add a
 - [Dev/Test Labs](#dev/test-labs)
 
 
-## Windows Virtual Destkop
-![Windows Virtual Desktop](https://img.shields.io/github/workflow/status/faroukfriha/azure-as-code/Windows%20Virtual%20Desktop/master?logo=github-actions&logoColor=white&style=for-the-badge)
+## [Windows Virtual Desktop](windows-virtual-desktop/README.md)
 
-## Azure Kubernetes Services
+![Windows Virtual Desktop](https://img.shields.io/github/workflow/status/faroukfriha/azure-as-code/windows-virtual-desktop/master?logo=github-actions&logoColor=white&style=for-the-badge)
 
-Coming soon
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
 
-## Azure Active Directory
-### Sort applications
-Coming soon
-## Virtual machines management
+## [Azure Kubernetes Services](azure-kubernetes-services/README.md)
+
+![Azure Kubernetes Services](https://img.shields.io/github/workflow/status/faroukfriha/azure-as-code/azure-kubernetes-services/master?logo=github-actions&logoColor=white&style=for-the-badge)
+
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+
+## [Azure Active Directory](azure-active-directory/README.md)
+
+![Azure Active Directory](https://img.shields.io/github/workflow/status/faroukfriha/azure-as-code/azure-active-directory/master?logo=github-actions&logoColor=white&style=for-the-badge)
+
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+
+- [Sort applications registrations](azure-active-directory/sort-applications-registration/README.md)
+
+## [Virtual Machines Management](virtual-machines-management/README.md)
+
+![Virtual Machines Management](https://img.shields.io/github/workflow/status/faroukfriha/azure-as-code/virtual-machines-management/master?logo=github-actions&logoColor=white&style=for-the-badge)
+
 The following functions/runbooks/scripts will help you managed all of your resources in your Azure subscriptions.
-### Monitor
-#### Datadog
-Coming soon
-#### Dynatrace
-Coming soon
-#### Azure Monitor
-Coming soon
-### Storage
-#### Mount disks on virtual machine creation
-Coming soon
-### Metadata
-#### Rename virtual machines
-Coming soon
-### Cost
-#### StopStartVMs
-##### Description
 
-This PowerShell Workflow Runbook connects to Azure using an Automation Run As account, retrieves the power status of Azure VMs and turns off / on  in parallel those that are turned on / off. You can attach a recurring schedule to this runbook to run it at a specific time.
+### [Monitor](virtual-machines-management/monitor/README.md)
 
-##### Required
+Lorem Ipsum is simply dummy text of the printing and typesetting industry.
 
-1. An Automation connection asset called AzureRunAsConnection that contains the information for connecting with Azure using a service principal.  To use an asset with a different name you can pass the asset name as a input parameter to this runbook.
+- [Datadog](virtual-machines-management/monitor/datadog/README.md)
+- [Dynatrace](virtual-machines-management/monitor/dynatrace/README.md)
+- [Azure Monitor](virtual-machines-management/monitor/azure-monitor/README.md)
 
-2. An Action input parameter value that allows the runbook to manage VMs power state. The parameter must be set to "Stop" or "Start".
+### [Storage](virtual-machines-management/storage/README.md)
 
-##### Deployment
+Lorem Ipsum is simply dummy text of the printing and typesetting industry.
 
-Copy and paste the content of the script named StopStartVMs.ps1 to your Azure Automation Runbook or integrate this repository to your Azure Automation account as shown [here](https://docs.microsoft.com/en-us/azure/automation/automation-source-control-integration#step-2--set-up-source-control-in-azure-automation).
+- [Mount disks on virtual machine creation](virtual-machines-management/storage/mount-disks-on-virtual-machine-creation/README.md)
 
-#### StopStartClassicVMs
+### [Metadata](virtual-machines-management/metadata/README.md)
 
-##### Description
+Lorem Ipsum is simply dummy text of the printing and typesetting industry.
 
-This PowerShell Workflow Runbook connects to Azure using an Automation Classic Run As account, retrieves the power status of Azure classic VMs and turns off / on  in parallel those that are turned on / off. You can attach a recurring schedule to this runbook to run it at a specific time.
+- [Rename virtual machines](virtual-machines-management/metadata/rename-virtual-machines/README.md)
 
-##### Required
+### [Cost](virtual-machines-management/cost/README.md)
 
-1. An Automation connection asset called AzureClassicRunAsConnection that contains the information for connecting with Azure using a service principal.  To use an asset with a different name you can pass the asset name as a input parameter to this runbook.
+Lorem Ipsum is simply dummy text of the printing and typesetting industry.
 
-2. An Action input parameter value that allows the runbook to manage VMs power state. The parameter must be set to "Stop" or "Start".
+- [Stop & Start virtual machines](virtual-machines-management/stop-start-virtual-machines/README.md)
 
-##### Deployment
+## [Dev/Test Labs](dev-test-labs/README.md)
 
-Copy and paste the content of the script named StopStartClassicVMs.ps1 to your Azure Automation Runbook or integrate this repository to your Azure Automation account as shown [here](https://docs.microsoft.com/en-us/azure/automation/automation-source-control-integration#step-2--set-up-source-control-in-azure-automation).
+![Dev/Test Labs](https://img.shields.io/github/workflow/status/faroukfriha/azure-as-code/dev-test-labs/master?logo=github-actions&logoColor=white&style=for-the-badge)
 
-## Dev/Test Labs
-
-Coming soon
-
----
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
 
 ## Contribution
 

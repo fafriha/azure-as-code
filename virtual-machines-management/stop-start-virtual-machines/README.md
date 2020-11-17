@@ -1,4 +1,4 @@
-# Azure Management Tasks
+# Virtual Machines Management
 
 These following runbooks will help you managed all of your resources in your Azure subscriptions.
 
