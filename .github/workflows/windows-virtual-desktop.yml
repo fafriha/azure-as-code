@@ -1,4 +1,4 @@
-name: Windows Virtual Desktop
+name: windows-virtual-desktop
 defaults:
   run:
     shell: bash
