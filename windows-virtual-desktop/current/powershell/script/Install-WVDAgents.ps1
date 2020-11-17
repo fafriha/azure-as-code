@@ -27,11 +27,11 @@ try
     Write-Output "Installing Chocolatey."
     iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
+    Write-Output "Installing Windows Virtual Desktop agent"
+    choco install wvd-agent --params "/REGISTRATIONTOKEN:$registrationToken" --ignore-checksums -y
+
     Write-Output "Installing Windows Virtual Desktop boot loader agent"
     choco install wvd-boot-loader --ignore-checksums -y
-
-    Write-Output "Installing Windows Virtual Desktop agent"
-    choco install wvd-agent --params '/REGISTRATIONTOKEN:$registrationToken' --ignore-checksums -y
 }
 catch
 {
