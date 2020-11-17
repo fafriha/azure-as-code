@@ -27,7 +27,7 @@ try
     Write-Output "Installing Chocolatey."
     iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
-    Write-Output "Installing Windows Virtual Desktop agent boot loader"
+    Write-Output "Installing Windows Virtual Desktop boot loader agent"
     choco install wvd-boot-loader --pre -y
 
     Write-Output "Installing Windows Virtual Desktop agent"
