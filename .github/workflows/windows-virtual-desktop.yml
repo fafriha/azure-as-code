@@ -7,7 +7,7 @@ defaults:
 on:
   push:
     paths:
-      - 'windows-virtual-desktop'
+      - 'windows-virtual-desktop/current/**'
   pull_request:
     branches: [ master ]
     
