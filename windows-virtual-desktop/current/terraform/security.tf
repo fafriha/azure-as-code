@@ -11,7 +11,7 @@ resource "azurerm_network_security_rule" "wvd_allow_bastion" {
   priority                    = 100
   direction                   = "Inbound"
   access                      = "Allow"
-  protocol                    = "Any"
+  protocol                    = "*"
   source_port_range           = "*"
   destination_port_range      = "*"
   source_address_prefix       = azurerm_subnet.wvd_bastion.address_prefix
@@ -26,7 +26,7 @@ resource "azurerm_network_security_rule" "wvd_deny_all" {
   priority                    = 4096
   direction                   = "Inbound"
   access                      = "Deny"
-  protocol                    = "Any"
+  protocol                    = "*"
   source_port_range           = "*"
   destination_port_range      = "*"
   source_address_prefix       = "*"
