@@ -93,7 +93,7 @@ Contributions are **greatly appreciated**. For major changes, please open an iss
 
 ## Languages
 
-All the projects included in this repository have been built with the following tools and languages.
+The features included in this repository have been built with the following tools and languages.
 
 ![Terraform](https://img.shields.io/badge/terraform-%23623CE4.svg?&style=for-the-badge&logo=terraform&logoColor=white) 
 ![PowerShell](https://img.shields.io/badge/powershell-%235391FE.svg?&style=for-the-badge&logo=powershell&logoColor=white) 
