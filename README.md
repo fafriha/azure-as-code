@@ -107,4 +107,4 @@ The features included in this repository have been built with the following tool
 [![GitHub](https://img.shields.io/badge/github-%23181717.svg?&style=for-the-badge&logo=github)](https://www.github.com/faroukfriha)
 
 ## License
-Distributed under the [![License](https://img.shields.io/badge/MIT-%233DA639.svg?&style=for-the-badge&logoColor=white&logo=open-source-initiative&color=black)](https://opensource.org/licenses/MIT) license.
+[![License](https://img.shields.io/badge/MIT-%233DA639.svg?&style=for-the-badge&logoColor=white&logo=open-source-initiative&color=black)](https://opensource.org/licenses/MIT)
