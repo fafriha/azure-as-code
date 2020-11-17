@@ -31,7 +31,7 @@ try
     choco install wvd-boot-loader --pre -y
 
     Write-Output "Installing Windows Virtual Desktop agent"
-    choco install wvd-agent --params '/REGISTRATIONTOKEN:$registrationToken' -y
+    choco install wvd-agent --params '/REGISTRATIONTOKEN:$registrationToken' --pre -y
 }
 catch
 {
@@ -41,6 +41,6 @@ catch
 finally
 {
     Write-Host "Restarting..."
-    Restart-Computr -Force
+    Restart-Computer -Force
     $LASTEXITCODE
 }
