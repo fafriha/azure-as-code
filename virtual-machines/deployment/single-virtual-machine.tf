@@ -138,7 +138,7 @@ resource "azurerm_virtual_machine_extension" "contoso" {
 
   protected_settings = <<PROTECTED_SETTINGS
     {
-      "script": "${base64encode(templatefile("./Install-Agents.ps1", { 
+      "CommandToExecute": "Powershell.exe -Executionpolicy Bypass -EncodedCommand ${base64encode(templatefile("./Install-Agents.ps1", { 
                                                 FileShare = "${replace(replace("${azurerm_storage_share.contoso.url}", "https:", ""), "/", "\\")}", 
                                                 RegistrationToken = "Token", 
                                                 LocalAdminName = "${var.local_admin_account["username"]}"}))}"
