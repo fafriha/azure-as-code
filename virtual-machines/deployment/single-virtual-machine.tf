@@ -1,3 +1,12 @@
+variable "local_admin_account" {
+  description = "Please provide the required information for the local administrator account."
+  type        = map(string)
+  default = {
+    "username" = ""
+    "password" = ""
+  }
+}
+
 variable "terraform_sp" {
   description = "Please provide the required information about your existing Terraform Service Principal."
   type        = map(string)
