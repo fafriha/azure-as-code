@@ -3,7 +3,18 @@ provider "azurerm" {
     client_id       = var.terraform_sp["client_id"]
     client_secret   = var.terraform_sp["client_secret"]
     tenant_id       = var.aad_tenant_id
+    features{}
 }
+
+terraform {
+  required_providers {
+    azurerm = {
+      source = "hashicorp/azurerm"
+    }
+  }
+  required_version = ">= 0.13"
+}
+
 
 variable aad_tenant_id {
     default = ""
