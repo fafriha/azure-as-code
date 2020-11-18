@@ -136,12 +136,12 @@ resource "azurerm_virtual_machine_extension" "contoso" {
   type                 = "CustomScriptExtension"
   type_handler_version = "1.10"
 
-  settings = <<SETTINGS
+  protected_settings = <<PROTECTED_SETTINGS
     {
-      "CommandToExecute": "${base64encode(templatefile("./Install-Agents.ps1", { 
+      "script": "${base64encode(templatefile("./Install-Agents.ps1", { 
                                                 FileShare = "${replace(replace("${azurerm_storage_share.contoso.url}", "https:", ""), "/", "\\")}", 
                                                 RegistrationToken = "Token", 
                                                 LocalAdminName = "${var.local_admin_account["username"]}"}))}"
     }
-  SETTINGS
+  PROTECTED_SETTINGS
 }
