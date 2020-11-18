@@ -38,7 +38,7 @@ variable local_admin_account {
     }
 }
 
-variable "wvd_storage" {
+variable "storage" {
   description = "[Mandatory] [Create] Enter the name of the storage account that will host all user profiles."
   type        = map(string)
   default = {
@@ -109,13 +109,13 @@ resource "azurerm_windows_virtual_machine" "contoso" {
 }
 
 resource "azurerm_storage_account" "contoso" {
-  name                      = var.wvd_storage["profiles_account_name"]
-  location                  = azurerm_resource_group.wvd_resource_group.location
-  resource_group_name       = azurerm_resource_group.wvd_resource_group.name
-  account_kind              = var.wvd_storage["profiles_account_kind"]
-  account_tier              = var.wvd_storage["profiles_account_tier"]
-  account_replication_type  = var.wvd_storage["replication_type"]
-  enable_https_traffic_only = var.wvd_storage["enable_https"]
+  name                      = var.storage["profiles_account_name"]
+  location                  = azurerm_resource_group.contoso.location
+  resource_group_name       = azurerm_resource_group.contoso.name
+  account_kind              = var.storage["profiles_account_kind"]
+  account_tier              = var.storage["profiles_account_tier"]
+  account_replication_type  = var.storage["replication_type"]
+  enable_https_traffic_only = var.storage["enable_https"]
 }
 
 resource "azurerm_storage_share" "contoso" {
@@ -134,7 +134,7 @@ resource "azurerm_virtual_machine_extension" "contoso" {
   settings = <<SETTINGS
     {
       "script": "${base64encode(templatefile("./Install-Agents.ps1", { 
-                                                FileShare = "${replace(replace("${azurerm_storage_share.contoso.url}", "https:", ""), "/", "\\")}", 
+                                                FileShare = replace(replace("${azurerm_storage_share.contoso.url}", "https:", ""), "/", "\\"), 
                                                 RegistrationToken = "Token", 
                                                 LocalAdminName = "${var.local_admin_account["username"]}"}))}"
     }
