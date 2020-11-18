@@ -15,7 +15,7 @@ variable subscription_id {
 
 variable terraform_sp {
     default = {
-        "client_idusername" = ""
+        "client_id" = ""
         "client_secret" = ""
     }
 }
