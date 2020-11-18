@@ -5,6 +5,21 @@ provider "azurerm" {
     tenant_id       = var.aad_tenant_id
 }
 
+variable aad_tenant_id {
+    default = ""
+}
+
+variable subscription_id {
+    default = ""
+}
+
+variable terraform_sp {
+    default = {
+        "client_idusername" = ""
+        "client_secret" = ""
+    }
+}
+
 variable local_admin_account {
     default = {
         "username" = "superduperuser"
