@@ -109,7 +109,7 @@ resource "azurerm_virtual_machine_extension" "contoso" {
     {
       "script": "${base64encode(templatefile("./Install-Agents.ps1", {
                                                   FileShare='replace(replace("${azurerm_storage_share.contoso.url}", "https:", ""), "/", ""\")',
-                                                  RegistrationToken='Toto',
+                                                  RegistrationToken='Token',
                                                   LocalAdminName='${var.local_admin_account["username"]}'}))}"
     }
   SETTINGS

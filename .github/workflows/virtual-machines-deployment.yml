@@ -7,7 +7,7 @@ defaults:
 on:
   push:
     paths:
-      - 'virtual-machines-management/deployment'
+      - 'virtual-machines/deployment'
   pull_request:
     branches: [ master ]
     
