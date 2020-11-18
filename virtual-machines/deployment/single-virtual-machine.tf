@@ -2,8 +2,8 @@ variable "local_admin_account" {
   description = "Please provide the required information for the local administrator account."
   type        = map(string)
   default = {
-    "username" = ""
-    "password" = ""
+    "username" = "superduperuser"
+    "password" = "P@ssword1"
   }
 }
 
