@@ -1,41 +1,20 @@
-provider "azurerm" {
-    subscription_id = var.subscription_id
-    client_id       = var.terraform_sp["client_id"]
-    client_secret   = var.terraform_sp["client_secret"]
-    tenant_id       = var.aad_tenant_id
-    features{}
-}
-
-terraform {
-  required_providers {
-    azurerm = {
-      source = "hashicorp/azurerm"
-    }
+variable "terraform_sp" {
+  description = "Please provide the required information about your existing Terraform Service Principal."
+  type        = map(string)
+  default = {
+    "client_id"     = ""
+    "client_secret" = ""
   }
-  required_version = ">= 0.13"
 }
 
-
-variable aad_tenant_id {
-    default = ""
+variable "aad_tenant_id" {
+  description = "Please provide the ID of your existing Azure AD tenant."
+  default     = ""
 }
 
-variable subscription_id {
-    default = ""
-}
-
-variable terraform_sp {
-    default = {
-        "client_id" = ""
-        "client_secret" = ""
-    }
-}
-
-variable local_admin_account {
-    default = {
-        "username" = "superduperuser"
-        "password" = "P@ssword1"
-    }
+variable "subscription_id" {
+  description = "Please provide the ID of your existing subscription."
+  default     = ""
 }
 
 variable "storage" {
@@ -51,6 +30,23 @@ variable "storage" {
     "replication_type"      = "LRS"
     "enable_https"          = "true"
   }
+}
+
+provider "azurerm" {
+    subscription_id = var.subscription_id
+    client_id       = var.terraform_sp["client_id"]
+    client_secret   = var.terraform_sp["client_secret"]
+    tenant_id       = var.aad_tenant_id
+    features{}
+}
+
+terraform {
+  required_providers {
+    azurerm = {
+      source = "hashicorp/azurerm"
+    }
+  }
+  required_version = ">= 0.13"
 }
 
 resource "azurerm_resource_group" "contoso" {
@@ -134,7 +130,7 @@ resource "azurerm_virtual_machine_extension" "contoso" {
   settings = <<SETTINGS
     {
       "script": "${base64encode(templatefile("./Install-Agents.ps1", { 
-                                                FileShare = replace(replace("${azurerm_storage_share.contoso.url}", "https:", ""), "/", "\\"), 
+                                                FileShare = "${replace(replace("${azurerm_storage_share.contoso.url}", "https:", ""), "/", "\\")}", 
                                                 RegistrationToken = "Token", 
                                                 LocalAdminName = "${var.local_admin_account["username"]}"}))}"
     }
