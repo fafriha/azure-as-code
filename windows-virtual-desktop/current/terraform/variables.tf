@@ -56,7 +56,9 @@ variable "wvd_hostpool" {
   }
 }
 
-###### WARNING ##### Adding users to application groups requires User Access Administrator or Owner rights
+########################################## WARNING ########################################
+## Adding users to application groups requires User Access Administrator or Owner rights ##
+###########################################################################################
 variable "wvd_application_group" {
   description = "Please provide the required information to create a WVD application group."
   type        = map(any)
@@ -137,38 +139,6 @@ variable "wvd_storage" {
   }
 }
 
-variable "wvd_key_vault_name" {
-  description = "Please provide a name for the key vault."
-  default     = "kv-prd-frc-wvd-01"
-}
-
-variable "wvd_domain" {
-  description = "Please provide the required information about your exsiting Active Directory domain."
-  type        = map(string)
-  default = {
-    "domain_name" = "friha.fr"
-    "ou_path"     = "OU=EMEA,DC=friha,DC=fr"
-  }
-}
-
-variable "wvd_domain_join_account" {
-  description = "Please provide the required information about your existing domain join service account."
-  type        = map(string)
-  default = {
-    "username" = ""
-    "password" = ""
-  }
-}
-
-variable "wvd_local_admin_account" {
-  description = "Please provide the required information for the local administrator account."
-  type        = map(string)
-  default = {
-    "username" = ""
-    "password" = ""
-  }
-}
-
 variable "wvd_monitoring" {
   description = "Please provide the required information about for monitoring resources."
   type        = map(string)
@@ -217,6 +187,11 @@ variable "wvd_function" {
   }
 }
 
+variable "wvd_key_vault_name" {
+  description = "Please provide a name for the key vault."
+  default     = "kv-prd-frc-wvd-01"
+}
+
 variable "wvd_sp_roles" {
   description = "Please provide the required informations about the Managed Identity of the Function App and the Terraform Service Principal."
   type        = map(any)
@@ -229,6 +204,33 @@ variable "wvd_sp_roles" {
       "name"  = "Terraform Service Principal"
       "roles" = ["Key Vault Secrets Officer (preview)"]
     }
+  }
+}
+
+variable "wvd_domain" {
+  description = "Please provide the required information about your exsiting Active Directory domain."
+  type        = map(string)
+  default = {
+    "domain_name" = "friha.fr"
+    "ou_path"     = "OU=EMEA,DC=friha,DC=fr"
+  }
+}
+
+variable "wvd_domain_join_account" {
+  description = "Please provide the required information about your existing domain join service account."
+  type        = map(string)
+  default = {
+    "username" = ""
+    "password" = ""
+  }
+}
+
+variable "wvd_local_admin_account" {
+  description = "Please provide the required information for the local administrator account."
+  type        = map(string)
+  default = {
+    "username" = ""
+    "password" = ""
   }
 }
 

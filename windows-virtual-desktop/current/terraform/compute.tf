@@ -100,15 +100,12 @@ resource "azurerm_virtual_machine_extension" "wvd_join_hostpool" {
   type_handler_version = "1.10"
   depends_on           = [azurerm_virtual_machine_extension.wvd_join_domain]
 
-  protected_settings = <<PROTECTED_SETTINGS
-    {
-      "commandToExecute": "powershell.exe -executionpolicy bypass -command \"./Install-WVDAgents.ps1 -RegistrationToken ${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token}\""
-    }
-  PROTECTED_SETTINGS
-
   settings = <<SETTINGS
     {
-        "fileUris": ["https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/windows-virtual-desktop/current/powershell/script/Install-WVDAgents.ps1"]
+      "script": "${base64encode(templatefile("../powershell/script/Install-Agents.ps1", {
+                                                  FileShare="'\\\\'${var.wvd_storage["profiles_account_name"]}\\'${var.wvd_storage_share["${each.value.tags.hostpool}-profiles"]}'",
+                                                  RegistrationToken="${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token}",
+                                                  LocalAdminName="${var.wvd_local_admin_account["username"]}"}))}"
     }
   SETTINGS
 }
