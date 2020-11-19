@@ -143,7 +143,7 @@ variable "wvd_monitoring" {
   description = "Please provide the required information about for monitoring resources."
   type        = map(string)
   default = {
-    "log_analytics_workspace_name" = "log-prd-frc-wvd-01"
+    "log_analytics_workspace_name" = "log-prd-frc-wvd-02"
     "app_insights_name"            = "ai-prd-frc-wvd-01"
     "app_insights_type"            = "web"
   }
