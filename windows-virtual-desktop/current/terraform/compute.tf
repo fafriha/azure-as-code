@@ -55,40 +55,40 @@ SETTINGS
 protectedsettings
 }
 
-## Joining session hosts to the domain
-resource "azurerm_virtual_machine_extension" "wvd_join_domain" {
-  for_each                   = azurerm_windows_virtual_machine.wvd_hosts
-  name                       = "JoinDomain"
-  virtual_machine_id         = azurerm_windows_virtual_machine.wvd_hosts[each.key].id
-  publisher                  = "Microsoft.Compute"
-  type                       = "JsonADDomainExtension"
-  type_handler_version       = "1.3"
-  auto_upgrade_minor_version = true
-  depends_on                 = [azurerm_virtual_machine_extension.wvd_join_log_analytics_workspace]
+# ## Joining session hosts to the domain
+# resource "azurerm_virtual_machine_extension" "wvd_join_domain" {
+#   for_each                   = azurerm_windows_virtual_machine.wvd_hosts
+#   name                       = "JoinDomain"
+#   virtual_machine_id         = azurerm_windows_virtual_machine.wvd_hosts[each.key].id
+#   publisher                  = "Microsoft.Compute"
+#   type                       = "JsonADDomainExtension"
+#   type_handler_version       = "1.3"
+#   auto_upgrade_minor_version = true
+#   depends_on                 = [azurerm_virtual_machine_extension.wvd_join_log_analytics_workspace]
 
-  lifecycle {
-    ignore_changes = [
-      settings,
-      protected_settings,
-    ]
-  }
+#   lifecycle {
+#     ignore_changes = [
+#       settings,
+#       protected_settings,
+#     ]
+#   }
 
-  settings = <<SETTINGS
-    {
-      "Name": "${var.wvd_domain["domain_name"]}",
-      "OUPath": "${var.wvd_domain["ou_path"]}",
-      "User": "${azurerm_key_vault_secret.wvd_domain_join_account.name}@${var.wvd_domain["domain_name"]}",
-      "Restart": "true",
-      "Options": "3"
-    }
-SETTINGS
+#   settings = <<SETTINGS
+#     {
+#       "Name": "${var.wvd_domain["domain_name"]}",
+#       "OUPath": "${var.wvd_domain["ou_path"]}",
+#       "User": "${azurerm_key_vault_secret.wvd_domain_join_account.name}@${var.wvd_domain["domain_name"]}",
+#       "Restart": "true",
+#       "Options": "3"
+#     }
+# SETTINGS
 
-  protected_settings = <<PROTECTED_SETTINGS
-  {
-    "Password": "${azurerm_key_vault_secret.wvd_domain_join_account.value}"
-  }
-PROTECTED_SETTINGS
-}
+#   protected_settings = <<PROTECTED_SETTINGS
+#   {
+#     "Password": "${azurerm_key_vault_secret.wvd_domain_join_account.value}"
+#   }
+# PROTECTED_SETTINGS
+# }
 
 ## Joining session hosts to the host pool
 resource "azurerm_virtual_machine_extension" "wvd_join_hostpool" {
@@ -100,12 +100,15 @@ resource "azurerm_virtual_machine_extension" "wvd_join_hostpool" {
   type_handler_version = "1.10"
   depends_on           = [azurerm_virtual_machine_extension.wvd_join_domain]
 
+  protected_settings = <<PROTECTED_SETTINGS
+    {
+      "commandToExecute": "powershell.exe -executionpolicy bypass -command \"./Install-WVDAgents.ps1 -RegistrationToken ${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token} -FileShare ${replace(replace(azurerm_storage_share.contoso.url, "https:", ""), "/", "\\")} -LocalAdminName ${var.wvd_local_admin_account["username"]}\""
+    }
+  PROTECTED_SETTINGS
+
   settings = <<SETTINGS
     {
-      "script": "${base64encode(templatefile("../powershell/script/Install-Agents.ps1", {
-                                                  FileShare="'\\\\'${var.wvd_storage["profiles_account_name"]}\\'${azurerm_storage_share.wvd_profiles["${each.value.tags.hostpool}-profiles"]}'",
-                                                  RegistrationToken="${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token}",
-                                                  LocalAdminName="${var.wvd_local_admin_account["username"]}"}))}"
+        "fileUris": ["https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/windows-virtual-desktop/current/powershell/script/Install-Agents.ps1"]
     }
   SETTINGS
 }

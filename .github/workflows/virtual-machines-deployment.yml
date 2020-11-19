@@ -1,41 +1,46 @@
-name: virtual-machines-deployment
-defaults:
-  run:
-    shell: bash
-    working-directory: ./virtual-machines/deployment
+# name: virtual-machines-deployment
+# defaults:
+#   run:
+#     shell: bash
+#     working-directory: ./virtual-machines/deployment
     
-on:
-  push:
-    paths:
-      - 'virtual-machines/deployment/**'
-  pull_request:
-    branches: [ master ]
+# on:
+#   push:
+#     paths:
+#       - 'virtual-machines/deployment/**'
+#   pull_request:
+#     branches: [ master ]
     
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
 
-      - name: Initialize
-        run: terraform init 
-              -backend-config="tenant_id=${{ secrets.AAD_TENANT_ID }}"
-              -backend-config="subscription_id=${{ secrets.SUBSCRIPTION_ID }}"
-              -backend-config="client_id=${{ secrets.SP_DEV_TERRAFORM_ID }}"
-              -backend-config="client_secret=${{ secrets.SP_DEV_TERRAFORM_SECRET }}"
+#       - name: Install
+#         uses: little-core-labs/install-terraform@v2.0.0
+#         with:
+#             version: 0.14.2-beta2
 
-      - name: Format
-        run: terraform fmt
+#       - name: Initialize
+#         run: terraform init 
+#               -backend-config="tenant_id=${{ secrets.AAD_TENANT_ID }}"
+#               -backend-config="subscription_id=${{ secrets.SUBSCRIPTION_ID }}"
+#               -backend-config="client_id=${{ secrets.SP_DEV_TERRAFORM_ID }}"
+#               -backend-config="client_secret=${{ secrets.SP_DEV_TERRAFORM_SECRET }}"
 
-      - name: Destroy
-        run: terraform destroy -auto-approve
-              -var "aad_tenant_id=${{ secrets.AAD_TENANT_ID }}" 
-              -var "subscription_id=${{ secrets.SUBSCRIPTION_ID }}" 
-              -var 'terraform_sp={"client_id":"${{ secrets.SP_DEV_TERRAFORM_ID }}","client_secret":"${{ secrets.SP_DEV_TERRAFORM_SECRET }}"}'         
+#       - name: Format
+#         run: terraform fmt
 
-      - name: Apply
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        run: terraform apply -auto-approve
-              -var "aad_tenant_id=${{ secrets.AAD_TENANT_ID }}" 
-              -var "subscription_id=${{ secrets.SUBSCRIPTION_ID }}" 
-              -var 'terraform_sp={"client_id":"${{ secrets.SP_DEV_TERRAFORM_ID }}","client_secret":"${{ secrets.SP_DEV_TERRAFORM_SECRET }}"}'         
+#       - name: Destroy
+#         run: terraform destroy -auto-approve
+#               -var "aad_tenant_id=${{ secrets.AAD_TENANT_ID }}" 
+#               -var "subscription_id=${{ secrets.SUBSCRIPTION_ID }}" 
+#               -var 'terraform_sp={"client_id":"${{ secrets.SP_DEV_TERRAFORM_ID }}","client_secret":"${{ secrets.SP_DEV_TERRAFORM_SECRET }}"}'         
+
+#       - name: Apply
+#         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+#         run: terraform apply -auto-approve
+#               -var "aad_tenant_id=${{ secrets.AAD_TENANT_ID }}" 
+#               -var "subscription_id=${{ secrets.SUBSCRIPTION_ID }}" 
+#               -var 'terraform_sp={"client_id":"${{ secrets.SP_DEV_TERRAFORM_ID }}","client_secret":"${{ secrets.SP_DEV_TERRAFORM_SECRET }}"}'         

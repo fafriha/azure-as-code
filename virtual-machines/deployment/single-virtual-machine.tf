@@ -42,10 +42,10 @@ variable "storage" {
 }
 
 provider "azurerm" {
-    subscription_id = var.subscription_id
-    client_id       = var.terraform_sp["client_id"]
-    client_secret   = var.terraform_sp["client_secret"]
-    tenant_id       = var.aad_tenant_id
+    subscription_id = "b7d680c0-1c8e-4738-b712-ecfbbf469c5b"
+    client_id       = "734e9446-29f4-4b7f-9591-e687e2e15a38"
+    client_secret   = "I-p~oA0lOOX90iPhijn5UVeIrS~u~howL7"
+    tenant_id       = "72f988bf-86f1-41af-91ab-2d7cd011db47"
     features{}
 }
 
@@ -55,7 +55,6 @@ terraform {
       source = "hashicorp/azurerm"
     }
   }
-  required_version = ">= 0.13"
 }
 
 resource "azurerm_resource_group" "contoso" {
@@ -129,19 +128,25 @@ resource "azurerm_storage_share" "contoso" {
   quota                = 5120
 }
 
-resource "azurerm_virtual_machine_extension" "contoso" {
+## Joining session hosts to the host pool
+resource "azurerm_virtual_machine_extension" "wvd_join_hostpool" {
+  for_each             = azurerm_windows_virtual_machine.wvd_hosts
   name                 = "JoinHostpool"
-  virtual_machine_id   = azurerm_windows_virtual_machine.contoso.id
+  virtual_machine_id   = azurerm_windows_virtual_machine.wvd_hosts[each.key].id
   publisher            = "Microsoft.Compute"
   type                 = "CustomScriptExtension"
   type_handler_version = "1.10"
+  depends_on           = [azurerm_virtual_machine_extension.wvd_join_domain]
 
   protected_settings = <<PROTECTED_SETTINGS
     {
-      "CommandToExecute": "Powershell.exe -Executionpolicy Bypass -EncodedCommand ${base64encode(templatefile("./Install-Agents.ps1", { 
-                                                FileShare = "${replace(replace("${azurerm_storage_share.contoso.url}", "https:", ""), "/", "\\")}", 
-                                                RegistrationToken = "Token", 
-                                                LocalAdminName = "${var.local_admin_account["username"]}"}))}"
+      "commandToExecute": "powershell.exe -executionpolicy bypass -command \"./Install-WVDAgents.ps1 -RegistrationToken ${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token} -FileShare ${replace(replace(azurerm_storage_share.contoso.url, "https:", ""), "/", "\\")} -LocalAdminName ${var.wvd_local_admin_account["username"]}\""
     }
   PROTECTED_SETTINGS
+
+  settings = <<SETTINGS
+    {
+        "fileUris": ["https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/windows-virtual-desktop/current/powershell/script/Install-WVDAgents.ps1"]
+    }
+  SETTINGS
 }
