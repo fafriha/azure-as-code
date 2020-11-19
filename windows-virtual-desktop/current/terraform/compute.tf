@@ -102,7 +102,7 @@ resource "azurerm_virtual_machine_extension" "wvd_join_hostpool" {
 
   protected_settings = <<PROTECTED_SETTINGS
     {
-      "commandToExecute": "powershell.exe -executionpolicy bypass -command ${data.template_file.wvd_deploy_agents.rendered}"
+      "commandToExecute": "powershell.exe -executionpolicy bypass -command ${data.template_file.wvd_deploy_agents[each.key].rendered}"
     }
   PROTECTED_SETTINGS
 }

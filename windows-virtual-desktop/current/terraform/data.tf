@@ -34,7 +34,7 @@ data "azurerm_virtual_network" "hub_virtual_network" {
 # }
 
 data "template_file" "wvd_deploy_agents" {
-  for_each             = azurerm_windows_virtual_machine.wvd_hosts
+  for_each = azurerm_windows_virtual_machine.wvd_hosts
   template = file("../powershell/script/Install-Agents.ps1")
 
   vars = {
