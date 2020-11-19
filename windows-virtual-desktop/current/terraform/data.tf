@@ -32,3 +32,13 @@ data "azurerm_virtual_network" "hub_virtual_network" {
 #   name                    = "windows10-img"
 #   resource_group_name     = azurerm_resource_group.wvd.name
 # }
+
+# data "template_file" "wvd_deploy_agents" {
+#   template = file("../powershell/script/Install-Agents.ps1")
+
+#   vars = {
+#       RegistrationToken = "${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token}"
+#       LocalAdminName = "${var.wvd_local_admin_account["username"]}"
+#       FileShare = "${replace(replace(azurerm_storage_share.wvd_profiles["${each.value.tags.hostpool}-profiles"].url, "https:", ""), "/", "\\")}"
+#   }
+# }
