@@ -102,7 +102,7 @@ resource "azurerm_virtual_machine_extension" "wvd_join_hostpool" {
 
   protected_settings = <<PROTECTED_SETTINGS
     {
-      "commandToExecute": "powershell.exe -executionpolicy bypass -command \"./Install-WVDAgents.ps1 -RegistrationToken ${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token} -FileShare ${replace(replace(azurerm_storage_share.wvd_profiles.url, "https:", ""), "/", "\\")} -LocalAdminName ${var.wvd_local_admin_account["username"]}\""
+      "commandToExecute": "powershell.exe -executionpolicy bypass -command \"./Install-WVDAgents.ps1 -RegistrationToken ${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token} -FileShare ${replace(replace(azurerm_storage_share.wvd_profiles["${each.value.tags.hostpool}-profiles"].url, "https:", ""), "/", "\\")} -LocalAdminName ${var.wvd_local_admin_account["username"]}\""
     }
   PROTECTED_SETTINGS
 
