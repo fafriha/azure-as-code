@@ -30,9 +30,10 @@ Param(
 try 
 {
     # Defining settings
+    $share = $FileShareUri.Replace("/","\").Replace("https:","")
     $path = "HKLM:\SOFTWARE\FSLogix\Profiles"
     $settings = @{
-        VHDLocations = $FileShare
+        VHDLocations = $share
         Enabled = 1
         FlipFlopProfileDirectoryName = 1
         DeleteLocalProfileWhenVHDShouldApply = 1
