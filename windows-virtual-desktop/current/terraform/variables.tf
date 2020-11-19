@@ -128,10 +128,10 @@ variable "wvd_storage" {
   description = "[Mandatory] [Create] Enter the name of the storage account that will host all user profiles."
   type        = map(string)
   default = {
-    "function_account_name" = "saprdfrcwvd01"
+    "function_account_name" = "saprdfrcwvd001"
     "function_account_kind" = "StorageV2"
     "function_account_tier" = "Standard"
-    "profiles_account_name" = "saprdfrcwvd02"
+    "profiles_account_name" = "saprdfrcwvd002"
     "profiles_account_kind" = "FileStorage"
     "profiles_account_tier" = "Premium"
     "replication_type"      = "LRS"
@@ -143,8 +143,8 @@ variable "wvd_monitoring" {
   description = "Please provide the required information about for monitoring resources."
   type        = map(string)
   default = {
-    "log_analytics_workspace_name" = "log-prd-frc-wvd-02"
-    "app_insights_name"            = "ai-prd-frc-wvd-01"
+    "log_analytics_workspace_name" = "log-prd-frc-wvd-001"
+    "app_insights_name"            = "ai-prd-frc-wvd-001"
     "app_insights_type"            = "web"
   }
 }
