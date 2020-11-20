@@ -1,4 +1,3 @@
-<powershell>
 <#
 .SYNOPSIS
 Deploys Windows Virtual Desktop agents
@@ -84,5 +83,3 @@ finally
     Restart-Computer -Force
     $LASTEXITCODE
 }
-</powershell>
-<persist>false</persist>
