@@ -100,9 +100,9 @@ resource "azurerm_virtual_machine_extension" "wvd_join_hostpool" {
   type_handler_version = "1.10"
   #depends_on           = [azurerm_virtual_machine_extension.wvd_join_domain]
 
-  protected_settings = <<PROTECTED_SETTINGS
+  settings = <<SETTINGS
     {
       "commandToExecute": "powershell.exe -executionpolicy bypass -file ${templatefile("../powershell/script/Install-Agents.ps1", { RegistrationToken = "${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token}", FileShare = "${azurerm_storage_share.wvd_profiles["${each.value.tags.hostpool}-profiles"].url}", LocalAdminName = "${var.wvd_local_admin_account["username"]}" } )}"
     }
-  PROTECTED_SETTINGS
+  SETTINGS
 }
