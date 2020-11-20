@@ -90,7 +90,7 @@ protectedsettings
 # PROTECTED_SETTINGS
 # }
 
-## Joining session hosts to the host pool
+# Joining session hosts to the host pool
 resource "azurerm_virtual_machine_extension" "wvd_join_hostpool" {
   for_each             = azurerm_windows_virtual_machine.wvd_hosts
   name                 = "JoinHostpool"
