@@ -20,11 +20,11 @@ Param(
 
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
-    [string]$LocalAdminName,
+    [string]$FileShare,
 
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
-    [string]$FileShare
+    [string]$LocalAdminName
 )
 
 try 
