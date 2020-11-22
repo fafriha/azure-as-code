@@ -20,7 +20,11 @@ Param(
 
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
-    [string]$FileShareUri,
+    [string]$StorageAccountName,
+
+    [Parameter(Mandatory = $true)]
+    [ValidateNotNullOrEmpty()]
+    [string]$FileShareName,
 
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
@@ -30,10 +34,9 @@ Param(
 Try 
 {
     # Defining settings
-    $share = $FileShareUri.Replace('/','\').Replace('https:','')
     $path = 'HKLM:\SOFTWARE\FSLogix\Profiles'
     $settings = @{
-        VHDLocations = $share
+        VHDLocations = "\\$StorageAccountName.file.core.windows.net\$FileShareName"
         Enabled = 1
         FlipFlopProfileDirectoryName = 1
         DeleteLocalProfileWhenVHDShouldApply = 1
@@ -79,7 +82,7 @@ Catch
 }
 Finally
 {
-    Write-Host Restarting...
+    Write-Host "Restarting..."
     Restart-Computer -Force
     $LASTEXITCODE
 }
