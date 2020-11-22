@@ -92,9 +92,9 @@ PROTECTED_SETTINGS
 }
 
 # Joining session hosts to the host pool
-resource "azurerm_virtual_machine_extension" "wvd_join_hostpool" {
+resource "azurerm_virtual_machine_extension" "wvd_install_agents" {
   for_each             = azurerm_windows_virtual_machine.wvd_hosts
-  name                 = "JoinHostpool"
+  name                 = "InstallAgents"
   virtual_machine_id   = azurerm_windows_virtual_machine.wvd_hosts[each.key].id
   publisher            = "Microsoft.Compute"
   type                 = "CustomScriptExtension"

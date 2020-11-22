@@ -109,7 +109,7 @@ resource "azurerm_role_assignment" "wvd_sp" {
 }
 
 ## Adding users to application groups
-#### WARNING - Adding users to application groups required User Access Administrator or Owner rights
+#### WARNING - Adding users to application groups required User Access Administrator or Owner rights and Reader rights on Azure AD
 resource "azurerm_role_assignment" "wvd_users" {
   count                = length(local.application_groups)
   scope                = azurerm_virtual_desktop_application_group.wvd_application_group[local.application_groups[count.index].name].id
