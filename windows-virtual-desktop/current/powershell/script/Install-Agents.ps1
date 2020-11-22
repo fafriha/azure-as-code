@@ -20,7 +20,7 @@ Param(
 
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
-    [string]$FileShare,
+    [string]$FileShareUri,
 
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
@@ -41,7 +41,7 @@ try
         PreventLoginWithTempProfile = 1
     }
 
-    Write-Output "Enabling TLS 1.2."
+    Write-Output "Enabling TLS 1.2..."
     [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 
     Write-Output "Installing Chocolatey..."
@@ -62,7 +62,7 @@ try
     
     foreach ($setting in $settings.GetEnumerator())
     {
-        if ($setting.Name -eq 'VHDLocations') 
+        if ($setting.Name -eq "VHDLocations") 
         {
             New-ItemProperty -Path $path -Name $setting.Name -Value $setting.Value -PropertyType MULTI_SZ -Force     
         }
