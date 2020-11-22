@@ -30,7 +30,7 @@ Param(
 try 
 {
     # Defining settings
-    #$share = $FileShareUri.Replace("/","\").Replace("https:","")
+    $share = $FileShareUri.Replace("/","\").Replace("https:","")
     $path = "HKLM:\SOFTWARE\FSLogix\Profiles"
     $settings = @{
         VHDLocations = $share
@@ -54,11 +54,11 @@ try
     choco install wvd-boot-loader --ignore-checksums -y
     
     Write-Output "Installing FSLogix agent..."
-    choco install fslogix -y
+    choco install fslogix --ignore-checksums -y
 
     Write-Output "Configuring remote profiles..."
     Add-LocalGroupMember -Group "FSLogix Profile Exclude List" -Member $LocalAdminName
-    New-Item –Path $path –Force
+    New-Item $path –Force
     
     foreach ($setting in $settings.GetEnumerator())
     {
