@@ -59,12 +59,12 @@ Try
     Write-Output "Configuring remote profiles..."
     Add-LocalGroupMember -Group "FSLogix Profile Exclude List" -Member $LocalAdminName
     New-Item $path –Force
-    
+
     foreach ($setting in $settings.GetEnumerator())
     {
-        if ($setting.Name -eq 'VHDLocations') 
+        if ($setting.Name -eq 'VHDLocations')
         {
-            New-ItemProperty -Path $path -Name $setting.Name -Value $setting.Value -PropertyType MULTI_SZ -Force     
+            New-ItemProperty -Path $path -Name $setting.Name -Value $setting.Value -PropertyType MULTI_SZ -Force
         }
         else 
         {
@@ -79,7 +79,7 @@ Catch
 }
 Finally
 {
-    Write-Host "Restarting..."
+    Write-Host Restarting...
     Restart-Computer -Force
     $LASTEXITCODE
 }
