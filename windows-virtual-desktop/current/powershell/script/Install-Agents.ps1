@@ -30,7 +30,7 @@ Param(
 Try 
 {
     # Defining settings
-    $share = $FileShareUri.Replace("/","\").Replace("https:","")
+    $share = $FileShareUri.Replace('/','\').Replace('https:','')
     $path = "HKLM:\SOFTWARE\FSLogix\Profiles"
     $settings = @{
         VHDLocations = $share
@@ -62,7 +62,7 @@ Try
     
     foreach ($setting in $settings.GetEnumerator())
     {
-        if ($setting.Name -eq "VHDLocations") 
+        if ($setting.Name -eq 'VHDLocations') 
         {
             New-ItemProperty -Path $path -Name $setting.Name -Value $setting.Value -PropertyType MULTI_SZ -Force     
         }
