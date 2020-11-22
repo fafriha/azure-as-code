@@ -31,7 +31,7 @@ Try
 {
     # Defining settings
     $share = $FileShareUri.Replace('/','\').Replace('https:','')
-    $path = "HKLM:\SOFTWARE\FSLogix\Profiles"
+    $path = 'HKLM:\SOFTWARE\FSLogix\Profiles'
     $settings = @{
         VHDLocations = $share
         Enabled = 1
