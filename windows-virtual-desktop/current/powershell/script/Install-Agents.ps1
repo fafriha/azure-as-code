@@ -63,11 +63,11 @@ Try
     {
         if ($setting.Name -eq 'VHDLocations')
         {
-            New-ItemProperty -Path $path -Name $setting.Name -Value $setting.Value -PropertyType MULTI_SZ -Force
+            New-ItemProperty -Path $path -Name $setting.Name -Value $setting.Value -PropertyType MultiString -Force
         }
         else 
         {
-            New-ItemProperty -Path $path -Name $setting.Name -Value $setting.Value -PropertyType DWORD -Force
+            New-ItemProperty -Path $path -Name $setting.Name -Value $setting.Value -PropertyType DWord -Force
         }
     }
 }

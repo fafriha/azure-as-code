@@ -103,13 +103,7 @@ resource "azurerm_virtual_machine_extension" "wvd_join_hostpool" {
 
   protected_settings = <<PROTECTED_SETTINGS
     {
-      "CommandToExecute": "Powershell.exe -ExecutionPolicy Bypass -File ./Install-Agents.ps1 -RegistrationToken ${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token} -FileShareUri ${azurerm_storage_share.wvd_profiles[each.value.tags.hostpool].url} -LocalAdminName ${each.value.admin_username}"
+      "CommandToExecute": "Powershell.exe -ExecutionPolicy Bypass -File ${templatefile("./Install-Agents.ps1", {RegistrationToken = "${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token}", FileShareUri = "${azurerm_storage_share.wvd_profiles[each.value.tags.hostpool].url}", LocalAdminName = "${each.value.admin_username}"})}"
     }
   PROTECTED_SETTINGS
-
-  settings = <<SETTINGS
-    {
-        "fileUris": ["https://raw.githubusercontent.com/faroukfriha/azure-as-code/master/windows-virtual-desktop/current/powershell/script/Install-Agents.ps1"]
-    }
-  SETTINGS
 }
