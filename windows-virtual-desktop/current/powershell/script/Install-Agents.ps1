@@ -20,11 +20,7 @@ Param(
 
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
-    [string]$StorageAccountName,
-
-    [Parameter(Mandatory = $true)]
-    [ValidateNotNullOrEmpty()]
-    [string]$FileShareName,
+    [string]$FileShareUri,
 
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
@@ -36,7 +32,7 @@ Try
     # Defining settings
     $path = 'HKLM:\SOFTWARE\FSLogix\Profiles'
     $settings = @{
-        VHDLocations = "\\$StorageAccountName.file.core.windows.net\$FileShareName"
+        VHDLocations = $FileShareUri.Replace('/','\').Replace('https:','')
         Enabled = 1
         FlipFlopProfileDirectoryName = 1
         DeleteLocalProfileWhenVHDShouldApply = 1
@@ -61,7 +57,7 @@ Try
 
     Write-Output "Configuring remote profiles..."
     Add-LocalGroupMember -Group "FSLogix Profile Exclude List" -Member $LocalAdminName
-    New-Item $path –Force
+    New-Item $path -Force
 
     foreach ($setting in $settings.GetEnumerator())
     {
