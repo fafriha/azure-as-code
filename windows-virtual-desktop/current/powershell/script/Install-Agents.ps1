@@ -80,6 +80,6 @@ catch
 finally
 {
     Write-Host "Restarting..."
-    #Restart-Computer -Force
+    Restart-Computer -Force
     $LASTEXITCODE
 }
