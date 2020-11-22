@@ -4,7 +4,7 @@ resource "azurerm_virtual_network" "wvd_virtual_network" {
   address_space       = [var.wvd_networking["address_space"]]
   location            = azurerm_resource_group.wvd_resource_group.location
   resource_group_name = azurerm_resource_group.wvd_resource_group.name
-  dns_servers         = data.azurerm_virtual_network.hub_virtual_network.dns_servers
+  #dns_servers         = data.azurerm_virtual_network.hub_virtual_network.dns_servers
 }
 
 ## Peering between and hub's virtual network and WVD's virtual network 
