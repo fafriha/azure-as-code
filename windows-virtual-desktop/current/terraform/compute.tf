@@ -9,7 +9,7 @@ resource "azurerm_windows_virtual_machine" "wvd_hosts" {
   zone                     = each.value.index % 3 + 1
   admin_username           = azurerm_key_vault_secret.wvd_local_admin_account.name
   admin_password           = azurerm_key_vault_secret.wvd_local_admin_account.value
-  enable_automatic_updates = false
+  enable_automatic_updates = "Manuel"
 
   source_image_reference {
     publisher = "MicrosoftWindowsDesktop"
