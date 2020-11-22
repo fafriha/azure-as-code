@@ -27,7 +27,7 @@ Param(
     [string]$LocalAdminName
 )
 
-try 
+Try 
 {
     # Defining settings
     $share = $FileShareUri.Replace("/","\").Replace("https:","")
@@ -72,12 +72,12 @@ try
         }
     }
 }
-catch
+Catch
 {
     Write-Error $_.Exception
     throw $_.Exception
 }
-finally
+Finally
 {
     Write-Host "Restarting..."
     Restart-Computer -Force
