@@ -13,10 +13,11 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
 
 - [Windows Virtual Desktop](#windows-virtual-desktop)
 - [Azure Kubernetes Services](#azure-kubernetes-services)
-- [Virtual Machines Management](#virtual-machines-management)
-- [Azure Active Directory](#azure-active-directory)
+- [Sort Azure Active Directory Applications](#sort-azure-active-directory-aplications)
+- [Stop & Start Virtual Machines](#stop-start-virtual-machines)
+- [Rename Virtual Machines](#rename-virtual-machines)
 - [Dev/Test Labs](#dev/test-labs)
-
+- [Datadog](#datadog)
 
 ## [Windows Virtual Desktop](windows-virtual-desktop/README.md)
 
@@ -30,49 +31,33 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
 
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
 
-## [Azure Active Directory](azure-active-directory/README.md)
+## [Sort Azure Active Directory Applications](sort-azure-active-directory-applications/README.md)
 
-![Azure Active Directory](https://img.shields.io/github/workflow/status/faroukfriha/azure-as-code/azure-active-directory/master?logo=github-actions&logoColor=white&style=for-the-badge)
+![Sort Azure Active Directory Applications](https://img.shields.io/github/workflow/status/faroukfriha/azure-as-code/sort-azure-active-directory/master?logo=github-actions&logoColor=white&style=for-the-badge)
 
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
 
-- [Sort applications registrations](azure-active-directory/sort-applications-registration/README.md)
+## [Stop & Start Virtual Machines](stop-start-virtual-machines/README.md)
 
-## [Virtual Machines Management](virtual-machines-management/README.md)
+![Stop & Start Virtual Machines](https://img.shields.io/github/workflow/status/faroukfriha/azure-as-code/stop-start-virtual-machines/master?logo=github-actions&logoColor=white&style=for-the-badge)
 
-![Virtual Machines Management](https://img.shields.io/github/workflow/status/faroukfriha/azure-as-code/virtual-machines-management/master?logo=github-actions&logoColor=white&style=for-the-badge)
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
 
-The following functions/runbooks/scripts will help you managed all of your resources in your Azure subscriptions.
+## [Rename Virtual Machines](rename-start-virtual-machines/README.md)
 
-### [Monitor](virtual-machines-management/monitor/README.md)
+![Rename virtual machines](https://img.shields.io/github/workflow/status/faroukfriha/azure-as-code/rename-virtual-machines/master?logo=github-actions&logoColor=white&style=for-the-badge)
 
-Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-
-- [Datadog](virtual-machines-management/monitor/datadog/README.md)
-- [Dynatrace](virtual-machines-management/monitor/dynatrace/README.md)
-- [Azure Monitor](virtual-machines-management/monitor/azure-monitor/README.md)
-
-### [Storage](virtual-machines-management/storage/README.md)
-
-Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-
-- [Mount disks on virtual machine creation](virtual-machines-management/storage/mount-disks-on-virtual-machine-creation/README.md)
-
-### [Metadata](virtual-machines-management/metadata/README.md)
-
-Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-
-- [Rename virtual machines](virtual-machines-management/metadata/rename-virtual-machines/README.md)
-
-### [Cost](virtual-machines-management/cost/README.md)
-
-Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-
-- [Stop & Start virtual machines](virtual-machines-management/stop-start-virtual-machines/README.md)
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
 
 ## [Dev/Test Labs](dev-test-labs/README.md)
 
 ![Dev/Test Labs](https://img.shields.io/github/workflow/status/faroukfriha/azure-as-code/dev-test-labs/master?logo=github-actions&logoColor=white&style=for-the-badge)
+
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+
+## [Datadog](datadog/README.md)
+
+![Datadog](https://img.shields.io/github/workflow/status/faroukfriha/azure-as-code/datadog/master?logo=github-actions&logoColor=white&style=for-the-badge)
 
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
 

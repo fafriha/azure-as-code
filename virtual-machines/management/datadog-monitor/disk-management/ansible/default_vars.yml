@@ -1,6 +1,0 @@
----
-target_mountpoint: "/mountpoint"
-source_authorized_keys: "~/.ssh/authorized_keys"
-destination_authorized_keys: "/root/.ssh/"
-source_repo: "repo"
-destination_repo: "repo"

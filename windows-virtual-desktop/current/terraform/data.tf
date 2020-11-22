@@ -2,11 +2,11 @@
 data "azurerm_client_config" "current" {}
 
 ## Gathering application groups members details
-#### WARNING - Adding users to application groups required User Access Administrator or Owner rights
-# data "azuread_user" "wvd_users" {
-#   for_each            = toset([for u in local.application_groups : u.user])
-#   user_principal_name = each.key
-# }
+### WARNING - Adding users to application groups required User Access Administrator or Owner rights and Reader rights on Azure AD
+data "azuread_user" "wvd_users" {
+  for_each            = toset([for u in local.application_groups : u.user])
+  user_principal_name = each.key
+}
 
 ## Gathering hub resource group details
 data "azurerm_resource_group" "hub_resource_group" {

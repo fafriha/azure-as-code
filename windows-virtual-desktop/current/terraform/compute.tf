@@ -56,40 +56,40 @@ SETTINGS
 protectedsettings
 }
 
-# ## Joining session hosts to the domain
-# resource "azurerm_virtual_machine_extension" "wvd_join_domain" {
-#   for_each                   = azurerm_windows_virtual_machine.wvd_hosts
-#   name                       = "JoinDomain"
-#   virtual_machine_id         = azurerm_windows_virtual_machine.wvd_hosts[each.key].id
-#   publisher                  = "Microsoft.Compute"
-#   type                       = "JsonADDomainExtension"
-#   type_handler_version       = "1.3"
-#   auto_upgrade_minor_version = true
-#   depends_on                 = [azurerm_virtual_machine_extension.wvd_join_log_analytics_workspace]
+## Joining session hosts to the domain
+resource "azurerm_virtual_machine_extension" "wvd_join_domain" {
+  for_each                   = azurerm_windows_virtual_machine.wvd_hosts
+  name                       = "JoinDomain"
+  virtual_machine_id         = azurerm_windows_virtual_machine.wvd_hosts[each.key].id
+  publisher                  = "Microsoft.Compute"
+  type                       = "JsonADDomainExtension"
+  type_handler_version       = "1.3"
+  auto_upgrade_minor_version = true
+  depends_on                 = [azurerm_virtual_machine_extension.wvd_join_log_analytics_workspace]
 
-#   lifecycle {
-#     ignore_changes = [
-#       settings,
-#       protected_settings,
-#     ]
-#   }
+  lifecycle {
+    ignore_changes = [
+      settings,
+      protected_settings,
+    ]
+  }
 
-#   settings = <<SETTINGS
-#     {
-#       "Name": "${var.wvd_domain["domain_name"]}",
-#       "OUPath": "${var.wvd_domain["ou_path"]}",
-#       "User": "${azurerm_key_vault_secret.wvd_domain_join_account.name}@${var.wvd_domain["domain_name"]}",
-#       "Restart": "true",
-#       "Options": "3"
-#     }
-# SETTINGS
+  settings = <<SETTINGS
+    {
+      "Name": "${var.wvd_domain["domain_name"]}",
+      "OUPath": "${var.wvd_domain["ou_path"]}",
+      "User": "${azurerm_key_vault_secret.wvd_domain_join_account.name}@${var.wvd_domain["domain_name"]}",
+      "Restart": "true",
+      "Options": "3"
+    }
+SETTINGS
 
-#   protected_settings = <<PROTECTED_SETTINGS
-#   {
-#     "Password": "${azurerm_key_vault_secret.wvd_domain_join_account.value}"
-#   }
-# PROTECTED_SETTINGS
-# }
+  protected_settings = <<PROTECTED_SETTINGS
+  {
+    "Password": "${azurerm_key_vault_secret.wvd_domain_join_account.value}"
+  }
+PROTECTED_SETTINGS
+}
 
 # Joining session hosts to the host pool
 resource "azurerm_virtual_machine_extension" "wvd_join_hostpool" {
@@ -99,7 +99,7 @@ resource "azurerm_virtual_machine_extension" "wvd_join_hostpool" {
   publisher            = "Microsoft.Compute"
   type                 = "CustomScriptExtension"
   type_handler_version = "1.10"
-  #depends_on           = [azurerm_virtual_machine_extension.wvd_join_domain]
+  depends_on           = [azurerm_virtual_machine_extension.wvd_join_domain]
 
   protected_settings = <<PROTECTED_SETTINGS
     {
