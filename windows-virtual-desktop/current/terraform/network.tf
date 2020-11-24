@@ -53,7 +53,7 @@ resource "azurerm_subnet" "wvd_bastion" {
 
 ## Associating hub's route table to clients and canary subnets
 resource "azurerm_subnet_route_table_association" "wvd_routing" {
-  for_each       = azurerm_subnet
+  for_each       = azurerm_subnet.*.name
   subnet_id      = each.key.id
   route_table_id = data.azurerm_route_table.hub_route_table.id
 }
