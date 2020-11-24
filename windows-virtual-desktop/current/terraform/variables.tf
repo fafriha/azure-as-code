@@ -130,14 +130,6 @@ variable "wvd_subnet" {
   }
 }
 
-variable "wvd_bastion" {
-  description = "Please provide the required information for the Bastion instance"
-  type        = map(string)
-  default     = {
-    "bastion_name"   = "bas-prd-frc-wvd-01"
-    "public_ip_name" = "pip-prd-frc-wvd-01"
-  }
-}
 variable "wvd_storage" {
   description = "[Mandatory] [Create] Enter the name of the storage account that will host all user profiles."
   type        = map(string)

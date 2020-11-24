@@ -52,7 +52,7 @@ resource "azurerm_network_interface" "wvd_hosts" {
 
   ip_configuration {
     name                          = "ipc-${each.key}"
-    subnet_id                     = var.wvd_hostpool[each.value.hostpool_name].validate_environment != "True" ? azurerm_subnet.wvd_subnets[clients.id : azurerm_subnet.wvd_canary.id
+    subnet_id                     = azurerm_subnet.wvd_subnets[replace(each.value.hostpool_name, "hp", "snet")].id
     private_ip_address_allocation = "dynamic"
   }
 }
