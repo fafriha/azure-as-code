@@ -51,6 +51,13 @@ resource "azurerm_subnet" "wvd_bastion" {
   address_prefixes     = [var.wvd_networking["bastion_subnet_address_prefix"]]
 }
 
+## Associating hub's route table to clients and canary subnets
+resource "azurerm_subnet_route_table_association" "wvd_routing" {
+  for_each       = azurerm_subnet
+  subnet_id      = each.key.id
+  route_table_id = data.azurerm_route_table.hub_route_table.id
+}
+
 ## Creating a Public IP for the Bastion instance
 resource "azurerm_public_ip" "wvd_bastion" {
   name                = var.wvd_networking["public_ip_name"]

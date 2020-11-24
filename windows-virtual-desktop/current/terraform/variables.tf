@@ -6,7 +6,7 @@ variable "hub_resources" {
     "resource_group_name"      = "rg-prd-frc-hub-01"
     "virtual_network_name"     = "vnet-prd-frc-hub-01"
     "peering_name"             = "peer-prd-frc-hub-to-wvd-01"
-    "default_route_table_name" = "rt-prd-frc-default-01"
+    "default_route_table_name" = "rt-prd-frc-hub-01"
   }
 }
 
