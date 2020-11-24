@@ -1,20 +1,20 @@
 ## Creating a network security group to secure session hosts (should be disabled if already using a Bastion in a hub)
 resource "azurerm_network_security_group" "wvd_network_security_group" {
-  name                = var.wvd_network["network_security_group_name"]
+  name                = var.wvd_virtual_network["network_security_group_name"]
   location            = azurerm_resource_group.wvd_resource_group.location
   resource_group_name = azurerm_resource_group.wvd_resource_group.name
 }
 
 ## Creating a security rule to allow Bastion traffic to canary hosts (should be disabled if already using a Bastion in a hub)
 resource "azurerm_network_security_rule" "wvd_allow_bastion" {
-  name                        = "AllowAzureBastionInbound"
+  name                        = "AllowInboundFromHub"
   priority                    = 100
   direction                   = "Inbound"
   access                      = "Allow"
   protocol                    = "*"
   source_port_range           = "*"
   destination_port_range      = "*"
-  source_address_prefix       = azurerm_subnet.wvd_bastion.address_prefix
+  source_address_prefix       = azurerm_virtual_network.wvd_virtual_network.address_prefix
   destination_address_prefix  = "VirtualNetwork"
   resource_group_name         = azurerm_resource_group.wvd_resource_group.name
   network_security_group_name = azurerm_network_security_group.wvd_network_security_group.name

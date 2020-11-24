@@ -29,7 +29,7 @@ resource "azurerm_virtual_network_peering" "wvd_peering" {
 
 ## Creating all subnets to host all session hosts
 resource "azurerm_subnet" "wvd_subnets" {
-  for_each             = var.wvd_subnet
+  for_each             = var.wvd_subnets
   name                 = each.value.subnet_name
   resource_group_name  = azurerm_resource_group.wvd_resource_group.name
   virtual_network_name = azurerm_virtual_network.wvd_virtual_network.name
@@ -38,7 +38,7 @@ resource "azurerm_subnet" "wvd_subnets" {
 
 ## Associating hub's route table to clients and canary subnets
 resource "azurerm_subnet_route_table_association" "wvd_routing" {
-  for_each       = azurerm_subnet.wvd_subnet
+  for_each       = azurerm_subnet.wvd_subnets
   subnet_id      = each.value.id
   route_table_id = data.azurerm_route_table.hub_route_table.id
 }
