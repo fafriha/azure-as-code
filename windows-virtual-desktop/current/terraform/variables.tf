@@ -120,13 +120,14 @@ variable "wvd_subnet" {
   description = "Please provide the required networking information for the environment."
   type        = map(any)
   default = {
-  snet-can-frc-wvd-01 = {
-    "subnet_name"    = "snet-can-frc-wvd-01"
-    "address_prefix" = "192.168.1.192/27"
-  },
-  snet-prd-frc-wvd-01 = {
-    "subnet_name"     = "snet-prd-frc-wvd-01"
-    "address_prefix"  = "192.168.1.0/27"
+    snet-can-frc-wvd-01 = {
+      "subnet_name"    = "snet-can-frc-wvd-01"
+      "address_prefix" = "192.168.1.192/27"
+    },
+    snet-prd-frc-wvd-01 = {
+      "subnet_name"     = "snet-prd-frc-wvd-01"
+      "address_prefix"  = "192.168.1.0/27"
+    }
   }
 }
 
