@@ -105,25 +105,39 @@ variable "wvd_workspace" {
   }
 }
 
-variable "wvd_networking" {
+variable "wvd_virtual_network" {
   description = "Please provide the required networking information for the environment."
-  type        = map(any)
+  type        = map(string)
   default = {
     "virtual_network_name"          = "vnet-prd-frc-wvd-01"
     "address_space"                 = "192.168.1.0/24"
     "peering_name"                  = "peer-prd-frc-wvd-to-core-01"
-    "bastion_subnet_name"           = "AzureBastionSubnet"
-    "bastion_subnet_address_prefix" = "192.168.1.224/27"
-    "canary_subnet_name"            = "snet-can-frc-wvd-01"
-    "canary_subnet_address_prefix"  = "192.168.1.192/27"
-    "clients_subnet_name"           = "snet-prd-frc-wvd-01"
-    "clients_subnet_address_prefix" = "192.168.1.0/27"
-    "public_ip_name"                = "pip-prd-frc-wvd-01"
     "network_security_group_name"   = "nsg-prd-frc-wvd-01"
-    "bastion_name"                  = "bas-prd-frc-wvd-01"
   }
 }
 
+variable "wvd_subnet" {
+  description = "Please provide the required networking information for the environment."
+  type        = map(any)
+  default = {
+  snet-can-frc-wvd-01 = {
+    "subnet_name"    = "snet-can-frc-wvd-01"
+    "address_prefix" = "192.168.1.192/27"
+  },
+  snet-prd-frc-wvd-01 = {
+    "subnet_name"     = "snet-prd-frc-wvd-01"
+    "address_prefix"  = "192.168.1.0/27"
+  }
+}
+
+variable "wvd_bastion" {
+  description = "Please provide the required information for the Bastion instance"
+  type        = map(string)
+  default     = {
+    "bastion_name"   = "bas-prd-frc-wvd-01"
+    "public_ip_name" = "pip-prd-frc-wvd-01"
+  }
+}
 variable "wvd_storage" {
   description = "[Mandatory] [Create] Enter the name of the storage account that will host all user profiles."
   type        = map(string)

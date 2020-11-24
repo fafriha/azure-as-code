@@ -1,7 +1,7 @@
 ## Creating virtual network to host all session hosts
 resource "azurerm_virtual_network" "wvd_virtual_network" {
-  name                = var.wvd_networking["virtual_network_name"]
-  address_space       = [var.wvd_networking["address_space"]]
+  name                = var.wvd_virtual_network["virtual_network_name"]
+  address_space       = [var.wvd_virtual_network["address_space"]]
   location            = azurerm_resource_group.wvd_resource_group.location
   resource_group_name = azurerm_resource_group.wvd_resource_group.name
   dns_servers         = data.azurerm_virtual_network.hub_virtual_network.dns_servers
@@ -19,7 +19,7 @@ resource "azurerm_virtual_network_peering" "hub_peering" {
 
 ## Peering between WVD's virtual network and hub's virtual network 
 resource "azurerm_virtual_network_peering" "wvd_peering" {
-  name                      = var.wvd_networking["peering_name"]
+  name                      = var.wvd_virtual_network["peering_name"]
   resource_group_name       = azurerm_resource_group.wvd_resource_group.name
   virtual_network_name      = azurerm_virtual_network.wvd_virtual_network.name
   remote_virtual_network_id = data.azurerm_virtual_network.hub_virtual_network.id
@@ -27,44 +27,20 @@ resource "azurerm_virtual_network_peering" "wvd_peering" {
   allow_forwarded_traffic   = "false"
 }
 
-## Creating a subnet to host all prouction session hosts
-resource "azurerm_subnet" "wvd_clients" {
-  name                 = var.wvd_networking["clients_subnet_name"]
+## Creating all subnets to host all session hosts
+resource "azurerm_subnet" "wvd_subnets" {
+  for_each             = var.wvd_subnet
+  name                 = each.value.subnet_name
   resource_group_name  = azurerm_resource_group.wvd_resource_group.name
   virtual_network_name = azurerm_virtual_network.wvd_virtual_network.name
-  address_prefixes     = [var.wvd_networking["clients_subnet_address_prefix"]]
-}
-
-## Creating a subnet to host all canary session hosts
-resource "azurerm_subnet" "wvd_canary" {
-  name                 = var.wvd_networking["canary_subnet_name"]
-  resource_group_name  = azurerm_resource_group.wvd_resource_group.name
-  virtual_network_name = azurerm_virtual_network.wvd_virtual_network.name
-  address_prefixes     = [var.wvd_networking["canary_subnet_address_prefix"]]
-}
-
-## Creating a subnet to host a Bastion instance
-resource "azurerm_subnet" "wvd_bastion" {
-  name                 = var.wvd_networking["bastion_subnet_name"]
-  resource_group_name  = azurerm_resource_group.wvd_resource_group.name
-  virtual_network_name = azurerm_virtual_network.wvd_virtual_network.name
-  address_prefixes     = [var.wvd_networking["bastion_subnet_address_prefix"]]
+  address_prefixes     = [each.value.address_prefix]
 }
 
 ## Associating hub's route table to clients and canary subnets
 resource "azurerm_subnet_route_table_association" "wvd_routing" {
-  for_each       = azurerm_subnet.*.name
-  subnet_id      = each.key.id
+  for_each       = azurerm_subnet.wvd_subnet
+  subnet_id      = each.value.id
   route_table_id = data.azurerm_route_table.hub_route_table.id
-}
-
-## Creating a Public IP for the Bastion instance
-resource "azurerm_public_ip" "wvd_bastion" {
-  name                = var.wvd_networking["public_ip_name"]
-  location            = azurerm_resource_group.wvd_resource_group.location
-  resource_group_name = azurerm_resource_group.wvd_resource_group.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
 }
 
 ## Creating all session hosts network interfaces
@@ -76,7 +52,7 @@ resource "azurerm_network_interface" "wvd_hosts" {
 
   ip_configuration {
     name                          = "ipc-${each.key}"
-    subnet_id                     = var.wvd_hostpool[each.value.hostpool_name].validate_environment != "True" ? azurerm_subnet.wvd_clients.id : azurerm_subnet.wvd_canary.id
+    subnet_id                     = var.wvd_hostpool[each.value.hostpool_name].validate_environment != "True" ? azurerm_subnet.wvd_subnets[clients.id : azurerm_subnet.wvd_canary.id
     private_ip_address_allocation = "dynamic"
   }
 }

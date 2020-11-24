@@ -1,6 +1,6 @@
 ## Creating a network security group to secure session hosts (should be disabled if already using a Bastion in a hub)
 resource "azurerm_network_security_group" "wvd_network_security_group" {
-  name                = var.wvd_networking["network_security_group_name"]
+  name                = var.wvd_network["network_security_group_name"]
   location            = azurerm_resource_group.wvd_resource_group.location
   resource_group_name = azurerm_resource_group.wvd_resource_group.name
 }
@@ -37,13 +37,8 @@ resource "azurerm_network_security_rule" "wvd_deny_all" {
 
 ## Associating the network security group with subnets hosting session hosts
 resource "azurerm_subnet_network_security_group_association" "wvd_deny_inbound_traffic" {
-  subnet_id                 = azurerm_subnet.wvd_clients.id
-  network_security_group_id = azurerm_network_security_group.wvd_network_security_group.id
-}
-
-## Associating the network security group with subnets hosting session hosts
-resource "azurerm_subnet_network_security_group_association" "wvd_allow_bastion_traffic" {
-  subnet_id                 = azurerm_subnet.wvd_canary.id
+  for_each                  = azurerm_subnet.wvd_subnets
+  subnet_id                 = each.value.id
   network_security_group_id = azurerm_network_security_group.wvd_network_security_group.id
 }
 
@@ -85,19 +80,6 @@ resource "azurerm_key_vault_secret" "wvd_registration_info" {
   value        = azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.name].registration_info[0].token
   key_vault_id = azurerm_key_vault.wvd_key_vault.id
   depends_on   = [azurerm_role_assignment.wvd_sp]
-}
-
-## Creating a Bastion instance
-resource "azurerm_bastion_host" "wvd_bastion" {
-  name                = var.wvd_networking["bastion_name"]
-  location            = azurerm_resource_group.wvd_resource_group.location
-  resource_group_name = azurerm_resource_group.wvd_resource_group.name
-
-  ip_configuration {
-    name                 = "ipc-azprd-frc-${var.wvd_networking["bastion_name"]}"
-    subnet_id            = azurerm_subnet.wvd_bastion.id
-    public_ip_address_id = azurerm_public_ip.wvd_bastion.id
-  }
 }
 
 ## Adding MSIs as Contributor and Key Vault Secrets Officer
