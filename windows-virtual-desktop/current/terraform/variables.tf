@@ -1,4 +1,4 @@
-################################################### Mandatory ################################################
+################################################### Mandatory - Values must be provided ################################################
 
 variable "hub_resources" {
   description = "Please provide the information of your existing hub's resources and the desired name of the peering to the WVD's virtual network."
@@ -10,8 +10,55 @@ variable "hub_resources" {
   }
 }
 
+variable "wvd_domain" {
+  description = "Please provide the required information about your exsiting Active Directory domain."
+  type        = map(string)
+  default = {
+    "domain_name" = "friha.fr"
+    "ou_path"     = "OU=EMEA,DC=friha,DC=fr"
+  }
+}
+
+variable "wvd_domain_join_account" {
+  description = "Please provide the required information about your existing domain join service account."
+  type        = map(string)
+  default = {
+    "username" = ""
+    "password" = ""
+  }
+}
+
+variable "wvd_local_admin_account" {
+  description = "Please provide the required information for the local administrator account."
+  type        = map(string)
+  default = {
+    "username" = ""
+    "password" = ""
+  }
+}
+
+variable "terraform_sp" {
+  description = "Please provide the required information about your existing Terraform Service Principal."
+  type        = map(string)
+  default = {
+    "client_id"     = ""
+    "client_secret" = ""
+  }
+}
+
+variable "aad_tenant_id" {
+  description = "Please provide the ID of your existing Azure AD tenant."
+  default     = ""
+}
+
+variable "subscription_id" {
+  description = "Please provide the ID of your existing subscription."
+  default     = ""
+}
+
+################################################# Optional - Default values can be used ###################################################
 variable "wvd_resource_group" {
-  description = "Please provide a name and a location for the resource group that will contain all WVD related resources."
+  description = "Please provide a name and a location for the resource group that will contain all WVD resources."
   type        = map(string)
   default = {
     "resource_group_name" = "rg-prd-frc-wvd-01"
@@ -214,53 +261,7 @@ variable "wvd_sp_roles" {
   }
 }
 
-variable "wvd_domain" {
-  description = "Please provide the required information about your exsiting Active Directory domain."
-  type        = map(string)
-  default = {
-    "domain_name" = "friha.fr"
-    "ou_path"     = "OU=EMEA,DC=friha,DC=fr"
-  }
-}
-
-variable "wvd_domain_join_account" {
-  description = "Please provide the required information about your existing domain join service account."
-  type        = map(string)
-  default = {
-    "username" = ""
-    "password" = ""
-  }
-}
-
-variable "wvd_local_admin_account" {
-  description = "Please provide the required information for the local administrator account."
-  type        = map(string)
-  default = {
-    "username" = ""
-    "password" = ""
-  }
-}
-
-variable "terraform_sp" {
-  description = "Please provide the required information about your existing Terraform Service Principal."
-  type        = map(string)
-  default = {
-    "client_id"     = ""
-    "client_secret" = ""
-  }
-}
-
-variable "aad_tenant_id" {
-  description = "Please provide the ID of your existing Azure AD tenant."
-  default     = ""
-}
-
-variable "subscription_id" {
-  description = "Please provide the ID of your existing subscription."
-  default     = ""
-}
-
-################################################### Locals ################################################
+################################################### Locals - Do not modify ################################################
 ## Flatening inputs into collections where each element corresponds to a single resource
 locals {
 
