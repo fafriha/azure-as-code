@@ -55,7 +55,7 @@ Try
 
     ## Should be installed on image creation
     Write-Output "Installing Chocolatey..."
-    iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')
+    iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
     
     Write-Output "Installing Windows Virtual Desktop agent..."
     choco install wvd-agent --params "/REGISTRATIONTOKEN:$registrationToken" --ignore-checksums -y
