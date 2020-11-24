@@ -70,7 +70,7 @@ variable "wvd_application_group" {
       "friendly_name"  = "Canary"
       "description"    = "Dedicated to canary deployments."
       "hostpool_name"  = "hp-can-frc-wvd-01"
-      "users"          = ["user@company.com"] 
+      "users"          = ["john@friha.fr", "clark@friha.fr", "marika@friha.fr"] 
     },
     ag-prd-frc-wvd-02 = {
       "name"           = "ag-prd-frc-wvd-02"
@@ -79,7 +79,7 @@ variable "wvd_application_group" {
       "friendly_name"  = "Office"
       "description"    = "Dedicated to medium workload type (Microsoft Word, CLIs, ...)."
       "hostpool_name"  = "hp-prd-frc-wvd-02"
-      "users"          = ["user@company.com"]
+      "users"          = ["lisa@friha.fr", "yahya@friha.fr"]
     }
   }
 }
