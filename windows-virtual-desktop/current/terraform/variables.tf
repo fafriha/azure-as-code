@@ -116,7 +116,7 @@ variable "wvd_virtual_network" {
   }
 }
 
-variable "wvd_subnet" {
+variable "wvd_subnets" {
   description = "Please provide the required networking information for the environment."
   type        = map(any)
   default = {
