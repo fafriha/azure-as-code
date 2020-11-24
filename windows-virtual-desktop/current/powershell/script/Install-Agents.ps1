@@ -51,7 +51,7 @@ Try
 
     ## Should be installed on image creation
     Write-Output "Installing latest PowerShell version..."
-    iex "& { $(irm https://aka.ms/install-powershell.ps1) } -UseMSI -Quiet -AddToPath"
+    Invoke-Expression "& { $(irm https://aka.ms/install-powershell.ps1) } -UseMSI -Quiet -AddToPath"
 
     ## Should be installed on image creation
     Write-Output "Installing Chocolatey..."
