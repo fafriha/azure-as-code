@@ -14,7 +14,7 @@ resource "azurerm_virtual_network_peering" "hub_peering" {
   virtual_network_name      = var.hub_resources["virtual_network_name"]
   remote_virtual_network_id = azurerm_virtual_network.wvd_virtual_network.id
   allow_gateway_transit     = "true"
-  allow_gateway_transit     = "true"
+  allow_forwarded_traffic   = "true"
 }
 
 ## Peering between WVD's virtual network and hub's virtual network 
