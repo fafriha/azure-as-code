@@ -7,12 +7,13 @@ resource "azurerm_virtual_network" "wvd_virtual_network" {
   dns_servers         = data.azurerm_virtual_network.hub_virtual_network.dns_servers
 }
 
-## Peering between and hub's virtual network and WVD's virtual network 
+## Peering between hub's virtual network and WVD's virtual network 
 resource "azurerm_virtual_network_peering" "hub_peering" {
   name                      = var.hub_resources["peering_name"]
   resource_group_name       = var.hub_resources["resource_group_name"]
   virtual_network_name      = var.hub_resources["virtual_network_name"]
   remote_virtual_network_id = azurerm_virtual_network.wvd_virtual_network.id
+  allow_gateway_transit     = "true"
   allow_gateway_transit     = "true"
 }
 
@@ -23,7 +24,7 @@ resource "azurerm_virtual_network_peering" "wvd_peering" {
   virtual_network_name      = azurerm_virtual_network.wvd_virtual_network.name
   remote_virtual_network_id = data.azurerm_virtual_network.hub_virtual_network.id
   use_remote_gateways       = "true"
-  allow_forwarded_traffic   = "true"
+  allow_forwarded_traffic   = "false"
 }
 
 ## Creating a subnet to host all prouction session hosts
