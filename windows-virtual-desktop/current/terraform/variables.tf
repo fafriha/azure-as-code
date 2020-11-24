@@ -33,7 +33,7 @@ variable "wvd_hostpool" {
       "friendly_name"                    = "Canary"
       "description"                      = "Dedicated to canary deployments."
       "location"                         = "EastUs"
-      "vm_count"                         = 2
+      "vm_count"                         = 1
       "vm_size"                          = "Standard_F4s_v2"
       "vm_prefix"                        = "host-can-frc"
       "validate_environment"             = "true"
@@ -48,7 +48,7 @@ variable "wvd_hostpool" {
       "friendly_name"                    = "Office"
       "description"                      = "Dedicated to medium workload type (Microsoft Word, CLIs, ...)."
       "location"                         = "EastUs"
-      "vm_count"                         = 2
+      "vm_count"                         = 1
       "vm_size"                          = "Standard_F4s_v2"
       "vm_prefix"                        = "host-prd-frc"
       "validate_environment"             = "false"
@@ -143,7 +143,7 @@ variable "wvd_monitoring" {
   description = "Please provide the required information about for monitoring resources."
   type        = map(string)
   default = {
-    "log_analytics_workspace_name" = "log-prd-frc-wvd-01"
+    "log_analytics_workspace_name" = "law-prd-frc-wvd-01"
     "app_insights_name"            = "ai-prd-frc-wvd-01"
     "app_insights_type"            = "web"
   }

@@ -51,11 +51,11 @@ Try
 
     ## Should be installed on image creation
     Write-Output "Installing latest PowerShell version..."
-    Invoke-Expression "& { $(irm https://aka.ms/install-powershell.ps1) } -UseMSI -Quiet -AddToPath"
+    Invoke-Expression "& { $(Invoke-RestMethod https://aka.ms/install-powershell.ps1) } -UseMSI -Quiet -AddToPath"
 
     ## Should be installed on image creation
     Write-Output "Installing Chocolatey..."
-    iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+    Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
     
     Write-Output "Installing Windows Virtual Desktop agent..."
     choco install wvd-agent --params "/REGISTRATIONTOKEN:$registrationToken" --ignore-checksums -y
