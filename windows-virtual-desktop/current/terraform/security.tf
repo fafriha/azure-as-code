@@ -57,6 +57,14 @@ resource "azurerm_key_vault" "wvd_key_vault" {
   sku_name                        = "standard"
 }
 
+## Adding MSIs as Contributor and Key Vault Secrets Officer
+resource "azurerm_role_assignment" "wvd_sp" {
+  count                = length(local.sp_roles)
+  scope                = local.sp_roles[count.index].role != "Contributor" ? azurerm_key_vault.wvd_key_vault.id : azurerm_resource_group.wvd_resource_group.id
+  role_definition_name = local.sp_roles[count.index].role
+  principal_id         = local.sp_roles[count.index].name != "Terraform Service Principal" ? azurerm_function_app.wvd_function[local.sp_roles[count.index].name].identity.0.principal_id : data.azurerm_client_config.current.object_id
+}
+
 ## Securing local admin account details
 resource "azurerm_key_vault_secret" "wvd_local_admin_account" {
   name         = var.wvd_local_admin_account["username"]
@@ -73,21 +81,13 @@ resource "azurerm_key_vault_secret" "wvd_domain_join_account" {
   depends_on   = [azurerm_role_assignment.wvd_sp]
 }
 
-## Securing hostpools registration tokens
+## Securing hostpool registration token
 resource "azurerm_key_vault_secret" "wvd_registration_info" {
   for_each     = var.wvd_hostpool
   name         = each.value.name
   value        = azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.name].registration_info[0].token
   key_vault_id = azurerm_key_vault.wvd_key_vault.id
   depends_on   = [azurerm_role_assignment.wvd_sp]
-}
-
-## Adding MSIs as Contributor and Key Vault Secrets Officer
-resource "azurerm_role_assignment" "wvd_sp" {
-  count                = length(local.sp_roles)
-  scope                = local.sp_roles[count.index].role != "Contributor" ? azurerm_key_vault.wvd_key_vault.id : azurerm_resource_group.wvd_resource_group.id
-  role_definition_name = local.sp_roles[count.index].role
-  principal_id         = local.sp_roles[count.index].name != "Terraform Service Principal" ? azurerm_function_app.wvd_function[local.sp_roles[count.index].name].identity.0.principal_id : data.azurerm_client_config.current.object_id
 }
 
 ## Adding users to application groups

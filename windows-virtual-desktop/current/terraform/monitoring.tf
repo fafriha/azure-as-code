@@ -3,8 +3,8 @@ resource "azurerm_log_analytics_workspace" "wvd_log_analytics_workspace" {
   name                = var.wvd_monitoring["log_analytics_workspace_name"]
   location            = azurerm_resource_group.wvd_resource_group.location
   resource_group_name = azurerm_resource_group.wvd_resource_group.name
-  sku                 = "PerGB2018"
-  retention_in_days   = 30
+  sku                 = var.wvd_monitoring["log_analytics_workspace_sku"]
+  retention_in_days   = var.wvd_monitoring["retention_in_days"]
 }
 
 ## Enabling Application Insights (for Function App only)

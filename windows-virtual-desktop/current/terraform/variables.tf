@@ -198,8 +198,10 @@ variable "wvd_monitoring" {
   type        = map(string)
   default = {
     "log_analytics_workspace_name" = "law-prd-frc-wvd-01"
+    "log_analytics_workspace_sku"  = "PerGB2018"
     "app_insights_name"            = "ai-prd-frc-wvd-01"
     "app_insights_type"            = "web"
+    "retention_in_days"            = 30
   }
 }
 
