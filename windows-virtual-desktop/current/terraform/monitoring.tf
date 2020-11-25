@@ -15,4 +15,4 @@ resource "azurerm_application_insights" "wvd_application_insights" {
   application_type    = var.wvd_monitoring["app_insights_type"]
 }
 
-## Deplying workbooks to monitor WVD usage ... Stay tuned
+## Deploying workbooks to monitor WVD usage ... Coming soon
