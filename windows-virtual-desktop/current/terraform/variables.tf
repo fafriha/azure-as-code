@@ -85,8 +85,8 @@ variable "wvd_hostpool" {
       "vm_prefix"                        = "host-can-frc"
       "validate_environment"             = "true"
     },
-    hp-prd-frc-wvd-02 = {
-      "name"                             = "hp-prd-frc-wvd-02"
+    hp-prd-frc-wvd-01 = {
+      "name"                             = "hp-prd-frc-wvd-01"
       "type"                             = "Personal"
       "load_balancer_type"               = "Persistent"
       "personal_desktop_assignment_type" = "Automatic"
@@ -119,13 +119,13 @@ variable "wvd_application_group" {
       "hostpool_name"  = "hp-can-frc-wvd-01"
       "users"          = ["john@friha.fr", "clark@friha.fr", "marika@friha.fr"] 
     },
-    ag-prd-frc-wvd-02 = {
-      "name"           = "ag-prd-frc-wvd-02"
+    ag-prd-frc-wvd-01 = {
+      "name"           = "ag-prd-frc-wvd-01"
       "type"           = "Desktop"
       "location"       = "EastUs"
       "friendly_name"  = "Office"
       "description"    = "Dedicated to medium workload type (Microsoft Word, CLIs, ...)."
-      "hostpool_name"  = "hp-prd-frc-wvd-02"
+      "hostpool_name"  = "hp-prd-frc-wvd-01"
       "users"          = ["lisa@friha.fr", "yahya@friha.fr"]
     }
   }
@@ -142,12 +142,12 @@ variable "wvd_workspace" {
       "location"               = "EastUs"
       "application_group_name" = ["ag-can-frc-wvd-01"]
     },
-    wks-prd-frc-wvd-02 = {
-      "name"                   = "wks-prd-frc-wvd-02"
+    wks-prd-frc-wvd-01 = {
+      "name"                   = "wks-prd-frc-wvd-01"
       "friendly_name"          = "Standard"
       "location"               = "EastUs"
       "description"            = "Dedicated to medium workload type (Microsoft Word, CLIs, ...)."
-      "application_group_name" = ["ag-prd-frc-wvd-02"]
+      "application_group_name" = ["ag-prd-frc-wvd-01"]
     }
   }
 }
