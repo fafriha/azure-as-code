@@ -25,16 +25,24 @@ Switch to enable adding the file share to the domain
 Switch to enable the redirection of user profiles to the file share
 
 .EXAMPLE
-.\Initialize-SessionHost.ps1 -AddSessionhostToHostpool -RegistrationToken <token> -AddPowerShellCore -AddAzureFileShareToDomain -RedirecProfilesToAzureFileShare -FileShareUri <azurefileshareuri>
+.\Initialize-SessionHost.ps1 -AddSessionhostToHostpool <registrationtoken> -AddAzureFileShareToDomain <azurefileshareuri> -OffloadUserProfiles <azurefileshareuri> -AddPowerShellCore
 #>
 
 Param(
-    [Parameter(ParameterSetName = 'RegiserSessionHost', Mandatory = $false)][switch]$AddSessionHostToHostpool,
-    [Parameter(ParameterSetName = 'RegiserSessionHost', Mandatory = $true)][ValidateNotNullOrEmpty()][string]$RegistrationToken,
-    [Parameter(ParameterSetName = 'OffloadUserProfiles', Mandatory = $false)][switch]$AddAzureFileShareToDomain,
-    [Parameter(ParameterSetName = 'OffloadUserProfiles', Mandatory = $true)][ValidateNotNullOrEmpty()][string]$FileShareUri,
-    [Parameter(ParameterSetName = 'OffloadUserProfiles', Mandatory = $false)][switch]$RedirectProfilesToAzureFileShare,
-    [Parameter(Mandatory = $false)][switch]$AddPowerShellCore
+    [Parameter(Mandatory = $false)]
+    [ValidateNotNullOrEmpty()]
+    [string]$AddSessionHostToHostpool,
+
+    [Parameter(Mandatory = $false)]
+    [ValidateNotNullOrEmpty()]
+    [string]$AddAzureFileShareToDomain,
+
+    [Parameter(Mandatory = $false)]
+    [ValidateNotNullOrEmpty()]
+    [string]$OfflloadUserProfiles,
+
+    [Parameter(Mandatory = $false)]
+    [switch]$AddPowerShellCore
 )
 
 Try 
@@ -44,27 +52,27 @@ Try
     [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
     Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')) -ErrorAction Stop
 
-    if($RedirectProfilesToAzureFileShare)
-    {
-        ## Calling function
-        Write-Output "Installing FSLogix agent and configuring remote profiles..."
-        $rptafExitCode = RedirectProfilesToAzureFileShare($Path)
-
-        if($rptafExitCode -ne 0)
-        {
-            throw "Could not redirect user profiles to the remote storage. Function returned exit code $rptafExitCode."
-        }
-    }
-    
-    if($RegistrationToken)
+    if($AddSessionHostToHostpool)
     {
         ## Calling function
         Write-Output "Installing Windows Virtual Desktop agents..."
-        $rtExitCode = AddSessionhostToHostpool($RegistrationToken)
+        $rtExitCode = AddSessionhostToHostpool($AddSessionHostToHostpool)
 
         if($rtExitCode -ne 0)
         {
             throw "Could not register session host to hostpool. Function returned exit code $rtExitCode."
+        }
+    }  
+        
+    if($OfflloadUserProfiles)
+    {
+        ## Calling function
+        Write-Output "Installing FSLogix agent and configuring remote profiles..."
+        $oupExitCode = OffloadUserProfiles($OfflloadUserProfiles)
+
+        if($oupExitCode -ne 0)
+        {
+            throw "Could not redirect user profiles to the remote storage. Function returned exit code $oupExitCode."
         }
     }
 
@@ -72,7 +80,7 @@ Try
     {
         ## Calling function
         Write-Output "Adding Azure File Share to the current domain..."
-        $aaftdExitCode = AddAzureFileShareToDomain($FileShareUri)
+        $aaftdExitCode = AddAzureFileShareToDomain($AddAzureFileShareToDomain)
 
         if($aaftdExitCode -ne 0)
         {
@@ -104,14 +112,14 @@ Finally
     exit $LASTEXITCODE
 }
 
-function AddSessionhostToHostpool ($RegistrationToken)
+function AddSessionhostToHostpool ([string]$RegistrationToken)
 {
     $null = choco install wvd-agent --params "/REGISTRATIONTOKEN:$RegistrationToken" --ignore-checksums -y --stoponfirstfailure
     $null = choco install wvd-boot-loader --ignore-checksums -y --stoponfirstfailure
     return $LASTEXITCODE
 }
 
-function AddAzureFileShareToDomain ()
+function AddAzureFileShareToDomain ([string]$Path)
 {
     ######################################## Adding storage account to the domain
     # Download latest module
@@ -122,7 +130,7 @@ function AddAzureFileShareToDomain ()
     return $LASTEXITCODE
 }
 
-function RedirectProfilesToAzureFileShare ($path)
+function OffloadUserProfiles ([string]$Path)
 {
     ## Defining settings
     $localAdministrators = (Get-LocalGroupMember -Group "Administrators").Name
