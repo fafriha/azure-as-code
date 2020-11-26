@@ -39,7 +39,7 @@ Param(
 
     [Parameter(Mandatory = $false)]
     [ValidateNotNullOrEmpty()]
-    [string]$OfflloadUserProfiles,
+    [string]$OffloadUserProfiles,
 
     [Parameter(Mandatory = $false)]
     [switch]$AddPowerShellCore
@@ -64,11 +64,11 @@ Try
         }
     }  
         
-    if($OfflloadUserProfiles)
+    if($OffloadUserProfiles)
     {
         ## Calling function
         Write-Output "Installing FSLogix agent and configuring remote profiles..."
-        $oupExitCode = OffloadUserProfiles($OfflloadUserProfiles)
+        $oupExitCode = OffloadUserProfiles($OffloadUserProfiles)
 
         if($oupExitCode -ne 0)
         {
