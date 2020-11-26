@@ -94,7 +94,7 @@ PROTECTED_SETTINGS
 # Joining session hosts to the host pool
 resource "azurerm_virtual_machine_extension" "wvd_install_agents" {
   for_each             = azurerm_windows_virtual_machine.wvd_hosts
-  name                 = "InitializeHost"
+  name                 = "InitializeSessionHost"
   virtual_machine_id   = azurerm_windows_virtual_machine.wvd_hosts[each.key].id
   publisher            = "Microsoft.Compute"
   type                 = "CustomScriptExtension"
@@ -103,7 +103,7 @@ resource "azurerm_virtual_machine_extension" "wvd_install_agents" {
 
   protected_settings = <<PROTECTED_SETTINGS
     {
-      "CommandToExecute": "Powershell.exe -ExecutionPolicy Bypass -File ./Initialize-SessionHost.ps1 -AddPowerShellCore -AddSessionHostToHostPool -RedirectProfilesToAzureFileShare -RegistrationToken ${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token} -FileShareUri ${azurerm_storage_share.wvd_profiles[each.value.tags.hostpool].url}"
+      "CommandToExecute": "Powershell.exe -ExecutionPolicy Bypass -File ./Initialize-SessionHost.ps1 -AddPowerShellCore -AddSessionHostToHostpool -RedirectProfilesToAzureFileShare -RegistrationToken ${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token} -FileShareUri ${azurerm_storage_share.wvd_profiles[each.value.tags.hostpool].url}"
     }
   PROTECTED_SETTINGS
 

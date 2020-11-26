@@ -28,14 +28,12 @@ Switch to enable the redirection of user profiles to the file share
 .\Initialize-SessionHost.ps1 -AddSessionhostToHostpool -RegistrationToken <token> -AddPowerShellCore -AddAzureFileShareToDomain -RedirecProfilesToAzureFileShare -FileShareUri <azurefileshareuri>
 #>
 
-[CmdletBinding(DefaultParameterSetName='None')]
-
 Param(
-    [Parameter(ParameterSetName = 'AddSessionHostWithToken', Mandatory = $false)][switch]$AddSessionHostToHostpool,
-    [Parameter(ParameterSetName = 'AddSessionHostWithToken', Mandatory = $true)][ValidateNotNullOrEmpty()][string]$RegistrationToken,
-    [Parameter(ParameterSetName = 'AddAzureFileShareWithUri', Mandatory = $false)][switch]$AddAzureFileShareToDomain,
-    [Parameter(ParameterSetName = 'AddAzureFileShareWithUri', Mandatory = $true)][ValidateNotNullOrEmpty()][string]$FileShareUri,
-    [Parameter(Mandatory = $false)][switch]$RedirectProfilesToAzureFileShare,
+    [Parameter(ParameterSetName = 'RegiserSessionHost', Mandatory = $false)][switch]$AddSessionHostToHostpool,
+    [Parameter(ParameterSetName = 'RegiserSessionHost', Mandatory = $true)][ValidateNotNullOrEmpty()][string]$RegistrationToken,
+    [Parameter(ParameterSetName = 'OffloadUserProfiles', Mandatory = $false)][switch]$AddAzureFileShareToDomain,
+    [Parameter(ParameterSetName = 'OffloadUserProfiles', Mandatory = $true)][ValidateNotNullOrEmpty()][string]$FileShareUri,
+    [Parameter(ParameterSetName = 'OffloadUserProfiles', Mandatory = $false)][switch]$RedirectProfilesToAzureFileShare,
     [Parameter(Mandatory = $false)][switch]$AddPowerShellCore
 )
 
