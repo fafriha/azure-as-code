@@ -103,7 +103,7 @@ resource "azurerm_virtual_machine_extension" "wvd_install_agents" {
 
   protected_settings = <<PROTECTED_SETTINGS
     {
-      "CommandToExecute": "Powershell.exe -ExecutionPolicy Bypass -File ./Initialize-SessionHost.ps1 -AddPowerShellCore -AddSessionHostToHostpool -RedirectProfilesToAzureFileShare -RegistrationToken ${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token} -FileShareUri ${azurerm_storage_share.wvd_profiles[each.value.tags.hostpool].url}"
+      "CommandToExecute": "Powershell.exe -ExecutionPolicy Bypass -File ./Initialize-SessionHost.ps1 -AddPowerShellCore -AddSessionHostToHostpool ${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token} -AddAzureFileShareToDomain ${azurerm_storage_share.wvd_profiles[each.value.tags.hostpool].url} -OffloadUserProfiles ${azurerm_storage_share.wvd_profiles[each.value.tags.hostpool].url}"
     }
   PROTECTED_SETTINGS
 
