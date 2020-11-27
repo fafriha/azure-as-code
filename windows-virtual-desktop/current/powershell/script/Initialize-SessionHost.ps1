@@ -54,11 +54,11 @@ function AddSessionhostToHostpool ([string]$RegistrationToken)
 
 function AddAzureFileShareToDomain ([string]$Path)
 {
-    ######################################## Adding storage account to the domain
+    ###################################### Adding storage account to the domain
     # Download latest module
     # Get join domain account from parameter or Key Vault
     # Join storage account to domain
-    ##############################################################################
+    ############################################################################
     
     return $LASTEXITCODE
 }
