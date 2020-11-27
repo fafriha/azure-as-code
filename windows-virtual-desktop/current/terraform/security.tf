@@ -66,15 +66,20 @@ resource "azurerm_user_assigned_identity" "wvd_msi" {
 }
 
 ## Adding Managed Identity as Contributor and Key Vault Secrets Officer
-# resource "azurerm_role_assignment" "wvd_msi" {
-#   for_each             = { for msi in local.msi_roles : msi.role => msi... }
-#   role_definition_name = each.key
-#   scope                = each.key != "Contributor" ? azurerm_key_vault.wvd_key_vault.id : azurerm_resource_group.wvd_resource_group.id
-#   principal_id         = azurerm_user_assigned_identity.wvd_msi[each.value.name].id
-# }
+resource "azurerm_role_assignment" "wvd_msi" {
+  for_each             = { for msi in local.msi_roles : msi.name => msi... }
+  role_definition_name = each.value.name
+  scope                = each.value.name != "Contributor" ? azurerm_key_vault.wvd_key_vault.id : azurerm_resource_group.wvd_resource_group.id
+  principal_id         = azurerm_user_assigned_identity.wvd_msi[each.key].id
+}
 
-output msis{
-  value = azurerm_user_assigned_identity.wvd_msi
+## Adding users to application groups
+#### WARNING - Adding users to application groups requires User Access Administrator or Owner rights and Reader rights on Azure AD
+resource "azurerm_role_assignment" "wvd_users" {
+  count                = length(local.application_groups)
+  scope                = azurerm_virtual_desktop_application_group.wvd_application_group[local.application_groups[count.index].name].id
+  role_definition_name = "Desktop virtualization user"
+  principal_id         = data.azuread_user.wvd_users[local.application_groups[count.index].user].id
 }
 
 ## Adding currently used Service Principals as Key Vault Secrets Officer
@@ -107,13 +112,4 @@ resource "azurerm_key_vault_secret" "wvd_registration_info" {
   value        = azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.name].registration_info[0].token
   key_vault_id = azurerm_key_vault.wvd_key_vault.id
   depends_on   = [azurerm_role_assignment.wvd_sp]
-}
-
-## Adding users to application groups
-#### WARNING - Adding users to application groups required User Access Administrator or Owner rights and Reader rights on Azure AD
-resource "azurerm_role_assignment" "wvd_users" {
-  count                = length(local.application_groups)
-  scope                = azurerm_virtual_desktop_application_group.wvd_application_group[local.application_groups[count.index].name].id
-  role_definition_name = "Desktop virtualization user"
-  principal_id         = data.azuread_user.wvd_users[local.application_groups[count.index].user].id
 }
