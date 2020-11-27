@@ -106,6 +106,8 @@ function Add-AzureFileShareToDomain (
 {
     try 
     {
+        # Check storage account
+
         # Defining parameters
         $path = "$env:TEMP\AzFilesHybrid"
         $psModPath = $env:PSModulePath.Split(";")[0]
