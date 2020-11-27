@@ -160,7 +160,7 @@ function Add-AzureFileShareToDomain (
 
         # Running as join domain account
         $command = "Connect-AzAccount -Identity -Subscription $subscriptionId; $cmdlet"
-        Start-CommandAsDifferentUser($cred, $command)
+        #Start-CommandAsDifferentUser($cred, $command)
     }
     catch 
     {

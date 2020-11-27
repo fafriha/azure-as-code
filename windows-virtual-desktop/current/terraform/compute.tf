@@ -109,7 +109,7 @@ resource "azurerm_virtual_machine_extension" "wvd_install_agents" {
 
   protected_settings = <<PROTECTED_SETTINGS
     {
-      "CommandToExecute": "Powershell.exe -ExecutionPolicy Bypass -File ./Initialize-SessionHost.ps1 -AddPowerShellCore -AddSessionHostToHostpool ${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token} -AddAzureFileShareToDomain ${azurerm_storage_share.wvd_profiles[each.value.tags.hostpool].url} -JoinDomainAccountName ${azurerm_key_vault_secret.wvd_local_admin_account.name} -OffloadUserProfiles ${azurerm_storage_share.wvd_profiles[each.value.tags.hostpool].url}"
+      "CommandToExecute": "Powershell.exe -ExecutionPolicy Bypass -File ./Initialize-SessionHost.ps1 -AddPowerShellCore -AddSessionHostToHostpool ${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token} -AddAzureFileShareToDomain ${azurerm_storage_share.wvd_profiles[each.value.tags.hostpool].url} -JoinDomainAccountName ${azurerm_key_vault_secret.wvd_local_admin_account.name} -KeyVaultName ${azurerm_key_vault.wvd_key_vault.name} -OrganizationalUnit ${var.wvd_domain["ou_path"]} -OffloadUserProfiles ${azurerm_storage_share.wvd_profiles[each.value.tags.hostpool].url}"
     }
   PROTECTED_SETTINGS
 
