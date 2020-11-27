@@ -63,7 +63,7 @@ function AddAzureFileShareToDomain ([string]$Path)
     return $LASTEXITCODE
 }
 
-function OffloadUserProfiles ([string]$Path)
+function OffloadUserProfiles ([string]$FileShareUri)
 {
     ## Defining settings
     $localAdministrators = (Get-LocalGroupMember -Group "Administrators").Name
