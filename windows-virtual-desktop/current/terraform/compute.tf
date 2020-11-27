@@ -4,7 +4,7 @@ resource "azurerm_windows_virtual_machine" "wvd_hosts" {
   name                     = each.key
   location                 = azurerm_resource_group.wvd_resource_group.location
   resource_group_name      = azurerm_resource_group.wvd_resource_group.name
-  network_interface_ids    = [azurerm_network_interface.wvd_hosts["${each.key}-01"].id]
+  network_interface_ids    = [azurerm_network_interface.wvd_hosts[each.key].id]
   size                     = each.value.vm_size
   zone                     = each.value.index % 3 + 1
   admin_username           = azurerm_key_vault_secret.wvd_local_admin_account.name
