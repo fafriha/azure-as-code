@@ -73,14 +73,14 @@ resource "azurerm_role_assignment" "wvd_msi" {
   principal_id         = azurerm_user_assigned_identity.wvd_msi[each.value.name].id
 }
 
-## Adding users to application groups
-#### WARNING - Adding users to application groups requires User Access Administrator or Owner rights and Reader rights on Azure AD
-resource "azurerm_role_assignment" "wvd_users" {
-  count                = length(local.application_groups)
-  scope                = azurerm_virtual_desktop_application_group.wvd_application_group[local.application_groups[count.index].name].id
-  role_definition_name = "Desktop virtualization user"
-  principal_id         = data.azuread_user.wvd_users[local.application_groups[count.index].user].id
-}
+# ## Adding users to application groups
+# #### WARNING - Adding users to application groups requires User Access Administrator or Owner rights and Reader rights on Azure AD
+# resource "azurerm_role_assignment" "wvd_users" {
+#   count                = length(local.application_groups)
+#   scope                = azurerm_virtual_desktop_application_group.wvd_application_group[local.application_groups[count.index].name].id
+#   role_definition_name = "Desktop virtualization user"
+#   principal_id         = data.azuread_user.wvd_users[local.application_groups[count.index].user].id
+# }
 
 output msis{
   value = azurerm_user_assigned_identity.wvd_msi
