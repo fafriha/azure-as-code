@@ -15,7 +15,7 @@ resource "azurerm_windows_virtual_machine" "wvd_hosts" {
 
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.wvd_msi[replace(replace(each.value.hostpool_name, "hp", "msi"), "\\d+$", "01")].principal_id]
+    identity_ids = [azurerm_user_assigned_identity.wvd_msi[replace(replace(each.value.hostpool_name, "hp", "msi"), "\\d+$", "01")].id]
   }
 
   source_image_reference {
