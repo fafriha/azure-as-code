@@ -252,10 +252,14 @@ variable "wvd_msi_roles" {
   description = "Please provide the required informations about the Managed Identity assigned to the Function App and the Virtual Machines."
   type        = map(any)
   default = {
+    msi-can-frc-wvd-01 = {
+      "name"  = "msi-can-frc-wvd-01"
+      "roles" = ["Contributor", "Key Vault Secrets Officer (preview)"]
+    },
     msi-prd-frc-wvd-01 = {
       "name"  = "msi-prd-frc-wvd-01"
       "roles" = ["Contributor", "Key Vault Secrets Officer (preview)"]
-    }
+    }    
   }
 }
 
