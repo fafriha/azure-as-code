@@ -45,7 +45,7 @@ resource "azurerm_subnet_route_table_association" "wvd_routing" {
 
 ## Creating all session hosts network interfaces
 resource "azurerm_network_interface" "wvd_hosts" {
-  for_each            = { for s in local.session_hosts : format("%s-%02d-01", s.vm_prefix, s.index + 1) => s }
+  for_each            = { for s in local.session_hosts : format("%s-%02d", s.vm_prefix, s.index + 1) => s }
   name                = "nic-${each.key}"
   location            = azurerm_resource_group.wvd_resource_group.location
   resource_group_name = azurerm_resource_group.wvd_resource_group.name

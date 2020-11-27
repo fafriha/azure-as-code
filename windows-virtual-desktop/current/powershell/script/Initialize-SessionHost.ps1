@@ -100,7 +100,7 @@ function Add-AzureFileShareToDomain (
 {
     try 
     {
-        # Check storage account
+        # Checking storage account
 
         # Defining parameters
         $path = "$env:TEMP\AzFilesHybrid"

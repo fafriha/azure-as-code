@@ -28,7 +28,7 @@ resource "azurerm_windows_virtual_machine" "wvd_hosts" {
   #source_image_id = data.azurerm_image.wvd.id
 
   os_disk {
-    name                 = "osDisk-${lower(each.key)}-01"
+    name                 = "osDisk-${lower(each.key)}"
     caching              = "ReadWrite"
     storage_account_type = "Premium_LRS"
     disk_size_gb         = "128"
