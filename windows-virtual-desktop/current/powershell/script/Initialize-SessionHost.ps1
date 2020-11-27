@@ -168,7 +168,7 @@ Try
 Catch
 {
     Write-Error $_.Exception.Message
-    exit $LASTEXITCODE
+    exit 0
 }
 Finally
 {
