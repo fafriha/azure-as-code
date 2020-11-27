@@ -21,11 +21,11 @@ Switch to enable adding this session host to the hostpool
 .PARAMETER AddAzureFileShareToDomain
 Switch to enable adding the file share to the domain
 
-.PARAMETER RedirectProfilesToAzureFileShare
+.PARAMETER MoveUserProfiles
 Switch to enable the redirection of user profiles to the file share
 
 .EXAMPLE
-.\Initialize-SessionHost.ps1 -AddSessionhostToHostpool <registrationtoken> -AddAzureFileShareToDomain <azurefileshareuri> -OrganizationalUnit <oudistinguishedname> -OffloadUserProfiles <azurefileshareuri> -AddPowerShellCore
+.\Initialize-SessionHost.ps1 -AddSessionhostToHostpool <registrationtoken> -AddAzureFileShareToDomain <azurefileshareuri> -OrganizationalUnit <oudistinguishedname> -MoveUserProfiles <azurefileshareuri> -AddPowerShellCore
 #>
 
 Param(
@@ -47,7 +47,7 @@ Param(
 
     [Parameter(Mandatory = $false)]
     [ValidateNotNullOrEmpty()]
-    [string]$OffloadUserProfiles,
+    [string]$MoveUserProfiles,
 
     [Parameter(Mandatory = $false)]
     [switch]$AddPowerShellCore
@@ -92,10 +92,10 @@ function Add-SessionhostToHostpool ([string]$RegistrationToken)
 }
 
 function Add-AzureFileShareToDomain (
-    [string]$FileShareUri,
+    $FileShareUri,
     [string]$JoinDomainAccountName,
     [string]$KeyVaultName,
-    [Parameter(Mandatory = $false)][string]$OrganizationalUnit
+    [Parameter(Mandatory = $false)]$OrganizationalUnit
     )
 {
     try 
@@ -157,6 +157,8 @@ function Add-AzureFileShareToDomain (
         # Running as join domain account
         $command = "Connect-AzAccount -Identity -Subscription $subscriptionId; $cmdlet"
         #Start-CommandAsDifferentUser($cred, $command)
+
+        Write-Output "Done."
     }
     catch 
     {
@@ -165,7 +167,7 @@ function Add-AzureFileShareToDomain (
     }
 }
 
-function Offload-UserProfiles ([string]$FileShareUri)
+function Move-UserProfiles ([string]$FileShareUri)
 {
     ## Defining settings
     $localAdministrators = (Get-LocalGroupMember -Group "Administrators").Name
@@ -236,11 +238,11 @@ Try
         }
     }  
         
-    if($OffloadUserProfiles)
+    if($MoveUserProfiles)
     {
         ## Calling function
         Write-Output "Installing FSLogix agent and configuring remote profiles..."
-        $oupExitCode = Offload-UserProfiles($OffloadUserProfiles)
+        $oupExitCode = Move-UserProfiles($MoveUserProfiles)
 
         if($oupExitCode -ne 0)
         {
