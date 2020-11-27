@@ -66,11 +66,15 @@ resource "azurerm_user_assigned_identity" "wvd_msi" {
 }
 
 ## Adding Managed Identity as Contributor and Key Vault Secrets Officer
-resource "azurerm_role_assignment" "wvd_msi" {
-  for_each             = { for msi in local.msi_roles : msi.role => msi... }
-  role_definition_name = each.key
-  scope                = each.key != "Contributor" ? azurerm_key_vault.wvd_key_vault.id : azurerm_resource_group.wvd_resource_group.id
-  principal_id         = azurerm_user_assigned_identity.wvd_msi[each.value.name].id
+# resource "azurerm_role_assignment" "wvd_msi" {
+#   for_each             = { for msi in local.msi_roles : msi.role => msi... }
+#   role_definition_name = each.key
+#   scope                = each.key != "Contributor" ? azurerm_key_vault.wvd_key_vault.id : azurerm_resource_group.wvd_resource_group.id
+#   principal_id         = azurerm_user_assigned_identity.wvd_msi[each.value.name].id
+# }
+
+output msis{
+  value = azurerm_user_assigned_identity.wvd_msi
 }
 
 ## Adding currently used Service Principals as Key Vault Secrets Officer

@@ -14,7 +14,7 @@ resource "azurerm_windows_virtual_machine" "wvd_hosts" {
   license_type             = "Windows_Client"
 
   identity {
-    type = "UserAssigned"
+    type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.wvd_msi[replace(replace(each.value.hostpool_name, "hp", "msi"), "\\d+$", "01")].principal_id]
   }
 

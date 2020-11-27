@@ -111,22 +111,22 @@ variable "wvd_application_group" {
   type        = map(any)
   default = {
     ag-can-frc-wvd-01 = {
-      "name"           = "ag-can-frc-wvd-01"
-      "type"           = "Desktop"
-      "location"       = "EastUs"
-      "friendly_name"  = "Canary"
-      "description"    = "Dedicated to canary deployments."
-      "hostpool_name"  = "hp-can-frc-wvd-01"
-      "users"          = ["john@friha.fr", "clark@friha.fr", "marika@friha.fr"] 
+      "name"          = "ag-can-frc-wvd-01"
+      "type"          = "Desktop"
+      "location"      = "EastUs"
+      "friendly_name" = "Canary"
+      "description"   = "Dedicated to canary deployments."
+      "hostpool_name" = "hp-can-frc-wvd-01"
+      "users"         = ["john@friha.fr", "clark@friha.fr", "marika@friha.fr"]
     },
     ag-prd-frc-wvd-01 = {
-      "name"           = "ag-prd-frc-wvd-01"
-      "type"           = "Desktop"
-      "location"       = "EastUs"
-      "friendly_name"  = "Office"
-      "description"    = "Dedicated to medium workload type (Microsoft Word, CLIs, ...)."
-      "hostpool_name"  = "hp-prd-frc-wvd-01"
-      "users"          = ["lisa@friha.fr", "yahya@friha.fr"]
+      "name"          = "ag-prd-frc-wvd-01"
+      "type"          = "Desktop"
+      "location"      = "EastUs"
+      "friendly_name" = "Office"
+      "description"   = "Dedicated to medium workload type (Microsoft Word, CLIs, ...)."
+      "hostpool_name" = "hp-prd-frc-wvd-01"
+      "users"         = ["lisa@friha.fr", "yahya@friha.fr"]
     }
   }
 }
@@ -156,10 +156,10 @@ variable "wvd_virtual_network" {
   description = "Please provide the required networking information for the environment."
   type        = map(string)
   default = {
-    "virtual_network_name"          = "vnet-prd-frc-wvd-01"
-    "address_space"                 = "192.168.1.0/24"
-    "peering_name"                  = "peer-prd-frc-wvd-to-core-01"
-    "network_security_group_name"   = "nsg-prd-frc-wvd-01"
+    "virtual_network_name"        = "vnet-prd-frc-wvd-01"
+    "address_space"               = "192.168.1.0/24"
+    "peering_name"                = "peer-prd-frc-wvd-to-core-01"
+    "network_security_group_name" = "nsg-prd-frc-wvd-01"
   }
 }
 
@@ -172,8 +172,8 @@ variable "wvd_subnets" {
       "address_prefix" = "192.168.1.192/27"
     },
     snet-prd-frc-wvd-01 = {
-      "subnet_name"     = "snet-prd-frc-wvd-01"
-      "address_prefix"  = "192.168.1.0/27"
+      "subnet_name"    = "snet-prd-frc-wvd-01"
+      "address_prefix" = "192.168.1.0/27"
     }
   }
 }
@@ -259,7 +259,7 @@ variable "wvd_msi_roles" {
     msi-prd-frc-wvd-01 = {
       "name"  = "msi-prd-frc-wvd-01"
       "roles" = ["Contributor", "Key Vault Secrets Officer (preview)"]
-    }    
+    }
   }
 }
 
