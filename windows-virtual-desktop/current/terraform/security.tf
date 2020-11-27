@@ -65,22 +65,22 @@ resource "azurerm_user_assigned_identity" "wvd_msi" {
   location            = azurerm_resource_group.wvd_resource_group.location
 }
 
-## Adding Managed Identity as Contributor and Key Vault Secrets Officer
-resource "azurerm_role_assignment" "wvd_msi" {
-  for_each             = { for msi in local.msi_roles : msi.role => msi... }
-  role_definition_name = each.key
-  scope                = each.key != "Contributor" ? azurerm_key_vault.wvd_key_vault.id : azurerm_resource_group.wvd_resource_group.id
-  principal_id         = azurerm_user_assigned_identity.wvd_msi[each.value.name].id
-}
-
-# ## Adding users to application groups
-# #### WARNING - Adding users to application groups requires User Access Administrator or Owner rights and Reader rights on Azure AD
-# resource "azurerm_role_assignment" "wvd_users" {
-#   count                = length(local.application_groups)
-#   scope                = azurerm_virtual_desktop_application_group.wvd_application_group[local.application_groups[count.index].name].id
-#   role_definition_name = "Desktop virtualization user"
-#   principal_id         = data.azuread_user.wvd_users[local.application_groups[count.index].user].id
+# ## Adding Managed Identity as Contributor and Key Vault Secrets Officer
+# resource "azurerm_role_assignment" "wvd_msi" {
+#   for_each             = { for msi in local.msi_roles : msi.role => msi... }
+#   role_definition_name = each.key
+#   scope                = each.key != "Contributor" ? azurerm_key_vault.wvd_key_vault.id : azurerm_resource_group.wvd_resource_group.id
+#   principal_id         = azurerm_user_assigned_identity.wvd_msi[each.value.name].id
 # }
+
+## Adding users to application groups
+#### WARNING - Adding users to application groups requires User Access Administrator or Owner rights and Reader rights on Azure AD
+resource "azurerm_role_assignment" "wvd_users" {
+  count                = length(local.application_groups)
+  scope                = azurerm_virtual_desktop_application_group.wvd_application_group[local.application_groups[count.index].name].id
+  role_definition_name = "Desktop virtualization user"
+  principal_id         = data.azuread_user.wvd_users[local.application_groups[count.index].user].id
+}
 
 output msis{
   value = azurerm_user_assigned_identity.wvd_msi
