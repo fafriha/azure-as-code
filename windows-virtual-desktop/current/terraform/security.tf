@@ -59,7 +59,7 @@ resource "azurerm_key_vault" "wvd_key_vault" {
 
 ## Creating the managed service identity
 resource "azurerm_user_assigned_identity" "wvd_msi" {
-  for_each            = local.msi_role
+  for_each            = local.msi_roles
   name                = each.value.name
   resource_group_name = azurerm_resource_group.wvd_resource_group.name
   location            = azurerm_resource_group.wvd_resource_group.location
