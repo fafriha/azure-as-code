@@ -106,7 +106,7 @@ function OffloadUserProfiles ([string]$FileShareUri)
 function AddPowerShellCore ()
 {
     ## Should be installed on image creation
-    $null = choco install powershell-core --stoponfirstfailure
+    $null = choco install powershell-core --stoponfirstfailure -y
     return $LASTEXITCODE 
 }
 
@@ -127,6 +127,10 @@ Try
         {
             throw "Could not register session host to hostpool. Function returned exit code $rtExitCode."
         }
+        else 
+        {
+            Write-Output "Done."
+        }
     }  
         
     if($OffloadUserProfiles)
@@ -138,6 +142,10 @@ Try
         if($oupExitCode -ne 0)
         {
             throw "Could not redirect user profiles to the remote storage. Function returned exit code $oupExitCode."
+        }
+        else 
+        {
+            Write-Output "Done."
         }
     }
 
@@ -151,6 +159,10 @@ Try
         {
             throw "Could not add the file share to the domain. Function returned exit code $aaftdExitCode."
         }
+        else 
+        {
+            Write-Output "Done."
+        }
     }
 
     if($AddPowerShellCore)
@@ -162,6 +174,10 @@ Try
         if($apscExitcode -ne 0)
         {
             throw "Could not install the latest PowerShell Code version. Function returned exit code $apscExitcode."
+        }
+        else 
+        {
+            Write-Output "Done."
         }
     }
 }
