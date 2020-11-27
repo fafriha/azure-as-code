@@ -24,7 +24,7 @@ resource "azurerm_function_app" "wvd_function" {
 
   identity {
     type = "UserAssigned"
-    identity_ids = azurerm_user_assigned_identity.wvd_msi["${replace(each.value.name, "fa", "msi")}"].principal_id
+  identity_ids = [azurerm_user_assigned_identity.wvd_msi[replace(each.value.name, "fa", "msi")].principal_id
   }
 
   app_settings = {
