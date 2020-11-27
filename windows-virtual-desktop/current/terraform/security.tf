@@ -83,7 +83,11 @@ resource "azurerm_role_assignment" "wvd_users" {
 }
 
 output msis{
-  value = azurerm_user_assigned_identity.wvd_msi.indentity[0]
+  value = azurerm_user_assigned_identity.wvd_msi
+}
+
+output msi_roles {
+  value = local.msi_roles
 }
 
 ## Adding currently used Service Principals as Key Vault Secrets Officer
