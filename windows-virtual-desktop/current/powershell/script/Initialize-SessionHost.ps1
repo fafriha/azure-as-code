@@ -25,7 +25,7 @@ Switch to enable adding the file share to the domain
 Switch to enable the redirection of user profiles to the file share
 
 .EXAMPLE
-.\Initialize-SessionHost.ps1 -AddSessionhostToHostpool <registrationtoken> -AddAzureFileShareToDomain <azurefileshareuri> -OffloadUserProfiles <azurefileshareuri> -AddPowerShellCore
+.\Initialize-SessionHost.ps1 -AddSessionhostToHostpool <registrationtoken> -AddAzureFileShareToDomain <azurefileshareuri> -OrganizationalUnit <oudistinguishedname> -OffloadUserProfiles <azurefileshareuri> -AddPowerShellCore
 #>
 
 Param(
@@ -33,9 +33,17 @@ Param(
     [ValidateNotNullOrEmpty()]
     [string]$AddSessionHostToHostpool,
 
-    [Parameter(Mandatory = $false)]
-    [ValidateNotNullOrEmpty()]
-    [string]$AddAzureFileShareToDomain,
+    [Parameter(ParameterSetName = "JoinStorageAccount", Mandatory = $true)]
+    [ValidateNotNullOrEmpty()][string]$AddAzureFileShareToDomain,
+
+    [Parameter(ParameterSetName = "JoinStorageAccount", Mandatory = $false)]
+    [ValidateNotNullOrEmpty()][string]$OrganizationalUnit,
+
+    [Parameter(ParameterSetName = "JoinStorageAccount", Mandatory = $true)]
+    [ValidateNotNullOrEmpty()][string]$JoinDomainAccountName,
+
+    [Parameter(ParameterSetName = "JoinStorageAccount", Mandatory = $true)]
+    [ValidateNotNullOrEmpty()][string]$KeyVaultName,
 
     [Parameter(Mandatory = $false)]
     [ValidateNotNullOrEmpty()]
@@ -45,25 +53,123 @@ Param(
     [switch]$AddPowerShellCore
 )
 
-function AddSessionhostToHostpool ([string]$RegistrationToken)
+############################################################## Funtions ########################################################
+function Start-CommandAsDifferentUser ([System.Management.Automation.PSCredential]$Credential, [string]$Cmdlet)
+{
+
+    If (Test-Path $ResultFile)  
+    {
+        Remove-Item $ResultFile
+    }
+    
+    # Defining parameters
+    $outputFile = "$env:temp\Start-CommandAsDifferentUser.log"
+
+    # Starting the process
+    (Start-Process -FilePath "powershell.exe" -Credential $Credential -ArgumentList $Cmdlet -NoNewWindow -PassThru -RedirectStandardOutput $outputFile).WaitForExit()
+    
+    # Reading the output
+    If (Test-Path $outputFile)
+    {
+        if((Get-Content $outputFile) -contains "Error")
+        {
+            $output = 1
+        }
+        else 
+        {
+            $output = 0    
+        }
+        
+        Remove-Item $outputFile
+    }
+    else
+    {
+        $output = 1
+    }
+
+    return $output
+}
+
+function Add-SessionhostToHostpool ([string]$RegistrationToken)
 {
     $null = choco install wvd-agent --params "/REGISTRATIONTOKEN:$RegistrationToken" --ignore-checksums -y --stoponfirstfailure
     $null = choco install wvd-boot-loader --ignore-checksums -y --stoponfirstfailure
     return $LASTEXITCODE
 }
 
-function AddAzureFileShareToDomain ([string]$Path)
+function Add-AzureFileShareToDomain (
+    [string]$FileShareUri,
+    [string]$JoinDomainAccountName,
+    [string]$KeyVaultName,
+    [Parameter(Mandatory = $false)][string]$OrganizationalUnit
+    )
 {
-    ###################################### Adding storage account to the domain
-    # Download latest module
-    # Get join domain account from parameter or Key Vault
-    # Join storage account to domain
-    ############################################################################
-    
-    return $LASTEXITCODE
+    try 
+    {
+        # Defining parameters
+        $path = "$env:TEMP\AzFilesHybrid"
+        $psModPath = $env:PSModulePath.Split(";")[0]
+        $storageAccountName = $FileShareUri.Split(".")[1]
+        $subscriptionId = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -NoProxy -Uri "http://169.254.169.254/metadata/instance/compute/subscriptionId?api-version=2020-10-01&format=text"
+        $resourceGroupName = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -NoProxy -Uri "http://169.254.169.254/metadata/instance/compute/resourceGroupName?api-version=2020-10-01&format=text"
+        $token = (Invoke-RestMethod -Uri 'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2020-01-01&resource=https%3A%2F%2Fvault.azure.net' -Method GET -Headers @{Metadata="true"}).access_token
+        $password = (Invoke-RestMethod -Uri "https://$KeyVaultName.azure.net/secrets/$JoinDomainAccountName?api-version=2020-01-01" -Method GET -Headers @{Authorization="Bearer $token"}).value | ConvertTo-SecureString -AsPlainText -Force
+        $cred = New-Object System.Management.Automation.PSCredential -ArgumentList $JoinDomainAccountName, $password
+        $uri = "https://github.com/Azure-Samples/azure-files-samples/releases/download/" + ((Invoke-WebRequest 'https://github.com/Azure-Samples/azure-files-samples/releases/latest' -Headers @{"Accept"="application/json"}).Content | ConvertFrom-Json).tag_name + "/AzFilesHybrid.zip"
+
+        if (!(Test-Path -Path $psModPath)) 
+        {
+            New-Item -Path $psModPath -ItemType Directory | Out-Null
+        }
+
+        # Downloading latest module
+        Invoke-WebRequest -Uri $uri -OutFile "$path.zip" | Unblock-File
+
+        # Extracting archive
+        Expand-Archive -LiteralPath "$path.zip" -DestinationPath $path -Force
+
+        # Importing data file
+        $psdFile = Import-PowerShellDataFile -Path "$path\AzFilesHybrid.psd1"
+
+        # Creating module path
+        $desiredModulePath = "$psModPath\AzFilesHybrid\$($psdFile.ModuleVersion)\"
+        if (!(Test-Path -Path $desiredModulePath)) 
+        {
+            New-Item -Path $desiredModulePath -ItemType Directory | Out-Null
+        }
+
+        Copy-Item -Path "$path\AzFilesHybrid.psd1" -Destination $desiredModulePath
+        Copy-Item -Path "$path\AzFilesHybrid.psm1" -Destination $desiredModulePath
+
+        # Removing archive
+        Remove-Item -Path "$path.zip" -Recurse -Force   
+
+        # Importing AzFilesHybrid module
+        Install-Module PowerShellGet, Az -Force -Scope AllUsers
+        Import-Module -Name AzFilesHybrid -Global 
+
+        # Registering the target storage account with active directory 
+        if($OrganizationalUnit)
+        {
+            $cmdlet = Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType "ComputerAccount" -OrganizationalUnitDistinguishedName $OrganizationalUnit -EncryptionType "AES256,RC4"
+        }
+        else 
+        {
+            $cmdlet = Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType "ComputerAccount" -EncryptionType "AES256,RC4"
+        }
+
+        # Running as join domain account
+        $command = "Connect-AzAccount -Identity -Subscription $subscriptionId; $cmdlet"
+        Start-CommandAsDifferentUser($cred, $command)
+    }
+    catch 
+    {
+        Write-Error $_.Exception
+        exit $LASTEXITCODE
+    }
 }
 
-function OffloadUserProfiles ([string]$FileShareUri)
+function Offload-UserProfiles ([string]$FileShareUri)
 {
     ## Defining settings
     $localAdministrators = (Get-LocalGroupMember -Group "Administrators").Name
@@ -103,13 +209,14 @@ function OffloadUserProfiles ([string]$FileShareUri)
     return $LASTEXITCODE
 }
 
-function AddPowerShellCore ()
+function Add-PowerShellCore ()
 {
     ## Should be installed on image creation
     $null = choco install powershell-core --stoponfirstfailure -y
     return $LASTEXITCODE 
 }
 
+################################################################# Main #################################################################
 Try 
 {
     ## Should be installed on image creation
@@ -121,7 +228,7 @@ Try
     {
         ## Calling function
         Write-Output "Installing Windows Virtual Desktop agents..."
-        $rtExitCode = AddSessionHostToHostpool($AddSessionHostToHostpool)
+        $rtExitCode = Add-SessionHostToHostpool($AddSessionHostToHostpool)
 
         if($rtExitCode -ne 0)
         {
@@ -137,7 +244,7 @@ Try
     {
         ## Calling function
         Write-Output "Installing FSLogix agent and configuring remote profiles..."
-        $oupExitCode = OffloadUserProfiles($OffloadUserProfiles)
+        $oupExitCode = Offload-UserProfiles($OffloadUserProfiles)
 
         if($oupExitCode -ne 0)
         {
@@ -153,7 +260,7 @@ Try
     {
         ## Calling function
         Write-Output "Adding Azure File Share to the current domain..."
-        $aaftdExitCode = AddAzureFileShareToDomain($AddAzureFileShareToDomain)
+        $aaftdExitCode = Add-AzureFileShareToDomain($AddAzureFileShareToDomain, $JoinDomainAccountName, $KeyVaultName, $OrganizationalUnit)
 
         if($aaftdExitCode -ne 0)
         {
@@ -169,7 +276,7 @@ Try
     {
         ## Calling function
         Write-Output "Installing latest PowerShell version..."
-        $apscExitcode = AddPowerShellCore
+        $apscExitcode = Add-PowerShellCore
 
         if($apscExitcode -ne 0)
         {
@@ -184,7 +291,7 @@ Try
 Catch
 {
     Write-Error $_.Exception.Message
-    exit 0
+    exit 1
 }
 Finally
 {

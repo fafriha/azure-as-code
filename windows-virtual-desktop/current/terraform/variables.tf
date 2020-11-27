@@ -248,17 +248,13 @@ variable "wvd_key_vault_name" {
   default     = "kv-prd-frc-wvd-01"
 }
 
-variable "wvd_sp_roles" {
-  description = "Please provide the required informations about the Managed Identity of the Function App and the Terraform Service Principal."
+variable "wvd_msi_roles" {
+  description = "Please provide the required informations about the Managed Identity assigned to the Function App and the Virtual Machines."
   type        = map(any)
   default = {
-    fa-prd-frc-wvd-01 = {
-      "name"  = "fa-prd-frc-wvd-01"
+    msi-prd-frc-wvd-01 = {
+      "name"  = "msi-prd-frc-wvd-01"
       "roles" = ["Contributor", "Key Vault Secrets Officer (preview)"]
-    },
-    tf = {
-      "name"  = "Terraform Service Principal"
-      "roles" = ["Key Vault Secrets Officer (preview)"]
     }
   }
 }
@@ -267,12 +263,12 @@ variable "wvd_sp_roles" {
 ## Flatening inputs into collections where each element corresponds to a single resource
 locals {
 
-  sp_roles = flatten([
-    for sp in var.wvd_sp_roles : [
-      for r in range(length(sp.roles)) :
+  msi_roles = flatten([
+    for msi in var.wvd_msi_roles : [
+      for r in range(length(msi.roles)) :
       {
-        name = sp.name
-        role = sp.roles[r]
+        name = msi.name
+        role = msi.roles[r]
       }
     ]
   ])

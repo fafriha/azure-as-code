@@ -11,6 +11,12 @@ resource "azurerm_windows_virtual_machine" "wvd_hosts" {
   admin_password           = azurerm_key_vault_secret.wvd_local_admin_account.value
   enable_automatic_updates = false
   patch_mode               = "Manual"
+  license_type             = "Windows_Client"
+
+  identity {
+    type = "UserAssigned"
+    identity_ids = azurerm_user_assigned_identity.wvd_msi.identity.0.principal_id
+  }
 
   source_image_reference {
     publisher = "MicrosoftWindowsDesktop"
@@ -103,7 +109,7 @@ resource "azurerm_virtual_machine_extension" "wvd_install_agents" {
 
   protected_settings = <<PROTECTED_SETTINGS
     {
-      "CommandToExecute": "Powershell.exe -ExecutionPolicy Bypass -File ./Initialize-SessionHost.ps1 -AddPowerShellCore -AddSessionHostToHostpool ${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token} -AddAzureFileShareToDomain ${azurerm_storage_share.wvd_profiles[each.value.tags.hostpool].url} -OffloadUserProfiles ${azurerm_storage_share.wvd_profiles[each.value.tags.hostpool].url}"
+      "CommandToExecute": "Powershell.exe -ExecutionPolicy Bypass -File ./Initialize-SessionHost.ps1 -AddPowerShellCore -AddSessionHostToHostpool ${azurerm_virtual_desktop_host_pool.wvd_hostpool[each.value.tags.hostpool].registration_info[0].token} -AddAzureFileShareToDomain ${azurerm_storage_share.wvd_profiles[each.value.tags.hostpool].url} -JoinDomainAccountName ${azurerm_key_vault_secret.wvd_local_admin_account.name} -OffloadUserProfiles ${azurerm_storage_share.wvd_profiles[each.value.tags.hostpool].url}"
     }
   PROTECTED_SETTINGS
 

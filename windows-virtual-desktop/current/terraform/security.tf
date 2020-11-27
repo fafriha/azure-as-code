@@ -57,12 +57,27 @@ resource "azurerm_key_vault" "wvd_key_vault" {
   sku_name                        = "standard"
 }
 
-## Adding MSIs as Contributor and Key Vault Secrets Officer
+## Creating the managed service identity
+resource "azurerm_user_assigned_identity" "wvd_msi" {
+  for_each            = local.msi_role
+  name                = each.value.name
+  resource_group_name = azurerm_resource_group.wvd_resource_group.name
+  location            = azurerm_resource_group.wvd_resource_group.location
+}
+
+## Adding Managed Identity as Contributor and Key Vault Secrets Officer
+resource "azurerm_role_assignment" "wvd_msi" {
+  for_each             = local.msi_roles
+  role_definition_name = each.value.role
+  scope                = each.value.role != "Contributor" ? azurerm_key_vault.wvd_key_vault.id : azurerm_resource_group.wvd_resource_group.id
+  principal_id         = azurerm_user_assigned_identity.wvd_msi[each.value.name].identity.0.principal_id
+}
+
+## Adding currently used Service Principals as Key Vault Secrets Officer
 resource "azurerm_role_assignment" "wvd_sp" {
-  count                = length(local.sp_roles)
-  scope                = local.sp_roles[count.index].role != "Contributor" ? azurerm_key_vault.wvd_key_vault.id : azurerm_resource_group.wvd_resource_group.id
-  role_definition_name = local.sp_roles[count.index].role
-  principal_id         = local.sp_roles[count.index].name != "Terraform Service Principal" ? azurerm_function_app.wvd_function[local.sp_roles[count.index].name].identity.0.principal_id : data.azurerm_client_config.current.object_id
+  scope                = azurerm_key_vault.wvd_key_vault.id
+  role_definition_name = "Key Vault Secrets Officer (preview)"
+  principal_id         = data.azurerm_client_config.current.object_id
 }
 
 ## Securing local admin account details
