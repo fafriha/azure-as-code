@@ -56,7 +56,7 @@ Try
     {
         ## Calling function
         Write-Output "Installing Windows Virtual Desktop agents..."
-        $rtExitCode = AddSessionhostToHostpool($AddSessionHostToHostpool)
+        $rtExitCode = AddSessionHostToHostpool($AddSessionHostToHostpool)
 
         if($rtExitCode -ne 0)
         {
