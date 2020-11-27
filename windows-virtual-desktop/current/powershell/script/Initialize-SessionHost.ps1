@@ -55,13 +55,7 @@ Param(
 
 ############################################################## Funtions ########################################################
 function Start-CommandAsDifferentUser ([System.Management.Automation.PSCredential]$Credential, [string]$Cmdlet)
-{
-
-    If (Test-Path $ResultFile)  
-    {
-        Remove-Item $ResultFile
-    }
-    
+{  
     # Defining parameters
     $outputFile = "$env:temp\Start-CommandAsDifferentUser.log"
 
