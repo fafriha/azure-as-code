@@ -45,6 +45,71 @@ Param(
     [switch]$AddPowerShellCore
 )
 
+function AddSessionhostToHostpool ([string]$RegistrationToken)
+{
+    $null = choco install wvd-agent --params "/REGISTRATIONTOKEN:$RegistrationToken" --ignore-checksums -y --stoponfirstfailure
+    $null = choco install wvd-boot-loader --ignore-checksums -y --stoponfirstfailure
+    return $LASTEXITCODE
+}
+
+function AddAzureFileShareToDomain ([string]$Path)
+{
+    ######################################## Adding storage account to the domain
+    # Download latest module
+    # Get join domain account from parameter or Key Vault
+    # Join storage account to domain
+    ##############################################################################
+    
+    return $LASTEXITCODE
+}
+
+function OffloadUserProfiles ([string]$Path)
+{
+    ## Defining settings
+    $localAdministrators = (Get-LocalGroupMember -Group "Administrators").Name
+    $path = 'HKLM:\SOFTWARE\FSLogix\Profiles'
+    $settings = @{
+        VHDLocations = $FileShareUri.Replace('/','\').Replace('https:','')
+        Enabled = 1
+        FlipFlopProfileDirectoryName = 1
+        DeleteLocalProfileWhenVHDShouldApply = 1
+        PreventLoginWithFailure = 1
+        PreventLoginWithTempProfile = 1
+    }
+
+    ## Should be installed on image creation
+    $null = choco install fslogix --ignore-checksums -y --stoponfirstfailure 
+
+    ## Should be configured via GPOs
+    $null = New-Item $path -Force -ErrorAction Stop
+
+    foreach ($localAdministrator in $localAdministrators)
+    {
+        Add-LocalGroupMember -Group "FSLogix Profile Exclude List" -Member $localAdministrator
+    }
+    
+    foreach ($setting in $settings.GetEnumerator())
+    {
+        if ($setting.Name -eq 'VHDLocations')
+        {
+            $null = New-ItemProperty -Path $path -Name $setting.Name -Value $setting.Value -PropertyType MultiString -Force
+        }
+        else 
+        {
+            $null = New-ItemProperty -Path $path -Name $setting.Name -Value $setting.Value -PropertyType DWord -Force
+        }
+    }
+
+    return $LASTEXITCODE
+}
+
+function AddPowerShellCore ()
+{
+    ## Should be installed on image creation
+    $null = choco install powershell-core --stoponfirstfailure
+    return $LASTEXITCODE 
+}
+
 Try 
 {
     ## Should be installed on image creation
@@ -110,69 +175,4 @@ Finally
     Write-Host "Restarting..."
     Restart-Computer -Force
     exit $LASTEXITCODE
-}
-
-function AddSessionhostToHostpool ([string]$RegistrationToken)
-{
-    $null = choco install wvd-agent --params "/REGISTRATIONTOKEN:$RegistrationToken" --ignore-checksums -y --stoponfirstfailure
-    $null = choco install wvd-boot-loader --ignore-checksums -y --stoponfirstfailure
-    return $LASTEXITCODE
-}
-
-function AddAzureFileShareToDomain ([string]$Path)
-{
-    ######################################## Adding storage account to the domain
-    # Download latest module
-    # Get join domain account from parameter or Key Vault
-    # Join storage account to domain
-    ##############################################################################
-    
-    return $LASTEXITCODE
-}
-
-function OffloadUserProfiles ([string]$Path)
-{
-    ## Defining settings
-    $localAdministrators = (Get-LocalGroupMember -Group "Administrators").Name
-    $path = 'HKLM:\SOFTWARE\FSLogix\Profiles'
-    $settings = @{
-        VHDLocations = $FileShareUri.Replace('/','\').Replace('https:','')
-        Enabled = 1
-        FlipFlopProfileDirectoryName = 1
-        DeleteLocalProfileWhenVHDShouldApply = 1
-        PreventLoginWithFailure = 1
-        PreventLoginWithTempProfile = 1
-    }
-
-    ## Should be installed on image creation
-    $null = choco install fslogix --ignore-checksums -y --stoponfirstfailure 
-
-    ## Should be configured via GPOs
-    $null = New-Item $path -Force -ErrorAction Stop
-
-    foreach ($localAdministrator in $localAdministrators)
-    {
-        Add-LocalGroupMember -Group "FSLogix Profile Exclude List" -Member $localAdministrator
-    }
-    
-    foreach ($setting in $settings.GetEnumerator())
-    {
-        if ($setting.Name -eq 'VHDLocations')
-        {
-            $null = New-ItemProperty -Path $path -Name $setting.Name -Value $setting.Value -PropertyType MultiString -Force
-        }
-        else 
-        {
-            $null = New-ItemProperty -Path $path -Name $setting.Name -Value $setting.Value -PropertyType DWord -Force
-        }
-    }
-
-    return $LASTEXITCODE
-}
-
-function AddPowerShellCore ()
-{
-    ## Should be installed on image creation
-    $null = choco install powershell-core --stoponfirstfailure
-    return $LASTEXITCODE 
 }
