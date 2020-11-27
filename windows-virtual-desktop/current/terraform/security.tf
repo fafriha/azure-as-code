@@ -70,7 +70,7 @@ resource "azurerm_role_assignment" "wvd_msi" {
   for_each             = local.msi_roles
   role_definition_name = each.value.role
   scope                = each.value.role != "Contributor" ? azurerm_key_vault.wvd_key_vault.id : azurerm_resource_group.wvd_resource_group.id
-  principal_id         = azurerm_user_assigned_identity.wvd_msi[each.value.name].identity.0.principal_id
+  principal_id         = azurerm_user_assigned_identity.wvd_msi[each.value.name].principal_id
 }
 
 ## Adding currently used Service Principals as Key Vault Secrets Officer
