@@ -70,7 +70,7 @@ resource "azurerm_role_assignment" "wvd_msi" {
   count                = length(local.msi_roles)
   role_definition_name = local.msi_roles[count.index].role
   scope                = local.msi_roles[count.index].role != "Contributor" ? azurerm_key_vault.wvd_key_vault.id : azurerm_resource_group.wvd_resource_group.id
-  principal_id         = azurerm_user_assigned_identity.wvd_msi[local.msi_roles[count.index].name].id
+  principal_id         = azurerm_user_assigned_identity.wvd_msi[local.msi_roles[count.index].name].principal_id
 }
 
 ## Adding users to application groups
@@ -82,7 +82,7 @@ resource "azurerm_role_assignment" "wvd_users" {
   principal_id         = data.azuread_user.wvd_users[local.application_groups[count.index].user].id
 }
 
-## Adding currently used Service Principals as Key Vault Secrets Officer
+## Adding currently used Service Principal as Key Vault Secrets Officer
 resource "azurerm_role_assignment" "wvd_sp" {
   scope                = azurerm_key_vault.wvd_key_vault.id
   role_definition_name = "Key Vault Secrets Officer (preview)"
