@@ -48,7 +48,7 @@ Param(
 )
 
 ############################################################## Funtions ########################################################
-function Start-CommandAsDifferentUser ([System.Management.Automation.PSCredential]$Credential, [string]$Cmdlet)
+function Start-CommandAsDifferentUser ([System.Management.Automation.CredentialAttribute]$Credential, [string]$Cmdlet)
 {  
     # Defining parameters
     $outputFile = "$env:temp\Start-CommandAsDifferentUser.log"
@@ -171,7 +171,7 @@ function Add-AzureFileShareToDomain (
         }
 
         # Running as join domain account
-        Start-CommandAsDifferentUser($cred, $cmdlet)
+        Start-CommandAsDifferentUser $cred $cmdlet
         Write-Output "Step 16/16 - Joining storage account to domain. Done."
     }
     catch 
