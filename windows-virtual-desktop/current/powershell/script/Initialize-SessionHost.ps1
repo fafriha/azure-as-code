@@ -132,10 +132,10 @@ function Add-AzureFileShareToDomain (
         Write-Output "Step 8/16 - Creating credentials. Done."
 
         # Downloading latest module
-        Invoke-WebRequest -Uri "https://github.com/Azure-Samples/azure-files-samples/releases/latest/download/AzFilesHybrid.zip" -OutFile "$path.zip" -UseBasicParsing | Unblock-File
+        Invoke-WebRequest -Uri "https://github.com/Azure-Samples/azure-files-samples/releases/latest/download/AzFilesHybrid.zip" -OutFile $($path + ".zip") -UseBasicParsing | Unblock-File
         Write-Output "Step 9/16 - Downloading latest AzFilesHybrid module. Done."
 
-        # Extracting archive
+        # Unblocking and extracting archive
         Expand-Archive -LiteralPath $($path + ".zip") -DestinationPath $path -Force
         Write-Output "Step 10/16 - Extracting it. Done."
 
