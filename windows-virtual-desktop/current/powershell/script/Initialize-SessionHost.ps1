@@ -106,12 +106,13 @@ function Add-AzureFileShareToDomain (
         $path = "$env:TEMP\AzFilesHybrid"
         $psModPath = $env:PSModulePath.Split(";")[0]
         $storageAccountName = $FileShareUri.Split(".")[1]
+        $secretUri = "https://" + $KeyVaultName + ".azure.net/secrets/" + $JoinDomainAccountName + "?api-version=2020-09-01"
         $subscriptionId = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri "http://169.254.169.254/metadata/instance/compute/subscriptionId?api-version=2020-09-01&format=text"
         $resourceGroupName = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri "http://169.254.169.254/metadata/instance/compute/resourceGroupName?api-version=2020-09-01&format=text"
         $token = (Invoke-RestMethod -Uri 'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2020-09-01&resource=https%3A%2F%2Fvault.azure.net' -Method GET -Headers @{Metadata="true"}).access_token
-        $password = (Invoke-RestMethod -Uri "https://$KeyVaultName.azure.net/secrets/$JoinDomainAccountName?api-version=2020-09-01" -Method GET -Headers @{Authorization="Bearer $token"}).value | ConvertTo-SecureString -AsPlainText -Force
+        $password = (Invoke-RestMethod -Uri $secretUri -Method GET -Headers @{Authorization="Bearer $token"}).value | ConvertTo-SecureString -AsPlainText -Force
         $cred = New-Object System.Management.Automation.PSCredential -ArgumentList $JoinDomainAccountName, $password
-        $uri = "https://github.com/Azure-Samples/azure-files-samples/releases/download/" + ((Invoke-WebRequest 'https://github.com/Azure-Samples/azure-files-samples/releases/latest' -Headers @{"Accept"="application/json"}).Content | ConvertFrom-Json).tag_name + "/AzFilesHybrid.zip"
+        $moduleUri = "https://github.com/Azure-Samples/azure-files-samples/releases/download/" + ((Invoke-WebRequest 'https://github.com/Azure-Samples/azure-files-samples/releases/latest' -Headers @{"Accept"="application/json"}).Content | ConvertFrom-Json).tag_name + "/AzFilesHybrid.zip"
 
         if (!(Test-Path -Path $psModPath)) 
         {
@@ -119,7 +120,7 @@ function Add-AzureFileShareToDomain (
         }
 
         # Downloading latest module
-        Invoke-WebRequest -Uri $uri -OutFile "$path.zip" | Unblock-File
+        Invoke-WebRequest -Uri $moduleUri -OutFile "$path.zip" | Unblock-File
 
         # Extracting archive
         Expand-Archive -LiteralPath "$path.zip" -DestinationPath $path -Force
