@@ -160,7 +160,7 @@ function Add-AzureFileShareToDomain (
         Write-Output "Step 14/16 - Deleting temporary files. Done."
 
         # Importing AzFilesHybrid module
-        Install-PackageProvider Nuget -Force -Scope AllUsers
+        $null = Install-PackageProvider Nuget -Force -Scope AllUsers
         Install-Module PowerShellGet, Az -Force -Scope AllUsers
         Import-Module -Name AzFilesHybrid -Global 
         Write-Output "Step 15/16 - Installing Nuget as package provider, PowerShellGet and Az modules and importing AzFilesHybrid module. Done."
@@ -168,11 +168,11 @@ function Add-AzureFileShareToDomain (
         # Registering the target storage account with active directory 
         if($OrganizationalUnit)
         {
-            $cmdlet = Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType "ComputerAccount" -OrganizationalUnitDistinguishedName $OrganizationalUnit -EncryptionType "AES256,RC4"
+            $cmdlet = "Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType 'ComputerAccount' -OrganizationalUnitDistinguishedName $OrganizationalUnit -EncryptionType 'AES256,RC4'"
         }
         else 
         {
-            $cmdlet = Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType "ComputerAccount" -EncryptionType "AES256,RC4"
+            $cmdlet = "Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType 'ComputerAccount' -EncryptionType 'AES256,RC4'"
         }
 
         # Running as join domain account
