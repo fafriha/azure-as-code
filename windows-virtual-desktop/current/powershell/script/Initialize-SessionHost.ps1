@@ -110,13 +110,13 @@ function Add-AzureFileShareToDomain (
         # Checking if storage already exists in domain
         Write-Output "Step 2/17 - Checking existence of storage account in domain. Done."
 
-        $subscriptionId = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri "http://179.254.169.254/metadata/instance/compute/subscriptionId?api-version=2020-09-01&format=text"
+        $subscriptionId = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri "http://169.254.169.254/metadata/instance/compute/subscriptionId?api-version=2020-09-01&format=text"
         Write-Output "Step 3/17 - Getting subscription Id. Done."
 
-        $resourceGroupName = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri "http://179.254.169.254/metadata/instance/compute/resourceGroupName?api-version=2020-09-01&format=text"
+        $resourceGroupName = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri "http://169.254.169.254/metadata/instance/compute/resourceGroupName?api-version=2020-09-01&format=text"
         Write-Output "Step 4/17 - Getting resource group name. Done."
 
-        $token = (Invoke-RestMethod -Uri 'http://179.254.169.254/metadata/identity/oauth2/token?api-version=2020-09-01&resource=https%3A%2F%2Fvault.azure.net' -Method GET -Headers @{Metadata="true"}).access_token
+        $token = (Invoke-RestMethod -Uri 'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2020-09-01&resource=https%3A%2F%2Fvault.azure.net' -Method GET -Headers @{Metadata="true"}).access_token
         Write-Output "Step 5/17 - Requesting access token. Done."
 
         $password = (Invoke-RestMethod -Uri $secretUri -Method GET -Headers @{Authorization="Bearer $token"}).value | ConvertTo-SecureString -AsPlainText -Force
