@@ -106,8 +106,8 @@ function Add-AzureFileShareToDomain (
         $path = "$env:TEMP\AzFilesHybrid"
         $psModPath = $env:PSModulePath.Split(";")[0]
         $storageAccountName = $FileShareUri.Split(".")[1]
-        $subscriptionId = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -NoProxy -Uri "http://169.254.169.254/metadata/instance/compute/subscriptionId?api-version=2020-10-01&format=text"
-        $resourceGroupName = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -NoProxy -Uri "http://169.254.169.254/metadata/instance/compute/resourceGroupName?api-version=2020-10-01&format=text"
+        $subscriptionId = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri "http://169.254.169.254/metadata/instance/compute/subscriptionId?api-version=2020-10-01&format=text"
+        $resourceGroupName = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri "http://169.254.169.254/metadata/instance/compute/resourceGroupName?api-version=2020-10-01&format=text"
         $token = (Invoke-RestMethod -Uri 'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2020-01-01&resource=https%3A%2F%2Fvault.azure.net' -Method GET -Headers @{Metadata="true"}).access_token
         $password = (Invoke-RestMethod -Uri "https://$KeyVaultName.azure.net/secrets/$JoinDomainAccountName?api-version=2020-01-01" -Method GET -Headers @{Authorization="Bearer $token"}).value | ConvertTo-SecureString -AsPlainText -Force
         $cred = New-Object System.Management.Automation.PSCredential -ArgumentList $JoinDomainAccountName, $password
