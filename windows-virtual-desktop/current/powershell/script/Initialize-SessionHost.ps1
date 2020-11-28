@@ -122,7 +122,8 @@ function Add-AzureFileShareToDomain (
         $password = (Invoke-RestMethod -Uri $secretUri -Method GET -Headers @{Authorization="Bearer $token"}).value | ConvertTo-SecureString -AsPlainText -Force
         Write-Output "Step 7/16 - Getting secret. Done."
 
-        $cred = New-Object System.Management.Automation.PSCredential -ArgumentList $JoinDomainAccountName, $password
+        $username = (Get-WmiObject Win32_ComputerSystem).Domain + "\$JoinDomainAccountName"
+        $cred = New-Object System.Management.Automation.PSCredential -ArgumentList $username, $password
         Write-Output "Step 8/16 - Creating credentials. Done."
 
         # Downloading latest module
