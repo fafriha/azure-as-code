@@ -106,7 +106,7 @@ function Add-AzureFileShareToDomain (
         $path = "$env:TEMP\AzFilesHybrid"
         $psModPath = $env:PSModulePath.Split(";")[0]
         $storageAccountName = $FileShareUri.Split(".")[1]
-        $secretUri = "https://" + $KeyVaultName + "vault.azure.net/secrets/" + $JoinDomainAccountName + "?api-version=2020-09-01"
+        $secretUri = "https://" + $KeyVaultName + ".vault.azure.net/secrets/" + $JoinDomainAccountName + "?api-version=2020-09-01"
         $subscriptionId = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri "http://169.254.169.254/metadata/instance/compute/subscriptionId?api-version=2020-09-01&format=text"
         $resourceGroupName = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri "http://169.254.169.254/metadata/instance/compute/resourceGroupName?api-version=2020-09-01&format=text"
         $token = (Invoke-RestMethod -Uri 'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2020-09-01&resource=https%3A%2F%2Fvault.azure.net' -Method GET -Headers @{Metadata="true"}).access_token
