@@ -104,7 +104,7 @@ function Add-AzureFileShareToDomain (
         $path = "$env:TEMP\AzFilesHybrid"
         $psModPath = $env:PSModulePath.Split(";")[0]
         $storageAccountName = $FileShareUri.Split(".")[1]
-        $secretUri = "https://" + $KeyVaultName + ".vault.azure.net/secrets/" + $JoinDomainAccountName + "?api-version=2020-09-01"
+        $secretUri = "https://" + $KeyVaultName + ".vault.azure.net/secrets/" + $JoinDomainAccountName + "?api-version=7.1"
         Write-Output "Step 1/17 - Defining parameters. Done."
 
         # Checking if storage already exists in domain
