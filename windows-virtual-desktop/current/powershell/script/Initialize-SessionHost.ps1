@@ -110,7 +110,6 @@ function Add-AzureFileShareToDomain (
         # Checking if storage already exists in domain
         Write-Output "Step 2/17 - Checking existence of storage account in domain. Done."
 
-
         $subscriptionId = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri "http://179.254.169.254/metadata/instance/compute/subscriptionId?api-version=2020-09-01&format=text"
         Write-Output "Step 3/17 - Getting subscription Id. Done."
 
