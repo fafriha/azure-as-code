@@ -48,7 +48,7 @@ Param(
 )
 
 ############################################################## Funtions ########################################################
-function Start-CommandAsDifferentUser ([System.Management.Automation.CredentialAttribute]$Credential, [string]$Cmdlet)
+function Start-CommandAsDifferentUser ([PSCredential]$Credential, [string]$Cmdlet)
 {  
     # Defining parameters
     $outputFile = "$env:temp\Start-CommandAsDifferentUser.log"
@@ -122,8 +122,7 @@ function Add-AzureFileShareToDomain (
         $password = (Invoke-RestMethod -Uri $secretUri -Method GET -Headers @{Authorization="Bearer $token"}).value | ConvertTo-SecureString -AsPlainText -Force
         Write-Output "Step 7/16 - Getting secret. Done."
 
-        $username = (Get-WmiObject Win32_ComputerSystem).Domain + "\$JoinDomainAccountName"
-        $cred = New-Object System.Management.Automation.PSCredential -ArgumentList $username, $password
+        $cred = New-Object System.Management.Automation.PSCredential -ArgumentList (((Get-WmiObject Win32_ComputerSystem).Domain + "\$JoinDomainAccountName"), $password)
         Write-Output "Step 8/16 - Creating credentials. Done."
 
         # Downloading latest module
@@ -163,15 +162,21 @@ function Add-AzureFileShareToDomain (
         # Registering the target storage account with active directory 
         if($OrganizationalUnit)
         {
-            $cmdlet = "Connect-AzAccount -Identity -Subscription $subscriptionId; Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType 'ComputerAccount' -OrganizationalUnitDistinguishedName $OrganizationalUnit -EncryptionType 'AES256,RC4'"
+            $commands = @"
+                Connect-AzAccount -Identity -Subscription $subscriptionId
+                Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType 'ComputerAccount' -OrganizationalUnitDistinguishedName $OrganizationalUnit -EncryptionType 'AES256,RC4'
+"@
         }
         else 
         {
-            $cmdlet = "Connect-AzAccount -Identity -Subscription $subscriptionId; Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType 'ComputerAccount' -EncryptionType 'AES256,RC4'"
+            $commands = @"
+                Connect-AzAccount -Identity -Subscription $subscriptionId
+                Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType 'ComputerAccount' -EncryptionType 'AES256,RC4'
+"@
         }
 
         # Running as join domain account
-        Start-CommandAsDifferentUser $cred $cmdlet
+        Start-CommandAsDifferentUser $cred $commands
         Write-Output "Step 16/16 - Joining storage account to domain. Done."
     }
     catch 
