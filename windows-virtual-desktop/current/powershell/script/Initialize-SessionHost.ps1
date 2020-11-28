@@ -111,7 +111,7 @@ function Add-AzureFileShareToDomain (
         Write-Output "Step 3/16 - Checking existence of storage account in domain. Done."
 
         $subscriptionId = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri "http://169.254.169.254/metadata/instance/compute/subscriptionId?api-version=2020-09-01&format=text"
-        Write-Output "Step 4/16 - Getting subscription Id. Done."
+        Write-Output "Step 4/16 - Getting subscription id. Done."
 
         $resourceGroupName = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri "http://169.254.169.254/metadata/instance/compute/resourceGroupName?api-version=2020-09-01&format=text"
         Write-Output "Step 5/16 - Getting resource group name. Done."
