@@ -59,7 +59,7 @@ function Start-CommandAsDifferentUser ([PSCredential]$Credential, [string]$Cmdle
     # Reading the output
     If (Test-Path $outputFile)
     {
-        if((Get-Content $outputFile) -contains "Error")
+        if((Get-Content $outputFile | %{$_ -match "Error"}) -contains $true)
         {
             $output = 1
         }
