@@ -107,26 +107,45 @@ function Add-AzureFileShareToDomain (
         $psModPath = $env:PSModulePath.Split(";")[0]
         $storageAccountName = $FileShareUri.Split(".")[1]
         $secretUri = "https://" + $KeyVaultName + ".vault.azure.net/secrets/" + $JoinDomainAccountName + "?api-version=2020-09-01"
+        Write-Output "Step 1/17 - Defining parameters. Done."
+
         $subscriptionId = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri "http://169.254.169.254/metadata/instance/compute/subscriptionId?api-version=2020-09-01&format=text"
+        Write-Output "Step 2/17 - Getting subscription Id. Done."
+
         $resourceGroupName = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri "http://169.254.169.254/metadata/instance/compute/resourceGroupName?api-version=2020-09-01&format=text"
+        Write-Output "Step 3/17 - Getting resource group name. Done."
+
         $token = (Invoke-RestMethod -Uri 'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2020-09-01&resource=https%3A%2F%2Fvault.azure.net' -Method GET -Headers @{Metadata="true"}).access_token
+        Write-Output "Step 4/17 - Requesting access token. Done."
+
+        Write-Output "Getting secret..."
         $password = (Invoke-RestMethod -Uri $secretUri -Method GET -Headers @{Authorization="Bearer $token"}).value | ConvertTo-SecureString -AsPlainText -Force
+        Write-Output "Step 5/17 - Getting secret. Done."
+
         $cred = New-Object System.Management.Automation.PSCredential -ArgumentList $JoinDomainAccountName, $password
+        Write-Output "Step 6/17 - Creating credentials. Done."
+
         $moduleUri = "https://github.com/Azure-Samples/azure-files-samples/releases/download/" + ((Invoke-WebRequest 'https://github.com/Azure-Samples/azure-files-samples/releases/latest' -Headers @{"Accept"="application/json"}).Content | ConvertFrom-Json).tag_name + "/AzFilesHybrid.zip"
+        Write-Output "Step 7/17 - Creating Uri to get the latest AzHybridFiles module. Done."
+
 
         if (!(Test-Path -Path $psModPath)) 
         {
             New-Item -Path $psModPath -ItemType Directory | Out-Null
         }
+        Write-Output "Step 8/17 - Checking PowerShell module path existence. Done."
 
         # Downloading latest module
         Invoke-WebRequest -Uri $moduleUri -OutFile "$path.zip" | Unblock-File
+        Write-Output "Step 9/17 - Downloading latest AzHybridFiles module. Done."
 
         # Extracting archive
         Expand-Archive -LiteralPath "$path.zip" -DestinationPath $path -Force
+        Write-Output "Step 10/17 - Extracting it. Done."
 
         # Importing data file
         $psdFile = Import-PowerShellDataFile -Path "$path\AzFilesHybrid.psd1"
+        Write-Output "Step 11/17 - Importing its data file. Done."
 
         # Creating module path
         $desiredModulePath = "$psModPath\AzFilesHybrid\$($psdFile.ModuleVersion)\"
