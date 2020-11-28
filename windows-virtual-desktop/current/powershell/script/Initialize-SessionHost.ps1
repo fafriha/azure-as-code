@@ -93,8 +93,8 @@ function Add-SessionhostToHostpool ([string]$RegistrationToken)
 
 function Add-AzureFileShareToDomain (
     $FileShareUri,
-    [string]$JoinDomainAccountName,
-    [string]$KeyVaultName,
+    $JoinDomainAccountName,
+    $KeyVaultName,
     [Parameter(Mandatory = $false)]$OrganizationalUnit
     )
 {
@@ -227,7 +227,7 @@ Try
     {
         ## Calling function
         Write-Output "Installing Windows Virtual Desktop agents..."
-        $rtExitCode = Add-SessionHostToHostpool($AddSessionHostToHostpool)
+        $rtExitCode = Add-SessionHostToHostpool $AddSessionHostToHostpool
 
         if($rtExitCode -ne 0)
         {
@@ -243,7 +243,7 @@ Try
     {
         ## Calling function
         Write-Output "Installing FSLogix agent and configuring remote profiles..."
-        $oupExitCode = Move-UserProfiles($MoveUserProfiles)
+        $oupExitCode = Move-UserProfiles $MoveUserProfiles
 
         if($oupExitCode -ne 0)
         {
@@ -259,7 +259,7 @@ Try
     {
         ## Calling function
         Write-Output "Adding Azure File Share to the current domain..."
-        $aaftdExitCode = Add-AzureFileShareToDomain($AddAzureFileShareToDomain, $JoinDomainAccountName, $KeyVaultName, $OrganizationalUnit)
+        $aaftdExitCode = Add-AzureFileShareToDomain $AddAzureFileShareToDomain $JoinDomainAccountName $KeyVaultName $OrganizationalUnit
 
         if($aaftdExitCode -ne 0)
         {
