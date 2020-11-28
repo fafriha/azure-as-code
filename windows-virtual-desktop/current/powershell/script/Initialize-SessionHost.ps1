@@ -183,6 +183,7 @@ function Add-AzureFileShareToDomain (
     catch 
     {
         Write-Error $_.Exception
+        throw "Could not add the file share to the domain. Function returned exit code $LASTEXITCODE."
         exit $LASTEXITCODE
     }
 }
