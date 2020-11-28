@@ -163,17 +163,30 @@ function Add-AzureFileShareToDomain (
         if($OrganizationalUnit)
         {
             $commands = @"
-                Connect-AzAccount -Identity -Subscription $subscriptionId
-                Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType 'ComputerAccount' -OrganizationalUnitDistinguishedName $OrganizationalUnit -EncryptionType 'AES256,RC4'
+                try
+                {
+                    Get-ADComputer -Filter 'Name -like "*$storageAccountName*"' -ErrorAction Stop
+                }
+                catch
+                {
+                    Connect-AzAccount -Identity -Subscription $subscriptionId
+                    Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType 'ComputerAccount' -OrganizationalUnitDistinguishedName $OrganizationalUnit -EncryptionType 'AES256,RC4'
+                }                
 "@
         }
         else 
         {
             $commands = @"
+            try
+            {
+                Get-ADComputer -Filter 'Name -like "*$storageAccountName*"' -ErrorAction Stop
+            }
+            catch
+            {
                 Connect-AzAccount -Identity -Subscription $subscriptionId
                 Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType 'ComputerAccount' -EncryptionType 'AES256,RC4'
+            }                
 "@
-        }
 
         # Running as join domain account
         Start-CommandAsDifferentUser $cred $commands
