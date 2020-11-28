@@ -1,9 +1,9 @@
 <#
 .SYNOPSIS
-Deploys latest PowerShell version, Chocolatey, Windows Virtual Desktop agents and FSLogix agent.
+Deploys Chocolatey, Windows Virtual Desktop agents and FSLogix agent.
 
 .DESCRIPTION
-This script will get the latest PowerShell version, Chocolatey, Windows Virtual Desktop bootloader and infrastructure agents and FSLogix agents rom Chocolatey and install them.
+This script will get Chocolatey, Windows Virtual Desktop, and FSLogix agents from Chocolatey and install them.
 A host pool registration token is required when installing the Windows Virtual Desktop infrastructure agent.
 
 .PARAMETER RegistrationToken
@@ -11,9 +11,6 @@ The registration token of the hostpool in which the session host will be added
 
 .PARAMETER FileShareUri
 The Uri of the file share which will be used to store all user profiles
-
-.PARAMETER AddPowerShellCore
-Swtich to enable the installation of the latest Powershell Core version
 
 .PARAMETER AddSessionhostToHostpool
 Switch to enable adding this session host to the hostpool
@@ -25,7 +22,7 @@ Switch to enable adding the file share to the domain
 Switch to enable the redirection of user profiles to the file share
 
 .EXAMPLE
-.\Initialize-SessionHost.ps1 -AddSessionhostToHostpool <registrationtoken> -AddAzureFileShareToDomain <azurefileshareuri> -OrganizationalUnit <oudistinguishedname> -MoveUserProfiles <azurefileshareuri> -AddPowerShellCore
+.\Initialize-SessionHost.ps1 -AddSessionhostToHostpool <registrationtoken> -AddAzureFileShareToDomain <azurefileshareuri> -OrganizationalUnit <oudistinguishedname> -MoveUserProfiles <azurefileshareuri>
 #>
 
 Param(
@@ -47,10 +44,7 @@ Param(
 
     [Parameter(Mandatory = $false)]
     [ValidateNotNullOrEmpty()]
-    [string]$MoveUserProfiles,
-
-    [Parameter(Mandatory = $false)]
-    [switch]$AddPowerShellCore
+    [string]$MoveUserProfiles
 )
 
 ############################################################## Funtions ########################################################
@@ -168,16 +162,15 @@ function Add-AzureFileShareToDomain (
         # Registering the target storage account with active directory 
         if($OrganizationalUnit)
         {
-            $cmdlet = "Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType 'ComputerAccount' -OrganizationalUnitDistinguishedName $OrganizationalUnit -EncryptionType 'AES256,RC4'"
+            $cmdlet = "Connect-AzAccount -Identity -Subscription $subscriptionId; Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType 'ComputerAccount' -OrganizationalUnitDistinguishedName $OrganizationalUnit -EncryptionType 'AES256,RC4'"
         }
         else 
         {
-            $cmdlet = "Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType 'ComputerAccount' -EncryptionType 'AES256,RC4'"
+            $cmdlet = "Connect-AzAccount -Identity -Subscription $subscriptionId; Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType 'ComputerAccount' -EncryptionType 'AES256,RC4'"
         }
 
         # Running as join domain account
-        $command = "Connect-AzAccount -Identity -Subscription $subscriptionId; $cmdlet"
-        #Start-CommandAsDifferentUser($cred, $command)
+        Start-CommandAsDifferentUser($cred, $cmdlet)
         Write-Output "Step 16/16 - Joining storage account to domain. Done."
     }
     catch 
@@ -226,13 +219,6 @@ function Move-UserProfiles ([string]$FileShareUri)
     }
 
     return $LASTEXITCODE
-}
-
-function Add-PowerShellCore ()
-{
-    ## Should be installed on image creation
-    $null = choco install powershell-core --stoponfirstfailure -y
-    return $LASTEXITCODE 
 }
 
 ################################################################# Main #################################################################
@@ -284,22 +270,6 @@ Try
         if($aaftdExitCode -ne 0)
         {
             throw "Could not add the file share to the domain. Function returned exit code $aaftdExitCode."
-        }
-        else 
-        {
-            Write-Output "Done."
-        }
-    }
-
-    if($AddPowerShellCore)
-    {
-        ## Calling function
-        Write-Output "Installing latest PowerShell version..."
-        $apscExitcode = Add-PowerShellCore
-
-        if($apscExitcode -ne 0)
-        {
-            throw "Could not install the latest PowerShell Code version. Function returned exit code $apscExitcode."
         }
         else 
         {
