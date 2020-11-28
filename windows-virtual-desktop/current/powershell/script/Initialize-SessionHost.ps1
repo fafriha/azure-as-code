@@ -132,11 +132,11 @@ function Add-AzureFileShareToDomain (
         Write-Output "Step 8/16 - Creating credentials. Done."
 
         # Downloading latest module
-        Invoke-WebRequest -Uri "https://github.com/Azure-Samples/azure-files-samples/releases/latest/download/AzFilesHybrid.zip" -OutFile "$path.zip" | Unblock-File
-        Write-Output "Step 9/16 - Downloading latest AzHybridFiles module. Done."
+        Invoke-WebRequest -Uri "https://github.com/Azure-Samples/azure-files-samples/releases/latest/download/AzFilesHybrid.zip" -OutFile "$path.zip" -UseBasicParsing | Unblock-File
+        Write-Output "Step 9/16 - Downloading latest AzFilesHybrid module. Done."
 
         # Extracting archive
-        Expand-Archive -LiteralPath "$path.zip" -DestinationPath $path -Force
+        Expand-Archive -LiteralPath $($path + ".zip") -DestinationPath $path -Force
         Write-Output "Step 10/16 - Extracting it. Done."
 
         # Importing data file
@@ -160,9 +160,10 @@ function Add-AzureFileShareToDomain (
         Write-Output "Step 14/16 - Deleting temporary files. Done."
 
         # Importing AzFilesHybrid module
+        Install-PackageProvider Nuget -Force -Scope AllUsers
         Install-Module PowerShellGet, Az -Force -Scope AllUsers
         Import-Module -Name AzFilesHybrid -Global 
-        Write-Output "Step 15/16 - Installing and importing PowerShelGet, Az and AzHybridFiles modules. Done."
+        Write-Output "Step 15/16 - Installing Nuget as package provider, PowerShellGet and Az modules and importing AzFilesHybrid module. Done."
 
         # Registering the target storage account with active directory 
         if($OrganizationalUnit)
