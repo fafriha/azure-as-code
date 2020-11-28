@@ -26,10 +26,6 @@ Switch to enable the redirection of user profiles to the file share
 #>
 
 Param(
-    [Parameter(Mandatory = $false)]
-    [ValidateNotNullOrEmpty()]
-    [string]$AddSessionHostToHostpool,
-
     [Parameter(ParameterSetName = "JoinStorageAccount", Mandatory = $true)]
     [ValidateNotNullOrEmpty()][string]$AddAzureFileShareToDomain,
 
@@ -41,6 +37,10 @@ Param(
 
     [Parameter(ParameterSetName = "JoinStorageAccount", Mandatory = $true)]
     [ValidateNotNullOrEmpty()][string]$KeyVaultName,
+
+    [Parameter(Mandatory = $false)]
+    [ValidateNotNullOrEmpty()]
+    [string]$AddSessionHostToHostpool,
 
     [Parameter(Mandatory = $false)]
     [ValidateNotNullOrEmpty()]
