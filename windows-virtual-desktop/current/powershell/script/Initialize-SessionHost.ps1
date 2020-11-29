@@ -99,98 +99,41 @@ function Add-AzureFileShareToDomain (
         $psModPath = $env:PSModulePath.Split(";")[0]
         $storageAccountName = $FileShareUri.Split(".")[1]
         $secretUri = "https://" + $KeyVaultName + ".vault.azure.net/secrets/" + $JoinDomainAccountName + "?api-version=7.1"
-        Write-Output "Step 1/16 - Defining parameters. Done."
-
-        if (!(Test-Path -Path $psModPath)) 
-        {
-            New-Item -Path $psModPath -ItemType Directory | Out-Null
-        }
-        Write-Output "Step 2/16 - Checking PowerShell module path existence. Done."
-
-        # Checking if storage already exists in domain
-        Write-Output "Step 3/16 - Checking existence of storage account in domain. Done."
+        Write-Output "Step 1/8 - Defining parameters. Done."
 
         $subscriptionId = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri "http://169.254.169.254/metadata/instance/compute/subscriptionId?api-version=2020-09-01&format=text"
-        Write-Output "Step 4/16 - Getting subscription id. Done."
+        Write-Output "Step 2/8 - Getting subscription id. Done."
 
         $resourceGroupName = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri "http://169.254.169.254/metadata/instance/compute/resourceGroupName?api-version=2020-09-01&format=text"
-        Write-Output "Step 5/16 - Getting resource group name. Done."
+        Write-Output "Step 3/8 - Getting resource group name. Done."
 
         $token = (Invoke-RestMethod -Uri 'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2020-09-01&resource=https%3A%2F%2Fvault.azure.net' -Method GET -Headers @{Metadata="true"}).access_token
-        Write-Output "Step 6/16 - Requesting access token. Done."
+        Write-Output "Step 4/8 - Requesting access token. Done."
 
         $password = (Invoke-RestMethod -Uri $secretUri -Method GET -Headers @{Authorization="Bearer $token"}).value | ConvertTo-SecureString -AsPlainText -Force
-        Write-Output "Step 7/16 - Getting secret. Done."
+        Write-Output "Step 5/8 - Getting secret. Done."
 
         $cred = New-Object System.Management.Automation.PSCredential -ArgumentList (((Get-WmiObject Win32_ComputerSystem).Domain + "\$JoinDomainAccountName"), $password)
-        Write-Output "Step 8/16 - Creating credentials. Done."
-
-        # Downloading latest module
-        Invoke-WebRequest -Uri "https://github.com/Azure-Samples/azure-files-samples/releases/latest/download/AzFilesHybrid.zip" -OutFile $($path + ".zip") -UseBasicParsing | Unblock-File
-        Write-Output "Step 9/16 - Downloading latest AzFilesHybrid module. Done."
-
-        # Unblocking and extracting archive
-        Expand-Archive -LiteralPath $($path + ".zip") -DestinationPath $path -Force
-        Write-Output "Step 10/16 - Extracting it. Done."
-
-        # Importing data file
-        $psdFile = Import-PowerShellDataFile -Path "$path\AzFilesHybrid.psd1"
-        Write-Output "Step 11/16 - Importing its data file. Done."
-
-        # Creating module path
-        $desiredModulePath = "$psModPath\AzFilesHybrid\$($psdFile.ModuleVersion)\"
-        if (!(Test-Path -Path $desiredModulePath)) 
-        {
-            New-Item -Path $desiredModulePath -ItemType Directory | Out-Null
-        }
-        Write-Output "Step 12/16 - Checking existence of module folder in path. Done."
-
-        Copy-Item -Path "$path\AzFilesHybrid.psd1" -Destination $desiredModulePath
-        Copy-Item -Path "$path\AzFilesHybrid.psm1" -Destination $desiredModulePath
-        Write-Output "Step 13/16 - Copying module files to path. Done."
-
-        # Removing archive
-        Remove-Item -Path "$path.zip" -Recurse -Force   
-        Write-Output "Step 14/16 - Deleting temporary files. Done."
+        Write-Output "Step 6/8 - Creating credentials. Done."
 
         # Importing AzFilesHybrid module
         $null = Install-PackageProvider Nuget -Force -Scope AllUsers
         Install-Module PowerShellGet, Az -Force -Scope AllUsers
-        Import-Module -Name AzFilesHybrid -Global 
-        Write-Output "Step 15/16 - Installing Nuget as package provider, PowerShellGet and Az modules and importing AzFilesHybrid module. Done."
+        Write-Output "Step 7/8 - Installing Nuget as package provider and installing PowerShellGet and Az modules. Done."
 
         # Registering the target storage account with active directory 
         if($OrganizationalUnit)
         {
-            $commands = @"
-                try
-                {
-                    Get-ADComputer -Filter 'Name -like "*$storageAccountName*"' -ErrorAction Stop
-                }
-                catch
-                {
-                    Connect-AzAccount -Identity -Subscription $subscriptionId
-                    Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType 'ComputerAccount' -OrganizationalUnitDistinguishedName $OrganizationalUnit -EncryptionType 'AES256,RC4'
-                }                
-"@
+            $command = { try{ Set-ExecutionPolicy Bypass; New-Item -Path $psModPath -ItemType Directory | Out-Null; Invoke-WebRequest -Uri "https://github.com/Azure-Samples/azure-files-samples/releases/latest/download/AzFilesHybrid.zip" -OutFile $($path + ".zip") -UseBasicParsing | Unblock-File; Expand-Archive -LiteralPath $($path + ".zip") -DestinationPath $path -Force; $psdFile = Import-PowerShellDataFile -Path "$path\AzFilesHybrid.psd1"; $desiredModulePath = "$psModPath\AzFilesHybrid\$($psdFile.ModuleVersion)\"; New-Item -Path $desiredModulePath -ItemType Directory | Out-Null; Copy-Item -Path "$path\AzFilesHybrid.psd1" -Destination $desiredModulePath; Copy-Item -Path "$path\AzFilesHybrid.psm1" -Destination $desiredModulePath; Remove-Item -Path "$path.zip" -Recurse -Force; Import-Module -Name AzFilesHybrid -Global; Get-ADComputer -Filter 'Name -like "*$storageAccountName*"' -ErrorAction Stop }catch{ Connect-AzAccount -Identity -Subscription $subscriptionId; Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType 'ComputerAccount' -OrganizationalUnitDistinguishedName $OrganizationalUnit -EncryptionType 'AES256,RC4' }}
         }
         else 
         {
-            $commands = @"
-            try
-            {
-                Get-ADComputer -Filter 'Name -like "*$storageAccountName*"' -ErrorAction Stop
-            }
-            catch
-            {
-                Connect-AzAccount -Identity -Subscription $subscriptionId
-                Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType 'ComputerAccount' -EncryptionType 'AES256,RC4'
-            }                
-"@
+            $command = { try{ Set-ExecutionPolicy Bypass; New-Item -Path $psModPath -ItemType Directory | Out-Null; Invoke-WebRequest -Uri "https://github.com/Azure-Samples/azure-files-samples/releases/latest/download/AzFilesHybrid.zip" -OutFile $($path + ".zip") -UseBasicParsing | Unblock-File; Expand-Archive -LiteralPath $($path + ".zip") -DestinationPath $path -Force; $psdFile = Import-PowerShellDataFile -Path "$path\AzFilesHybrid.psd1"; $desiredModulePath = "$psModPath\AzFilesHybrid\$($psdFile.ModuleVersion)\"; New-Item -Path $desiredModulePath -ItemType Directory | Out-Null; Copy-Item -Path "$path\AzFilesHybrid.psd1" -Destination $desiredModulePath; Copy-Item -Path "$path\AzFilesHybrid.psm1" -Destination $desiredModulePath; Remove-Item -Path "$path.zip" -Recurse -Force; Import-Module -Name AzFilesHybrid -Global; Get-ADComputer -Filter 'Name -like "*$storageAccountName*"' -ErrorAction Stop }catch{ Connect-AzAccount -Identity -Subscription $subscriptionId; Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType 'ComputerAccount' -EncryptionType 'AES256,RC4' }}
+
         }
         # Running as join domain account
-        Start-CommandAsDifferentUser $cred $commands
-        Write-Output "Step 16/16 - Joining storage account to domain. Done."
+        Start-CommandAsDifferentUser $cred $command
+        Write-Output "Step 8/8 - Joining storage account to domain. Done."
     }
     catch 
     {
