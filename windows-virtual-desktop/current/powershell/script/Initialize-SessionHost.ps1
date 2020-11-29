@@ -29,11 +29,11 @@ Param(
     [Parameter(ParameterSetName = "JoinStorageAccount", Mandatory = $true)]
     [ValidateNotNullOrEmpty()][string]$AddAzureFileShareToDomain,
 
-    [Parameter(ParameterSetName = "JoinStorageAccount", Mandatory = $false)]
-    [ValidateNotNullOrEmpty()][string]$OrganizationalUnit,
-
     [Parameter(ParameterSetName = "JoinStorageAccount", Mandatory = $true)]
     [ValidateNotNullOrEmpty()][string]$JoinDomainAccountName,
+
+    [Parameter(ParameterSetName = "JoinStorageAccount", Mandatory = $false)]
+    [ValidateNotNullOrEmpty()][string]$OrganizationalUnit,
 
     [Parameter(ParameterSetName = "JoinStorageAccount", Mandatory = $true)]
     [ValidateNotNullOrEmpty()][string]$KeyVaultName,
