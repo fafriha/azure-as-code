@@ -187,7 +187,7 @@ function Add-AzureFileShareToDomain (
                 Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroupName -StorageAccountName $storageAccountName -DomainAccountType 'ComputerAccount' -EncryptionType 'AES256,RC4'
             }                
 "@
-
+        }
         # Running as join domain account
         Start-CommandAsDifferentUser $cred $commands
         Write-Output "Step 16/16 - Joining storage account to domain. Done."
