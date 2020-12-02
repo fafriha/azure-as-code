@@ -1,4 +1,4 @@
-name: windows-virtual-desktop
+name: build-infrastructure
 defaults:
   run:
     shell: bash
@@ -7,7 +7,8 @@ defaults:
 on:
   push:
     paths:
-      - 'windows-virtual-desktop/current/**'
+      - 'windows-virtual-desktop/current/terraform/**'
+      - 'windows-virtual-desktop/current/powershell/**'
   pull_request:
     branches: [ master ]
     
