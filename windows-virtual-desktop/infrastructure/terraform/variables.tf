@@ -84,6 +84,8 @@ variable "wvd_hostpool" {
       "vm_size"                          = "Standard_F4s_v2"
       "vm_prefix"                        = "host-can-frc"
       "validate_environment"             = "true"
+      "msi_name"                         = "msi-can-frc-wvd-01"
+      "msi_roles"                        = ["Contributor", "Key Vault Secrets Officer (preview)"]      
     },
     hp-prd-frc-wvd-01 = {
       "name"                             = "hp-prd-frc-wvd-01"
@@ -99,6 +101,8 @@ variable "wvd_hostpool" {
       "vm_size"                          = "Standard_F4s_v2"
       "vm_prefix"                        = "host-prd-frc"
       "validate_environment"             = "false"
+      "msi_name"                         = "msi-prd-frc-wvd-01"
+      "msi_roles"                        = ["Contributor", "Key Vault Secrets Officer (preview)"] 
     }
   }
 }
@@ -248,31 +252,16 @@ variable "wvd_key_vault_name" {
   default     = "kv-prd-frc-wvd-01"
 }
 
-variable "wvd_msi_roles" {
-  description = "Please provide the required informations about the Managed Identity assigned to the Function App and the Virtual Machines."
-  type        = map(any)
-  default = {
-    msi-can-frc-wvd-01 = {
-      "name"  = "msi-can-frc-wvd-01"
-      "roles" = ["Contributor", "Key Vault Secrets Officer (preview)"]
-    },
-    msi-prd-frc-wvd-01 = {
-      "name"  = "msi-prd-frc-wvd-01"
-      "roles" = ["Contributor", "Key Vault Secrets Officer (preview)"]
-    }
-  }
-}
-
 ################################################### Locals - Do not modify ################################################
 ## Flatening inputs into collections where each element corresponds to a single resource
 locals {
 
   msi_roles = flatten([
-    for msi in var.wvd_msi_roles : [
-      for r in range(length(msi.roles)) :
+    for msi in var.wvd_hostpool : [
+      for r in range(length(msi.msi_roles)) :
       {
-        name = msi.name
-        role = msi.roles[r]
+        name = msi.msi_name
+        role = msi.msi_roles[r]
       }
     ]
   ])

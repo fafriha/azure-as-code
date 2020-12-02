@@ -2,12 +2,12 @@ name: build-images
 defaults:
   run:
     shell: bash
-    working-directory: ./windows-virtual-desktop/current/packer
+    working-directory: ./windows-virtual-desktop/images/packer
     
 on:
   push:
     paths:
-      - 'windows-virtual-desktop/current/packer/**'
+      - 'windows-virtual-desktop/images/packer/**'
   pull_request:
     branches: [ feature-wvd ]
     

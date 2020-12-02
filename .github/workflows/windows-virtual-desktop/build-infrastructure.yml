@@ -2,13 +2,13 @@ name: build-infrastructure
 defaults:
   run:
     shell: bash
-    working-directory: ./windows-virtual-desktop/current/terraform
+    working-directory: ./windows-virtual-desktop/infrastructure/terraform
     
 on:
   push:
     paths:
-      - 'windows-virtual-desktop/current/terraform/**'
-      - 'windows-virtual-desktop/current/powershell/**'
+      - 'windows-virtual-desktop/infrastructure/terraform/**'
+      - 'windows-virtual-desktop/infrastructure/powershell/**'
   pull_request:
     branches: [ master ]
     
