@@ -1,7 +1,7 @@
-resource "azurerm_container_registry" "core" {
-  name                     = "${var.log_analytics_workspace_name}acr"
-  location                 = "${data.azurerm_resource_group.core.location}"
-  resource_group_name      = "${data.azurerm_resource_group.core.name}"
+resource "azurerm_container_registry" "dors" {
+  name                     = "${var.dors_container_registry_name}"
+  location                 = "${azurerm_resource_group.dors_resource_group.location}"
+  resource_group_name      = "${azurerm_resource_group.dors_resource_group.name}"
   sku                      = "Basic"
   admin_enabled            = false
 }
