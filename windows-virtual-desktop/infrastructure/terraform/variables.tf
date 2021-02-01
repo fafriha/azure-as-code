@@ -182,18 +182,26 @@ variable "wvd_subnets" {
   }
 }
 
+## Changer pour intégrer NetApp account
 variable "wvd_storage" {
   description = "[Mandatory] [Create] Enter the name of the storage account that will host all user profiles."
-  type        = map(string)
   default = {
-    "function_account_name" = "saprdfrcwvd01"
+    "function_account_name" = "saprdfrcfunc01"
     "function_account_kind" = "StorageV2"
     "function_account_tier" = "Standard"
-    "profiles_account_name" = "saprdfrcwvd02"
-    "profiles_account_kind" = "FileStorage"
+    
+    "netapp_or_azure"       = "netapp"
+    "profiles_account_name" = "saprdfrcwvd01"
+    #"profiles_account_kind" = "FileStorage" Only for Azure Files
     "profiles_account_tier" = "Premium"
+    "profiles_pool_name"    = "spprdfrcwvd01"
+    "pool_size"             = 5
+    "share_or_volume_quota" = 1
+    
     "replication_type"      = "LRS"
     "enable_https"          = "true"
+
+    "protocol"              = ["SMB3"]
   }
 }
 
@@ -235,8 +243,8 @@ variable "wvd_function" {
   description = "Please provide the required information for the functions"
   type        = map(any)
   default = {
-    fa-prd-frc-wvd-01 = {
-      "name"             = "fa-prd-frc-wvd-01"
+    func-prd-frc-wvd-01 = {
+      "name"             = "func-prd-frc-wvd-01"
       "runtime"          = "powershell"
       "version"          = "~3"
       "https_only"       = "true"
