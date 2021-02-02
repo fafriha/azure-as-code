@@ -12,7 +12,7 @@ on:
     branches: [ master ]
     
 jobs:
-  build:
+  build-infrastructure:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
