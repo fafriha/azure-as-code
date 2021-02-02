@@ -2,7 +2,7 @@ resource "azurerm_log_analytics_workspace" "dors" {
     name                = var.log_analytics_workspace_name
     location            = azurerm_resource_group.dors_resource_group.location
     resource_group_name = azurerm_resource_group.dors_resource_group.name
-    sku                 = "PerGB2018"
+    sku                 = var.log_analytics_workspace_sku
 }
 
 resource "azurerm_log_analytics_solution" "dors" {
