@@ -1,0 +1,75 @@
+{
+  "properties": {
+    "displayName": "Add a tag to a resource based on its name",
+    "policyType": "Custom",
+    "mode": "Indexed",
+    "description": "Adds the specified tag and value when any resource missing this tag is created or updated. Existing resources can be remediated by triggering a remediation task. If the tag exists with a different value it will not be changed. Does not modify tags on resource groups.",
+    "metadata": {
+      "category": "Tags",
+      "createdBy": "82e9e7b8-0edf-4326-b5e5-a87ab769ad4f",
+      "createdOn": "2022-06-30T09:48:20.6527686Z",
+      "updatedBy": "82e9e7b8-0edf-4326-b5e5-a87ab769ad4f",
+      "updatedOn": "2022-06-30T22:51:32.3862843Z"
+    },
+    "parameters": {
+      "tagName": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Tag Name",
+          "description": "Name of the tag, such as 'environment'"
+        }
+      },
+      "tagValue": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Tag Value",
+          "description": "Value of the tag, such as 'production'"
+        }
+      },
+      "prefix": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Prefix",
+          "description": "Prefix of the virtual machine, such as 'lnxfrh093'"
+        },
+        "defaultValue": ""
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Compute/virtualMachines"
+          },
+          {
+            "field": "name",
+            "match": "[concat(parameters('prefix'), '.....')]"
+          },
+          {
+            "field": "[concat('tags[', parameters('tagName'), ']')]",
+            "exists": "false"
+          }
+        ]
+      },
+      "then": {
+        "effect": "modify",
+        "details": {
+          "roleDefinitionIds": [
+            "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+          ],
+          "operations": [
+            {
+              "operation": "add",
+              "field": "[concat('tags[', parameters('tagName'), ']')]",
+              "value": "[parameters('tagValue')]"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "id": "/subscriptions/{subId}/providers/Microsoft.Authorization/policyDefinitions/af0bab2b-5493-41b1-ab4f-5eb2bc54525a",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "name": "af0bab2b-5493-41b1-ab4f-5eb2bc54525a",
+}

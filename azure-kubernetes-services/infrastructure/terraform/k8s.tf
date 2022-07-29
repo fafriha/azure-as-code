@@ -6,7 +6,7 @@ resource "azurerm_kubernetes_cluster" "dors" {
     dns_prefix          = var.dors_aks["dns_prefix"]
 
     linux_profile {
-        admin_username = var.dors_admin_account("username"])
+        admin_username = var.dors_admin_account["username"]
         ssh_key {
             key_data = file(var.dors_admin_account["ssh_public_key"])
         }

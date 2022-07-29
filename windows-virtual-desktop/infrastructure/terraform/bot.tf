@@ -1,1 +1,0 @@
-## Azure Bot will help you interact with your WVD environment and request some data such as Costs, Active Sessions, etc ... Coming soon
