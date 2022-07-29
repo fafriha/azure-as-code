@@ -71,5 +71,5 @@
   },
   "id": "/subscriptions/{subId}/providers/Microsoft.Authorization/policyDefinitions/af0bab2b-5493-41b1-ab4f-5eb2bc54525a",
   "type": "Microsoft.Authorization/policyDefinitions",
-  "name": "af0bab2b-5493-41b1-ab4f-5eb2bc54525a",
+  "name": "af0bab2b-5493-41b1-ab4f-5eb2bc54525a"
 }
